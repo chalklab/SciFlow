@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %} Chunking ACS SDF File {% endblock %}
+{% block header %} SDF Compounds {% endblock %}
+
+{% block content %}
+    <ol>
+        <li>name: {{ name }}</li>
+        <li>formula: {{ formula }}</li>
+        <li>CAS RN: {{ casrn }}</li>
+        <li>mol file: {{ mol }}</li>
+        <li>Index name: {{ iname }}</li>
+    </ol>
+{% endblock %}
