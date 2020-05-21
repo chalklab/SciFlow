@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %} JSON LD Ingestion {% endblock %}
+{% block header %} Ingestion: {% endblock %}
+
+{% block content %}
+<h5>To ingest files first place them in the appropriate folder. Then click the respective button below. </h5>
+
+{% block results %}
+{% endblock %}
+
+<div class="row justify-content-center">
+    <!-- hERG -->
+    <div class="col-3">
+        <!-- Button -->
+        <form action="" method="POST">
+            {% csrf_token %}
+        <br><button type="button" class="btn btn-success" data-toggle="modal" data-target="#hergmodal">
+          Ingest hERG Data
+        </button></br>
+
+        <!-- Modal -->
+        <div class="modal fade" id="hergmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="hergModalLabel">hERG Ingestion:</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                The following files will be ingested into the hERG database:
+                    {% for value in herginputfiles %}
+                    <br>{{value}}</br>
+                    {% endfor %}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+                <input type="submit" class="btn btn-success" value="Submit" name="herg">
+              </div>
+            </div>
+          </div>
+        </div>
+        </form>
+    </div>
+
+    <!-- CIF -->
+    <div class="col-3">
+        <!-- Button -->
+        <form action="" method="POST">
+            {% csrf_token %}
+        <br><button type="button" class="btn btn-success" data-toggle="modal" data-target="#cifmodal">
+          Ingest CIF Data
+        </button></br>
+
+        <!-- Modal -->
+        <div class="modal fade" id="cifmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="cifModalLabel">CIF Ingestion:</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                The following files will be ingested into the CIF database:
+                  <br>
+                    {% for value in cifinputfiles %}
+                  <br>{{value}}</br>
+                    {% endfor %}
+                  </br>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+                <input type="submit" class="btn btn-success" value="Submit" name="cif">
+              </div>
+            </div>
+          </div>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

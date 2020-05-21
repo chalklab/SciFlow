@@ -1,0 +1,52 @@
+{% extends 'ingestion.html' %}
+
+{% block results %}
+<!-- Results -->
+<div class="card text-left">
+    <div class="accordion" id="accordion">
+        <h5 class="card-header">
+            <nav aria-label=Results-Tabs">
+              <ul class="pagination">
+                <li>Results:</li>
+                  <li class="tab"><button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#collapseherg" aria-expanded="false" aria-controls="collapseherg">hERG</button></li>
+                  <li class="tab"><button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#collapsecif" aria-expanded="false" aria-controls="collapsecif">CIF</button></li>
+              </ul>
+            </nav>
+        </h5>
+        <div class="collapse" id="collapseherg" data-parent="#accordion">
+            <div class="card card-body">
+                <div class="card card-body">
+                    <h6 class="text-success">Success:</h6>
+                    {% for value in hergoutputfiles %}
+                    <br>{{value}}</br>
+                    {% endfor %}
+                </div>
+                <div class="card card-body">
+                    <h6 class="text-danger">Error:</h6>
+                    {% for value in hergerrorfiles %}
+                    <br>{{value}}</br>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="collapse" id="collapsecif" data-parent="#accordion">
+            <div class="card card-body">
+                <div class="card card-body">
+                    <h6 class="text-success">Success:</h6>
+                    {% for value in cifoutputfiles %}
+                    <br>{{value}}</br>
+                    {% endfor %}
+                </div>
+                <div class="card card-body">
+                    <h6 class="text-danger">Error:</h6>
+                    {% for value in ciferrorfiles %}
+                    <br>{{value}}</br>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

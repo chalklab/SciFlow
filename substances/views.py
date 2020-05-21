@@ -1,16 +1,15 @@
 """imports"""
-import django
+from django.shortcuts import redirect
 from django.shortcuts import render
 from .models import Substances
 from .models import Identifiers
 from .models import Systems
-from django.core import serializers
 
 
 def home(request):
     """view to generare list of substances on homepage"""
     substances = Substances.objects.all().filter(name__contains='benzene').order_by('name')
-    return render(request, "home.html", {'substances': substances})
+    return render(request, "subhome.html", {'substances': substances})
 
 
 def index(request):

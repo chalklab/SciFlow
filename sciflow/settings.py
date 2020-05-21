@@ -30,15 +30,22 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+PREREQ_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'substances',
 ]
+
+PROJECT_APPS = [
+    'substances',
+    'datasets'
+]
+
+
+INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -49,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'sciflow.urls'
 
@@ -74,11 +82,17 @@ WSGI_APPLICATION = 'sciflow.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-# Also, in the terminal use the following command to create an ssh tunnel to the database
-# after you have connected to the UNF VPM using Forticlient
-# ssh -fNL 3307:localhost:3306 <NNumber>@scidata.unfcsd.unf.edu
 
-DATABASES = {
+
+LOCALDB = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+
+
+UNFDB = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sciflow',
@@ -89,6 +103,7 @@ DATABASES = {
     }
 }
 
+DATABASES = UNFDB
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
