@@ -74,15 +74,18 @@ WSGI_APPLICATION = 'sciflow.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+# Also, in the terminal use the following command to create an ssh tunnel to the database
+# after you have connected to the UNF VPM using Forticlient
+# ssh -fNL 3307:localhost:3306 <NNumber>@scidata.unfcsd.unf.edu
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'fair',
-        'USER': 'fair',
-        'PASSWORD': 'fair2020chin',
-        'HOST': '/opt/local/var/run/mysql57/mysqld.sock',
-        'PORT': '3306',
+        'NAME': 'sciflow',
+        'USER': 'sciflow',
+        'PASSWORD': 'letthedatafl0w',
+        'HOST': '127.0.0.1',
+        'PORT': '3307',
     }
 }
 
