@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %} Substances Index {% endblock %}
+{% block header %} Substances Index {% endblock %}
+
+{% block content %}
+    <ul>
+        <li> Substances: {{ subcount }}</li>
+        <li> Identifiers: {{ idcount }}</li>
+        <li> Systems: {{ syscount }}</li>
+    </ul>
+{% endblock %}

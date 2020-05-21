@@ -3,6 +3,6 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Substances
+from .models import Datasets
 
-admin.site.register(Substances)
+admin.site.register(Datasets)
