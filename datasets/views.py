@@ -1,19 +1,18 @@
 """imports"""
-from django.shortcuts import render
 from django.shortcuts import redirect
+from django.shortcuts import render
 from .models import Datasets
+from datasets.ingestion import *
+
 
 
 def home(request):
-    """view to generare list of substances on homepage"""
+    """view to generate list of substances on homepage"""
     dscount = Datasets.objects.count()
-    return render(request, "subhome.html", {'dscount': dscount})
-
-
-
+    return render(request, "datasets/home.html", {'dscount': dscount})
 
 #Sciflow Ingestion
-from datasets.ingestion import*
+
 def ingestion(response):
     getfiles(herginput, herginputfiles)
     getfiles(cifinput, cifinputfiles)
@@ -28,7 +27,7 @@ def ingestion(response):
         ingest("cif", "m")
         return redirect('/ingestion/results')
 
-    return render(response, 'ingestion.html', {"herginputfiles":herginputfiles, "cifinputfiles":cifinputfiles})
+    return render(response, 'datasets/ingestion.html', {"herginputfiles":herginputfiles, "cifinputfiles":cifinputfiles})
 
 
 #Sciflow Ingestion Results
@@ -51,4 +50,4 @@ def ingestionresults(response):
         return redirect('/ingestion/results')
 
 
-    return render(response, 'ingestionresults.html', {"herginputfiles":herginputfiles, "cifinputfiles":cifinputfiles, "hergoutputfiles":hergoutputfiles, "cifoutputfiles":cifoutputfiles, "hergerrorfiles":hergerrorfiles, "ciferrorfiles":ciferrorfiles,})
+    return render(response, 'datasets/ingestionresults.html', {"herginputfiles":herginputfiles, "cifinputfiles":cifinputfiles, "hergoutputfiles":hergoutputfiles, "cifoutputfiles":cifoutputfiles, "hergerrorfiles":hergerrorfiles, "ciferrorfiles":ciferrorfiles,})
