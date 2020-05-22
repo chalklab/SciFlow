@@ -29,13 +29,14 @@ cifinputfiles = {}
 cifoutputfiles = {}
 ciferrorfiles = {}
 
-
+actlog = {}
 
 #functions
 def getfiles(folder, dict):
     for file in folder.iterdir():
         filename = str(file).split("\\")[-1]
         dict.update({filename:filename})
+        actlog.update({"Filename":filename})
 
 
 #ingestion script
@@ -54,8 +55,8 @@ def ingest(type, auto):
         if type == "herg":
             findcomp(path)
             hergcheck(path)
-            print(hergvalidity)
-            print(compounds)
+            actlog.update({"Validity":hergvalidity})
+            actlog.update({"Compounds":compounds})
             movefile(path, output, error, logdir, hergvalidity, hergerrorlog)
         if type == "cif":
             cifcheck(searchfile)
@@ -81,4 +82,6 @@ def movefile(source, output, error, logdir, dict, errorlog):
         status = "ERR-"
         #shutil.move('C:' + source, dest)
     printerrorlog(i, status, source, errorlog, logdir)
+    actlog.update({"Status":status})
+    printactivitylog('t', source, actlog)
 

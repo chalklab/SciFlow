@@ -36,7 +36,6 @@ def hergcheck(path):
         hergerrorlog.update({"b":"Incorrect Author! (needs to be written by Fray MJ)"})
 
     hergvalidity.update({"isherg":isherg, "author":author})
-    print(hergvalidity)
     searchfile.close()
 
 

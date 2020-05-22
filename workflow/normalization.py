@@ -13,12 +13,18 @@ def findcomp(path):
 
 
 def findprofile(compounds):
-
-
-    print("search for existing profile")
+    print("search for existing profile in the database")
+    if "exists" == True:
+        getprofile()
+    else:
+        makeprofile()
+    addprofile()
 
 def getprofile():
     print("get existing profile")
 
 def makeprofile():
     print("make a new profile")
+
+def addprofile():
+    print("add profile to file being ingested")
