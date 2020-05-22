@@ -1,10 +1,9 @@
 import pathlib
 import shutil
-import json
-import jsonschema
-from jsonschema import validate
-from datetime import datetime
-time = datetime.today().strftime('-%Y%m%d-%H%M%S-')
+from .validation import*
+from .normalization import*
+from .logwriter import*
+
 
 #directories:
 
@@ -17,8 +16,7 @@ herglog = pathlib.Path('/Users/Caleb Desktop/Desktop/sciflow ingestion/herg/04 h
 herginputfiles = {}
 hergoutputfiles = {}
 hergerrorfiles = {}
-hergvalidity = {}
-hergerrorlog = {}
+
 
 
 #cif
@@ -30,8 +28,7 @@ ciflog = pathlib.Path('/Users/Caleb Desktop/Desktop/sciflow ingestion/cif/04 cif
 cifinputfiles = {}
 cifoutputfiles = {}
 ciferrorfiles = {}
-cifvalidity = {}
-ciferrorlog = {}
+
 
 
 #functions
@@ -40,13 +37,6 @@ def getfiles(folder, dict):
         filename = str(file).split("\\")[-1]
         dict.update({filename:filename})
 
-from .chemblschema import schema
-def validateJson(jsonData):
-    try:
-        validate(instance=jsonData, schema=schema)
-    except jsonschema.exceptions.ValidationError as err:
-        return False
-    return True
 
 #ingestion script
 def ingest(type, auto):
@@ -64,6 +54,8 @@ def ingest(type, auto):
         if type == "herg":
             findcomp(path)
             hergcheck(path)
+            print(hergvalidity)
+            print(compounds)
             movefile(path, output, error, logdir, hergvalidity, hergerrorlog)
         if type == "cif":
             cifcheck(searchfile)
@@ -71,48 +63,7 @@ def ingest(type, auto):
             searchfile.close()
             movefile(path, output, error, logdir, cifvalidity, ciferrorlog)
 
-#valdity check: if file is valid, i = 1 at the end. It is invalid, it should equal 0
-def hergcheck(path):
-    searchfile = open('C:' + path,"r")
-    #checking if it is actually herg
-    a = 0
-    b = 0
-    for line in searchfile:
-        #checking if it is actually herg
-        if "\"CHEMBL240\"" in line:
-            a += 1
-        #verifying author (an example used for testing purposes)
-        if "Fray MJ" in line:
-            b += 1
-    if a > 0:
-        isherg = True
-    else:
-        isherg = False
-        hergerrorlog.update({"a":"No instance of CHEMBL240 found!"})
 
-    if b > 0:
-        author = True
-    else:
-        author = False
-        hergerrorlog.update({"b":"Incorrect Author! (needs to be written by Fray MJ)"})
-
-    hergvalidity.update({"isherg":isherg, "author":author})
-    print(hergvalidity)
-    searchfile.close()
-
-
-def cifcheck(path):
-    searchfile = open('C:' + path,"r")
-    i = 0
-    for line in searchfile:
-        if "potato" in line:
-            i += 1
-    if i > 0:
-        valid = True
-    else:
-        valid = False
-    return valid
-    searchfile.close()
 
 #move the file further down the pipeline depending on the vailidity, and prints a log depending on it's destination:
 def movefile(source, output, error, logdir, dict, errorlog):
@@ -123,39 +74,11 @@ def movefile(source, output, error, logdir, dict, errorlog):
 
     if i == 0:
         dest = output
-        status = "SCS"
+        status = "SCS-"
         #shutil.move('C:' + source, dest)
     else:
         dest = error
-        status = "ERR"
+        status = "ERR-"
         #shutil.move('C:' + source, dest)
+    printerrorlog(i, status, source, errorlog, logdir)
 
-    #Log Printing:
-    logname = time + status + source.split("\\")[-1].split(".")[0]
-    log = open(str(logdir + '/' + logname + '.txt'), "w+")
-    if status == "SCS":
-        log.write("This file was ingested successfully!")
-    if status == "ERR":
-        log.write(str(i) + " error(s) were encountered while ingesting this file! \n\n")
-        for value in errorlog.values():
-            log.write("- " + value + "\n")
-
-
-#Compound Conveyor
-def findcomp(path):
-    searchfile = open('C:' + path,"r")
-    for line in searchfile:
-        if "inchi_key" in line:
-            loc = line
-            pos = loc.find("standard_inchi_key")
-            inchi = loc[pos+22:pos+49]
-            print(inchi)
-    searchfile.close()
-def findprofile():
-    print("search for existing profile")
-
-def getprofile():
-    print("get existing profile")
-
-def makeprofile():
-    print("make a new profile")
