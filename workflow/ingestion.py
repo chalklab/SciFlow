@@ -60,19 +60,20 @@ def ingest(type, auto):
 
     for file in input.iterdir():
         path = str(file)
-        searchfile = open(path,"r")
+        searchfile = open('C:' + path,"r")
         if type == "herg":
-            hergcheck(searchfile)
-            searchfile.close()
+            findcomp(path)
+            hergcheck(path)
             movefile(path, output, error, logdir, hergvalidity, hergerrorlog)
         if type == "cif":
             cifcheck(searchfile)
+            findcomp(searchfile)
             searchfile.close()
             movefile(path, output, error, logdir, cifvalidity, ciferrorlog)
 
 #valdity check: if file is valid, i = 1 at the end. It is invalid, it should equal 0
-def hergcheck(searchfile):
-
+def hergcheck(path):
+    searchfile = open('C:' + path,"r")
     #checking if it is actually herg
     a = 0
     b = 0
@@ -83,7 +84,6 @@ def hergcheck(searchfile):
         #verifying author (an example used for testing purposes)
         if "Fray MJ" in line:
             b += 1
-
     if a > 0:
         isherg = True
     else:
@@ -96,14 +96,13 @@ def hergcheck(searchfile):
         author = False
         hergerrorlog.update({"b":"Incorrect Author! (needs to be written by Fray MJ)"})
 
-
-
     hergvalidity.update({"isherg":isherg, "author":author})
+    print(hergvalidity)
+    searchfile.close()
 
 
-
-
-def cifcheck(searchfile):
+def cifcheck(path):
+    searchfile = open('C:' + path,"r")
     i = 0
     for line in searchfile:
         if "potato" in line:
@@ -113,31 +112,50 @@ def cifcheck(searchfile):
     else:
         valid = False
     return valid
+    searchfile.close()
 
 #move the file further down the pipeline depending on the vailidity, and prints a log depending on it's destination:
 def movefile(source, output, error, logdir, dict, errorlog):
     i = 0
     for value in dict.values():
-        print(value)
         if value is False:
             i += 1
-    print("int: " + str(i))
 
     if i == 0:
         dest = output
-        status = "Scs"
+        status = "SCS"
         #shutil.move('C:' + source, dest)
     else:
         dest = error
-        status = "Err"
+        status = "ERR"
         #shutil.move('C:' + source, dest)
 
     #Log Printing:
-    logname = status + time + source.split("\\")[-1].split(".")[0]
+    logname = time + status + source.split("\\")[-1].split(".")[0]
     log = open(str(logdir + '/' + logname + '.txt'), "w+")
-    if status == "Scs":
+    if status == "SCS":
         log.write("This file was ingested successfully!")
-    if status == "Err":
+    if status == "ERR":
         log.write(str(i) + " error(s) were encountered while ingesting this file! \n\n")
         for value in errorlog.values():
             log.write("- " + value + "\n")
+
+
+#Compound Conveyor
+def findcomp(path):
+    searchfile = open('C:' + path,"r")
+    for line in searchfile:
+        if "inchi_key" in line:
+            loc = line
+            pos = loc.find("standard_inchi_key")
+            inchi = loc[pos+22:pos+49]
+            print(inchi)
+    searchfile.close()
+def findprofile():
+    print("search for existing profile")
+
+def getprofile():
+    print("get existing profile")
+
+def makeprofile():
+    print("make a new profile")

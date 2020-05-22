@@ -41,7 +41,8 @@ PREREQ_APPS = [
 
 PROJECT_APPS = [
     'substances',
-    'datasets'
+    'datasets',
+    'workflow'
 ]
 
 
