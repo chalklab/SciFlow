@@ -59,8 +59,6 @@ x = '/Users/n01448636/Documents/PycharmProjects/chembl_django/scidata/JSON_dumps
 def validateSciData(input):
     with open(input) as json_file:
         data = json.load(json_file)
-        keycheckA = ['@context', '@id', '@graph']
-        keycheckB = ['scidata']
         keysA = []
         keysB = []
         for k,v in data.items():
@@ -68,12 +66,13 @@ def validateSciData(input):
             if k == '@graph':
                 for y,z in v.items():
                     keysB.append(y)
-                for x in keycheckB:
-                    if x not in keysB:
-                        return False
-        for x in keycheckA:
+        for x in ['@context', '@id', '@graph']:
             if x not in keysA:
+                return False
+        for x in ['scidata']:
+            if x not in keysB:
                 return False
         return True
 
 print(validateSciData(x))
+
