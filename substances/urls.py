@@ -4,5 +4,5 @@ from substances import views
 
 urlpatterns = [
     path("", views.home, name='home'),
-    path("chunk/", views.view, name='view'),
+    path("view/<subid>", views.view, name='view'),
 ]

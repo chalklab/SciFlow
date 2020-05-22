@@ -24,5 +24,5 @@ def index(request):
 def view(request, subid):
     """present an overview page about the substance in sciflow"""
     substance = Substances.objects.get(id=subid)
-    ids = Substances.objects.select_related('identifiers').get(id=subid)
-    return render(request, "substances/view.html", {'substance': substance, 'ids': ids})
+    #ids = Substances.objects.select_related('identifiers').get(id=subid)
+    return render(request, "substances/view.html", {'substance': substance})

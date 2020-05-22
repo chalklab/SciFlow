@@ -6,7 +6,7 @@
 {% block content %}
     <ul>
     {% for substance in substances %}
-            <li>{{ substance.name }}</li>
+        <li><a href="/substances/view/{{ substance.id }}">{{ substance.name }}</a></li>
     {% endfor %}
     </ul>
 {% endblock %}
