@@ -1,15 +1,25 @@
 from datetime import datetime
 time = datetime.today().strftime('%Y%m%d_%H%M%S-')
+actlogdir = str('/Users/Caleb Desktop/Desktop/sciflow ingestion/activitylogs')
 
 
 #Log Printing:
-def printerrorlog(i, status, source, errorlog, logdir):
+def printerrorlog(i, status, source, errorlog, errlogdir):
     logname = time + status + source.split("\\")[-1].split(".")[0]
-    log = open(str(logdir + '/' + logname + '.txt'), "w+")
+    log = open(str(errlogdir + '/' + logname + '.txt'), "w+")
     if status == "SCS-":
         log.write("This file was ingested successfully!")
     if status == "ERR-":
         log.write(str(i) + " error(s) were encountered while ingesting this file! \n\n")
         for value in errorlog.values():
-            print(value)
             log.write("- " + value + "\n")
+
+
+def printactivitylog(printtype, source, actlog):
+    if printtype == "t":
+        for key, value in actlog.items():
+            print(str(key) + ": " + str(value))
+    if printtype == "f":
+        logname = "ACT-" + time + source.split("\\")[-1].split(".")[0]
+        log = open(str(actlogdir + '/' + logname + '.txt'), "w+")
+        log.write("activitylog")
