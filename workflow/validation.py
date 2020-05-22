@@ -1,5 +1,4 @@
-from .scidataschema import schema
-from .ingestion import*
+# from .ingestion import *
 import json
 import jsonschema
 from jsonschema import validate
@@ -53,12 +52,27 @@ def cifcheck(path):
     searchfile.close()
 
 
+#Validate scidata jsonld format
+x = '/Users/n01448636/Documents/PycharmProjects/chembl_django/scidata/JSON_dumps/51366_CHEMBL1086273.jsonld'
 
+def validateSciData(input):
+    with open(input) as json_file:
+        data = json.load(json_file)
+        keycheckA = ['@context', '@id', '@graph']
+        keycheckB = ['scidata']
+        keysA = []
+        keysB = []
+        for k,v in data.items():
+            keysA.append(k)
+            if k == '@graph':
+                for y,z in v.items():
+                    keysB.append(y)
+                for x in keycheckB:
+                    if x not in keysB:
+                        return False
+        for x in keycheckA:
+            if x not in keysA:
+                return False
+        return True
 
-
-def validateJson(jsonData):
-    try:
-        validate(instance=jsonData, schema=schema)
-    except jsonschema.exceptions.ValidationError as err:
-        return False
-    return True
+print(validateSciData(x))
