@@ -59,22 +59,26 @@ def cifcheck(path):
 
 def validatescidata(sdfile):
     """ validation script """
-    with open(sdfile) as json_file:
-        data = json.load(json_file)
-        keys_a = []
-        keys_b = []
-        for k, v in data.items():
-            keys_a.append(k)
-            if k == '@graph':
-                for y, z in v.items():
-                    keys_b.append(y)
-        for y in ['@context', '@id', '@graph']:
-            if y not in keys_a:
-                return False
-        for y in ['scidata']:
-            if y not in keys_b:
-                return False
-        return True
+    try:
+        with open(sdfile) as json_file:
+            data = json.load(json_file)
+            keys_a = []
+            keys_b = []
+            for k, v in data.items():
+                keys_a.append(k)
+                if k == '@graph':
+                    for y, z in v.items():
+                        keys_b.append(y)
+            for y in ['@context', '@id', '@graph']:
+                if y not in keys_a:
+                    return False
+            for y in ['scidata']:
+                if y not in keys_b:
+                    return False
+            return True
+    except Exception as ex:
+        return False
+
 
 
 def validatefiles():
