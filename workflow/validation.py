@@ -52,26 +52,34 @@ def cifcheck(path):
     searchfile.close()
 
 
+
 #Validate scidata jsonld format
-x = '/Users/n01448636/Documents/PycharmProjects/chembl_django/scidata/JSON_dumps/51366_CHEMBL1086273.jsonld'
+x = '/Users/n01448636/Documents/PycharmProjects/chembl_django/scidata/JSON_dumps/51366_1086273.jsonld'
 
 def validateSciData(input):
     with open(input) as json_file:
-        data = json.load(json_file)
+        try:
+            data = json.load(json_file)
+        except:
+            return False
         keysA = []
         keysB = []
-        for k,v in data.items():
-            keysA.append(k)
-            if k == '@graph':
-                for y,z in v.items():
-                    keysB.append(y)
-        for x in ['@context', '@id', '@graph']:
-            if x not in keysA:
-                return False
-        for x in ['scidata']:
-            if x not in keysB:
-                return False
-        return True
+        try:
+            for k,v in data.items():
+                keysA.append(k)
+                if k == '@graph':
+                    for y,z in v.items():
+                        keysB.append(y)
+            for x in ['@context', '@id', '@graph']:
+                if x not in keysA:
+                    return False
+            for x in ['scidata']:
+                if x not in keysB:
+                    return False
+            return True
+        except:
+            return False
 
 print(validateSciData(x))
+
 
