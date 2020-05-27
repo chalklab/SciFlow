@@ -1,7 +1,7 @@
 # from .ingestion import *
 import json
-import jsonschema
-from jsonschema import validate
+# import jsonschema
+# from jsonschema import validate
 
 hergvalidity = {}
 hergerrorlog = {}
@@ -9,37 +9,39 @@ cifvalidity = {}
 ciferrorlog = {}
 
 
-#valdity check: if file is valid, i = 1 at the end. It is invalid, it should equal 0
+# valdity check: if file is valid, i = 1 at the end. It is invalid, it should equal 0
 def hergcheck(path):
-    searchfile = open('C:' + path,"r")
-    #checking if it is actually herg
+    """ check that this is a herg file"""
+    searchfile = open('C:' + path)
+    # checking if it is actually herg
     a = 0
     b = 0
     for line in searchfile:
-        #checking if it is actually herg
+        # checking if it is actually herg
         if "\"CHEMBL240\"" in line:
             a += 1
-        #verifying author (an example used for testing purposes)
+        # verifying author (an example used for testing purposes)
         if "Fray MJ" in line:
             b += 1
     if a > 0:
         isherg = True
     else:
         isherg = False
-        hergerrorlog.update({"a":"No instance of CHEMBL240 found!"})
+        hergerrorlog.update({"a": "No instance of CHEMBL240 found!"})
 
     if b > 0:
         author = True
     else:
         author = False
-        hergerrorlog.update({"b":"Incorrect Author! (needs to be written by Fray MJ)"})
+        hergerrorlog.update({"b": "Incorrect Author! (needs to be written by Fray MJ)"})
 
-    hergvalidity.update({"isherg":isherg, "author":author})
+    hergvalidity.update({"isherg": isherg, "author": author})
     searchfile.close()
 
 
 def cifcheck(path):
-    searchfile = open('C:' + path,"r")
+    """ check that this is a CIF file"""
+    searchfile = open('C:' + path)
     i = 0
     for line in searchfile:
         if "potato" in line:
@@ -48,31 +50,45 @@ def cifcheck(path):
         valid = True
     else:
         valid = False
-    return valid
     searchfile.close()
+    return valid
 
 
-#Validate scidata jsonld format
-x = '/Users/n01448636/Documents/PycharmProjects/chembl_django/scidata/JSON_dumps/51366_CHEMBL1086273.jsonld'
+def validatescidata(sdfile):
+    """ validation script """
+    try:
+        with open(sdfile) as json_file:
+            data = json.load(json_file)
+            keys_a = []
+            keys_b = []
+            for k, v in data.items():
+                keys_a.append(k)
+                if k == '@graph':
+                    for y, z in v.items():
+                        keys_b.append(y)
+            for y in ['@context', '@id', '@graph']:
+                if y not in keys_a:
+                    return False
+            for y in ['scidata']:
+                if y not in keys_b:
+                    return False
+            return True
+    except Exception as ex:
+        return False
 
-def validateSciData(input):
-    with open(input) as json_file:
-        data = json.load(json_file)
-        keycheckA = ['@context', '@id', '@graph']
-        keycheckB = ['scidata']
-        keysA = []
-        keysB = []
-        for k,v in data.items():
-            keysA.append(k)
-            if k == '@graph':
-                for y,z in v.items():
-                    keysB.append(y)
-                for x in keycheckB:
-                    if x not in keysB:
-                        return False
-        for x in keycheckA:
-            if x not in keysA:
-                return False
-        return True
 
-print(validateSciData(x))
+
+def validatefiles():
+    """look in the json folder and validate any files present"""
+    jpath = settings.BASE_DIR + '/json/'
+    for dirpath, dirs, files in os.walk(jpath):
+        if len(files) > 0:
+            for filename in files:
+                valid = validatescidata(jpath + filename)
+                print(filename + ": " + str(valid))
+        else:
+            return "No files to validate"
+    return "Files validated"
+
+
+print(validatefiles())
