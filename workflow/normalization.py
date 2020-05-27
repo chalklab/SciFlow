@@ -8,12 +8,15 @@ def findcomp(path):
             loc = line
             pos = loc.find("standard_inchi_key")
             inchi = loc[pos+22:pos+49]
-            compounds.update({inchi:inchi})
+            compounds.update({"inchi":inchi})
     searchfile.close()
+    inchi = compounds.values()
+    print(inchi)
 
 
 def findprofile(compounds):
     print("search for existing profile in the database")
+    inchi = compounds.value()
     if "exists" == True:
         getprofile()
     else:
