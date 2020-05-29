@@ -3,6 +3,7 @@ import shutil
 from .validation import*
 from .normalization import*
 from .logwriter import*
+from .updatedb import*
 
 
 #directories:
@@ -36,7 +37,6 @@ def getfiles(folder, dict):
     for file in folder.iterdir():
         filename = str(file).split("\\")[-1]
         dict.update({filename:filename})
-        actlog.update({"Filename":filename})
 
 
 #ingestion script
@@ -51,28 +51,31 @@ def ingest(type, auto):
 
     for file in input.iterdir():
         path = str(file)
-        searchfile = open('C:' + path,"r")
-        if type == "herg":
-            findcomp(path)
-            hergcheck(path)
-            actlog.update({"Validity":hergvalidity})
-            actlog.update({"Compounds":compounds})
-            movefile(path, output, error, logdir, hergvalidity, hergerrorlog)
-        if type == "cif":
-            cifcheck(searchfile)
-            findcomp(searchfile)
-            searchfile.close()
-            movefile(path, output, error, logdir, cifvalidity, ciferrorlog)
+        filename = str(file).split("\\")[-1]
+        actlog.update({"Filename":filename})
+
+        validate(path, type) #validate.py
+        actlog.update({"Validity":validity})
+
+        if validate(path, type) is True:
+            normalize(path) #normalization.py
+            actlog.update({"Compound":compound})
+            actlog.update({"Target":target})
+
+            if normalize(path) is True:
+                updatedb() #updatedb.py
+
+        finalize(path, output, error, logdir, validity, errorlog, actlog)
 
 
-
-#move the file further down the pipeline depending on the vailidity, and prints a log depending on it's destination:
-def movefile(source, output, error, logdir, dict, errorlog):
+#finalizes the ingestion, determining whether it was successful, and printing all logs:
+def finalize(path, output, error, logdir, validity, errorlog, actlog):
     i = 0
-    for value in dict.values():
+    for value in validity.values():
         if value is False:
             i += 1
 
+    #Detemines whether the ingestion was successful or not, and counts the errors if it was not
     if i == 0:
         dest = output
         status = "SCS-"
@@ -81,7 +84,11 @@ def movefile(source, output, error, logdir, dict, errorlog):
         dest = error
         status = "ERR-"
         #shutil.move('C:' + source, dest)
-    printerrorlog(i, status, source, errorlog, logdir)
-    actlog.update({"Status":status})
-    printactivitylog('t', source, actlog)
 
+    #printing and resetting of logs (logwriter.py)
+    actlog.update({"Status":status})
+    printactivitylog('t', path, actlog)
+    printerrorlog(i, status, path, errorlog, logdir)
+    actlog.clear()
+    errorlog.clear()
+    validity.clear()

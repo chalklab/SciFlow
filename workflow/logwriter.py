@@ -3,7 +3,7 @@ time = datetime.today().strftime('%Y%m%d_%H%M%S-')
 actlogdir = str('/Users/Caleb Desktop/Desktop/sciflow ingestion/activitylogs')
 
 
-#Log Printing:
+#prints a log based on the values added to errorlog dictionary
 def printerrorlog(i, status, source, errorlog, errlogdir):
     logname = time + status + source.split("\\")[-1].split(".")[0]
     log = open(str(errlogdir + '/' + logname + '.txt'), "w+")
@@ -15,6 +15,7 @@ def printerrorlog(i, status, source, errorlog, errlogdir):
             log.write("- " + value + "\n")
 
 
+#prints a log based on the values added to the actlog dictionary. Can be set to print in the terminal (t) or to a file (f)
 def printactivitylog(printtype, source, actlog):
     if printtype == "t":
         for key, value in actlog.items():
