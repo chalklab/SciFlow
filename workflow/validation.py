@@ -77,18 +77,18 @@ def validatescidata(sdfile):
         return False
 
 
-
-def validatefiles():
-    """look in the json folder and validate any files present"""
-    jpath = settings.BASE_DIR + '/json/'
-    for dirpath, dirs, files in os.walk(jpath):
-        if len(files) > 0:
-            for filename in files:
-                valid = validatescidata(jpath + filename)
-                print(filename + ": " + str(valid))
-        else:
-            return "No files to validate"
-    return "Files validated"
-
-
-print(validatefiles())
+#
+# def validatefiles():
+#     """look in the json folder and validate any files present"""
+#     jpath = settings.BASE_DIR + '/json/'
+#     for dirpath, dirs, files in os.walk(jpath):
+#         if len(files) > 0:
+#             for filename in files:
+#                 valid = validatescidata(jpath + filename)
+#                 print(filename + ": " + str(valid))
+#         else:
+#             return "No files to validate"
+#     return "Files validated"
+#
+#
+# print(validatefiles())
