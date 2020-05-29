@@ -43,7 +43,7 @@ def validate(path, type):
 def validatescidata(path):
     """ validation script """
     try:
-        with open('C:' + path) as json_file:
+        with open(path) as json_file:
             data = json.load(json_file)
             keys_a = []
             keys_b = []
@@ -67,7 +67,7 @@ def validatescidata(path):
 #Specialized checks for each dataset type
 def hergcheck(path):
     """ check that this is a herg file"""
-    searchfile = open('C:' + path)
+    searchfile = open(path)
     a = 0
     b = 0
     for line in searchfile:
@@ -96,7 +96,7 @@ def hergcheck(path):
 
 def cifcheck(path):
     """ check that this is a CIF file"""
-    searchfile = open('C:' + path)
+    searchfile = open(path)
     i = 0
     for line in searchfile:
         if "potato" in line:
@@ -107,22 +107,3 @@ def cifcheck(path):
         valid = False
     searchfile.close()
     return valid
-
-
-
-
-#
-# def validatefiles():
-#     """look in the json folder and validate any files present"""
-#     jpath = settings.BASE_DIR + '/json/'
-#     for dirpath, dirs, files in os.walk(jpath):
-#         if len(files) > 0:
-#             for filename in files:
-#                 valid = validatescidata(jpath + filename)
-#                 print(filename + ": " + str(valid))
-#         else:
-#             return "No files to validate"
-#     return "Files validated"
-#
-#
-# print(validatefiles())

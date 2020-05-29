@@ -3,13 +3,16 @@ import os
 import json
 
 normcheck = {}
-compound = {}
-target = {}
 
 def normalize(path):
-    getsystem(path)
-    findprofile(path, compound)
-    normalizationcheck(path)
+    try:
+        compound, target = getsystem(path)
+        findprofile(path, compound)
+        normalizationcheck(path)
+        actlog.update({"Compound":compound})
+        actlog.update({"Target":target})
+    except:
+        pass
 
     i = 0
     for value in normcheck.values():
@@ -25,16 +28,23 @@ def normalize(path):
 #gets the compound and target within the scidata file
 #sddir = '/Users/n01448636/Documents/PycharmProjects/chembl_django/scidata/JSON_dumps/'
 def getsystem(path):
-    x = json.loads(open(path).read())
-    for k,v in x.items():
-        if k == '@graph':
-            for a in x['@graph']['scidata']['system']['facets']:
-                for b,c in a.items():
-                    if b == '@id' and c.startswith('target'):
-                        target.update({'targetchembl':(a['chembl_id'])})
-                    if b == '@id' and c.startswith('compound'):
-                        compound.update({'inchi':(a['identifiers']['standard_inchi'])})
+    compound = {}
+    target = {}
+    try:
+        x = json.loads(open(path).read())
+        for k,v in x.items():
+            if k == '@graph':
+                for a in x['@graph']['scidata']['system']['facets']:
+                    for b,c in a.items():
+                        if b == '@id' and c.startswith('target'):
+                            target.update({'targetchembl':(a['chembl_id'])})
+                        if b == '@id' and c.startswith('compound'):
+                            compound.update({'inchi':(a['identifiers']['standard_inchi'])})
+        if compound:
+            return compound, target
 
+    except:
+        pass
 
 #for sdfile in os.listdir(sddir):
     #print(findcomp(sdfile))

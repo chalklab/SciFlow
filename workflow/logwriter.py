@@ -1,6 +1,7 @@
 from datetime import datetime
 time = datetime.today().strftime('%Y%m%d_%H%M%S-')
-actlogdir = str('/Users/Caleb Desktop/Desktop/sciflow ingestion/activitylogs')
+from .ingestiondir import*
+actlogdir = str(root_path+'/activitylogs')
 
 
 #prints a log based on the values added to errorlog dictionary

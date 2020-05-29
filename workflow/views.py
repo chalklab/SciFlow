@@ -4,6 +4,12 @@ from .ingestion import*
 # Create your views here.
 
 #Sciflow Ingestion
+herginputfiles = {}
+hergoutputfiles = {}
+hergerrorfiles = {}
+cifinputfiles = {}
+cifoutputfiles = {}
+ciferrorfiles = {}
 
 def ingestion(response):
     getfiles(herginput, herginputfiles)
