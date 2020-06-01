@@ -1,16 +1,17 @@
 from .ingestion import*
 import os
 import json
+from .logwriter import logwrite
 
 normcheck = {}
 
-def normalize(path):
+def normalize(path, loginfo):
     try:
         compound, target = getsystem(path)
+        logwrite("act", loginfo, "System:\n\t- Compound: " + str(compound))
+        logwrite("act", loginfo, "\t- Target: " + str(target))
         findprofile(path, compound)
-        normalizationcheck(path)
-        actlog.update({"Compound":compound})
-        actlog.update({"Target":target})
+        normalizationcheck(path, loginfo)
     except:
         pass
 
@@ -61,23 +62,23 @@ def findprofile(path, compound):
 
 #if the profile is found, this pulls it
 def getprofile(inchi):
-    print("get existing profile")
+    print("")
 
 #if the profile is not found, this creates it
 def makeprofile(inchi):
-    print("make a new profile")
+    print("")
 
 #once the profile has been created or obtained, this integrates it to the main file
 def addprofile(inchi):
-    print("add profile to file being ingested")
+    print("")
 
 
 #checks to make sure the file has been correctly normalized
-def normalizationcheck(path):
+def normalizationcheck(path, loginfo):
     normalized = True
     if normalized == True:
-        isnormalized = True
+        logwrite("act", loginfo, "Normalization: Valid")
     else:
-        isnormalized = False
-        errorlog.update({"e":"File was not properly normalized!"})
-    validity.update({"isnormalized": isnormalized})
+        logwrite("act", loginfo, "Normalization: Invalid!")
+        logwrite("err", loginfo, "- File was not properly normalized!")
+

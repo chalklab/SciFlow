@@ -2,16 +2,16 @@ from .validation import*
 from .ingestion import*
 
 #function to attempt to push things to the mysql and graph databases. If either fail, the update is reverted to prevent inconsistencies.
-def updatedb():
+def updatedb(loginfo):
     try:
         updatemysql()
         updategraphdb()
-        validity.update({"Update Successful":True})
+        logwrite("act", loginfo, "Update: Valid\n")
     except:
         revertupdatemysql()
         revertupdategraphdb()
-        validity.update({"Update Successful":False})
-        errorlog.update({"f":"An issue was encountered while updating a database!"})
+        logwrite("act", loginfo, "Update: Invalid!\n")
+        logwrite("err", loginfo, "- An issue was encountered while updating a database!\n")
 
 def updatemysql():
     print("")

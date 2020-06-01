@@ -1,27 +1,34 @@
 from datetime import datetime
 time = datetime.today().strftime('%Y%m%d_%H%M%S-')
 from .ingestiondir import*
-actlogdir = str(root_path+'/activitylogs')
+from .ingestion import*
 
 
-#prints a log based on the values added to errorlog dictionary
-def printerrorlog(i, status, source, errorlog, errlogdir):
-    logname = time + status + source.split("\\")[-1].split(".")[0]
-    log = open(str(errlogdir + '/' + logname + '.txt'), "w+")
-    if status == "SCS-":
-        log.write("This file was ingested successfully!")
-    if status == "ERR-":
-        log.write(str(i) + " error(s) were encountered while ingesting this file! \n\n")
-        for value in errorlog.values():
-            log.write("- " + value + "\n")
+def errloginit(loginfo):
+    errlog = open(loginfo["errlogdir"]+'/'+loginfo["logname"]+'.txt', "w+")
+    errlog.write("The following error(s) were encountered while ingesting this file: \n\n")
+    errlog.close()
 
-
-#prints a log based on the values added to the actlog dictionary. Can be set to print in the terminal (t) or to a file (f)
-def printactivitylog(printtype, source, actlog):
+def actloginit(printtype, loginfo):
     if printtype == "t":
-        for key, value in actlog.items():
-            print(str(key) + ": " + str(value))
+        logwrite("act", loginfo, "Filename: " + loginfo["logname"].split("-")[1])
     if printtype == "f":
-        logname = "ACT-" + time + source.split("\\")[-1].split(".")[0]
-        log = open(str(actlogdir + '/' + logname + '.txt'), "w+")
-        log.write("activitylog")
+        actlog = open(loginfo["actlogdir"]+'/'+loginfo["logname"]+'.txt', "w+")
+        actlog.write("Filename: " + loginfo["logname"].split("-")[1] + "\n")
+        actlog.close()
+
+def logwrite(log, loginfo, input):
+
+    if log == "err":
+        try:
+            open(loginfo[log+"logdir"]+'/'+loginfo["logname"]+'.txt', "r")
+        except:
+            errloginit(loginfo)
+        logname = open(loginfo[log+"logdir"]+'/'+loginfo["logname"]+'.txt', "a+")
+        logname.write(input + '\n')
+
+    if log == "act":
+        try:
+            open(loginfo[log+"logdir"]+'/'+loginfo["logname"]+'.txt', "r")
+        except:
+            print(input)

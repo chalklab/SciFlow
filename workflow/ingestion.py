@@ -6,8 +6,6 @@ from .logwriter import*
 from .updatedb import*
 from .ingestiondir import*
 
-actlog = {}
-
 
 #functions
 def getfiles(folder, dict):
@@ -25,47 +23,45 @@ def ingest(type, auto):
         input = pathlib.Path(root_path+'/'+type+'/01 '+type+' input')
     output = pathlib.Path(root_path+'/'+type+'/02 '+type+' output')
     error = pathlib.Path(root_path+'/'+type+'/03 '+type+' error')
-    logdir = str(root_path+'/'+type+'/04 '+type+' log')
+
 
     for file in input.iterdir():
         if str(file).endswith('.jsonld'):
             path = str(file)
             filename = str(file).split("\\")[-1]
-            actlog.update({"Filename":filename})
 
-            validate(path, type) #validate.py
-            actlog.update({"Validity":validity})
+            loginfo = {
+                "errlogdir":str(root_path+'/'+type+'/04 '+type+' log'),
+                "actlogdir":str(root_path+'/activitylogs'),
+                "logname":time + filename.split(".")[0],
+             }
+            actloginit("t", loginfo)
 
-            if validate(path, type) is True:
-                normalize(path) #normalization.py
+            if validate(path, type, loginfo) is True: #validate.py
 
-                if normalize(path) is True:
-                    updatedb() #updatedb.py
+                if normalize(path, loginfo) is True: #normalization.py
+                    updatedb(loginfo) #updatedb.py
 
-            finalize(path, output, error, logdir, validity, errorlog, actlog)
+            finalize(path, output, error, loginfo)
 
 
-#finalizes the ingestion, determining whether it was successful, and printing all logs:
-def finalize(path, output, error, logdir, validity, errorlog, actlog):
+#finalizes the ingestion, determining whether it was successful, and moving the file
+def finalize(path, output, error, loginfo):
+    #Detemines whether the ingestion was successful or not
+    logname = loginfo["errlogdir"]+'/'+loginfo["logname"]+'.txt'
     i = 0
-    for value in validity.values():
-        if value is False:
-            i += 1
+    try:
+        open(logname, "r")
+        logwrite("act", loginfo, "Status: Failed!")
+        i += 1
+    except:
+        logwrite("act", loginfo, "Status: Success!")
 
-    #Detemines whether the ingestion was successful or not, and counts the errors if it was not
+    #Moves the file
     if i == 0:
         dest = output
-        status = "SCS-"
-        shutil.move(path, dest)
+        #shutil.move(path, dest)
     else:
         dest = error
-        status = "ERR-"
-        shutil.move(path, dest)
+        #shutil.move(path, dest)
 
-    #printing and resetting of logs (logwriter.py)
-    actlog.update({"Status":status})
-    printactivitylog('t', path, actlog)
-    printerrorlog(i, status, path, errorlog, logdir)
-    actlog.clear()
-    errorlog.clear()
-    validity.clear()

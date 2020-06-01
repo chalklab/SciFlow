@@ -1,29 +1,31 @@
 # from .ingestion import *
-# from .logwriter import*
+from .logwriter import*
 import json
 # import jsonschema
 # from jsonschema import validate
 import os
 
-validity = {}
-errorlog = {}
+
 
 #all-in-one validation function. Includes every check that we would want to do on a file.
-def validate(path, type):
+def validate(path, type, loginfo):
+    validity = {}
     #runs a check to make sure the file is in proper scidata format
     validatescidata(path)
     if validatescidata(path) is True:
         isscidata = True
+        logwrite("act", loginfo, "Validity:\n\t- Scidata: Valid")
     else:
         isscidata = False
-        errorlog.update({"a": "Invalid Scidata Format!"})
+        logwrite("err", loginfo, "- Invalid Scidata Format!\n")
+        logwrite("act", loginfo, "Validity:\n\t- Scidata: Invalid!")
     validity.update({"isscidata":isscidata})
 
     #Specialized checks for each dataset type
     if type == "herg":
-        hergcheck(path)
+        hergcheck(path, validity, loginfo)
     if type == "cif":
-        cifcheck(path)
+        cifcheck(path, validity, loginfo)
 
     #Validity Check
     i = 0
@@ -65,7 +67,7 @@ def validatescidata(path):
 
 
 #Specialized checks for each dataset type
-def hergcheck(path):
+def hergcheck(path, validity, loginfo):
     """ check that this is a herg file"""
     searchfile = open(path)
     a = 0
@@ -80,21 +82,17 @@ def hergcheck(path):
 
     if a > 0:
         isherg = True
+        logwrite("act", loginfo, "\t- Herg: Valid\n")
     else:
         isherg = False
-        errorlog.update({"b": "No instance of CHEMBL240 found!"})
+        logwrite("act", loginfo, "\t- Herg: Invalid!\n")
+        logwrite("err", loginfo, "- No instance of CHEMBL240 found!\n")
 
-    if b > 0:
-        author = True
-    else:
-        author = False
-        errorlog.update({"c": "Incorrect Author! (needs to be written by Fray MJ)"})
-
-    validity.update({"isherg": isherg, "author": author})
+    validity.update({"isherg": isherg})
     searchfile.close()
 
 
-def cifcheck(path):
+def cifcheck(path, validity, loginfo):
     """ check that this is a CIF file"""
     searchfile = open(path)
     i = 0
