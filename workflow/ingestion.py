@@ -5,6 +5,8 @@ from .normalization import*
 from .logwriter import*
 from .updatedb import*
 from .ingestiondir import*
+import time
+
 
 
 #functions
@@ -33,8 +35,9 @@ def ingest(type, auto):
             loginfo = {
                 "errlogdir":str(root_path+'/'+type+'/04 '+type+' log'),
                 "actlogdir":str(root_path+'/activitylogs'),
-                "logname":time + filename.split(".")[0],
+                "logname":now + filename.split(".")[0],
              }
+            # "t" prints to the terminal, "f" will print to a file
             actloginit("t", loginfo)
 
             if validate(path, type, loginfo) is True: #validate.py
@@ -60,8 +63,21 @@ def finalize(path, output, error, loginfo):
     #Moves the file
     if i == 0:
         dest = output
-        #shutil.move(path, dest)
+        shutil.move(path, dest)
     else:
         dest = error
-        #shutil.move(path, dest)
+        shutil.move(path, dest)
 
+
+def autoingest(type):
+    try:
+        ingest(type, "a")
+    except:
+        pass
+    wait(type)
+
+def wait(type):
+    time.sleep(10)
+    autoingest(type)
+
+autoingest("herg")
