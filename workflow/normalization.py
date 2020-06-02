@@ -2,6 +2,7 @@ from .ingestion import*
 import os
 import json
 from .logwriter import logwrite
+from substances.models import Identifiers, Substances
 
 normcheck = {}
 
@@ -10,7 +11,7 @@ def normalize(path, loginfo):
         compound, target = getsystem(path)
         logwrite("act", loginfo, "System:\n\t- Compound: " + str(compound))
         logwrite("act", loginfo, "\t- Target: " + str(target))
-        findprofile(path, compound)
+        findprofile(path, compound, loginfo)
         normalizationcheck(path, loginfo)
     except:
         pass
@@ -40,7 +41,7 @@ def getsystem(path):
                         if b == '@id' and c.startswith('target'):
                             target.update({'targetchembl':(a['chembl_id'])})
                         if b == '@id' and c.startswith('compound'):
-                            compound.update({'inchi':(a['identifiers']['standard_inchi'])})
+                            compound.update({'inchi':(a['identifiers']['standard_inchi_key'])})
         if compound:
             return compound, target
 
@@ -52,25 +53,28 @@ def getsystem(path):
 
 
 #searches the database for a profile matching the found inchi key
-def findprofile(path, compound):
+def findprofile(path, compound, loginfo):
     inchi = compound.get("inchi")
-    if "exists" == True:
-        getprofile(inchi)
+    if Identifiers.objects.all().filter(value=inchi).exists() == True:
+        getprofile(inchi, loginfo)
     else:
-        makeprofile(inchi)
-    addprofile(inchi)
+        makeprofile(inchi, loginfo)
+    addprofile(inchi, loginfo)
 
 #if the profile is found, this pulls it
-def getprofile(inchi):
-    print("")
+def getprofile(inchi, loginfo):
+    subid = Identifiers.objects.get(value=inchi).substance_id
+    substance = Substances.objects.get(id=subid)
+    logwrite("act", loginfo, "Substance Name: " + substance.name)
+
 
 #if the profile is not found, this creates it
-def makeprofile(inchi):
-    print("")
+def makeprofile(inchi,loginfo):
+    print("no inchi found")
 
 #once the profile has been created or obtained, this integrates it to the main file
-def addprofile(inchi):
-    print("")
+def addprofile(inchi, loginfo):
+    print("adding...")
 
 
 #checks to make sure the file has been correctly normalized

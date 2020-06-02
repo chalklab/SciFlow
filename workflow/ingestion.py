@@ -63,10 +63,10 @@ def finalize(path, output, error, loginfo):
     #Moves the file
     if i == 0:
         dest = output
-        shutil.move(path, dest)
+        #shutil.move(path, dest)
     else:
         dest = error
-        shutil.move(path, dest)
+        #shutil.move(path, dest)
 
 
 def autoingest(type):
@@ -80,4 +80,8 @@ def wait(type):
     time.sleep(10)
     autoingest(type)
 
-autoingest("herg")
+autodir = os.listdir(hergautoinput)
+if len(autodir) > 1:
+    autoingest("herg")
+else:
+    print("no files detected in auto input; auto input disabled")
