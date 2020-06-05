@@ -17,7 +17,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('type', models.CharField(choices=[('CA', 'CAS RN'), ('IN', 'InChi String'), ('IK', 'InChi Key'), ('SM', 'SMILES')], default='CA', max_length=2)),
-                ('value', models.CharField(default='', max_length=1024)),
+                ('value', models.CharField(default='', max_length=768)),
+                ('source', models.CharField(default='', max_length=64)),
             ],
             options={
                 'db_table': 'identifiers',
@@ -31,7 +32,9 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(default='', max_length=256)),
                 ('formula', models.CharField(default='', max_length=256)),
                 ('molweight', models.FloatField(default=0.0)),
+                ('monomass', models.FloatField(default=0.0)),
                 ('casrn', models.CharField(default='', max_length=16)),
+                ('updated', models.DateTimeField(auto_now=True)),
             ],
             options={
                 'db_table': 'substances',

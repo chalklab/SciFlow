@@ -8,8 +8,10 @@ class Substances(models.Model):
     """ getting data from the substances DB table"""
     name = models.CharField(max_length=256, default='')
     formula = models.CharField(max_length=256, default='')
+    monomass = models.FloatField(default=0.00)
     molweight = models.FloatField(default=0.00)
     casrn = models.CharField(max_length=16, default='')
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
@@ -18,16 +20,25 @@ class Substances(models.Model):
 
 class Identifiers(models.Model):
     """ getting data from the identifiers DB table"""
-    class IDTypes(models.TextChoices):
-        """list of different identifier types"""
-        CASRN = 'CA', 'CAS RN'
-        INCHI = 'IN', 'InChi String'
-        INCHIKEY = 'IK', 'InChi Key'
-        SMILES = 'SM', 'SMILES'
+    CASRN = 'casrn'
+    INCHI = 'inchi'
+    INCHIKEY = 'inchikey'
+    CSMILES = 'csmiles'
+    ISMILES = 'ismiles'
+    CSPR = 'chemspider'
+    PUBCHEM = 'pubchem'
+    INAME = 'iupacname'
+
+    TYPE_CHOICES = [
+        (CASRN, 'CAS Registry Number'),
+        (INCHI, 'IUPAC InChI String'),
+        (INCHIKEY, 'IUPAC InChI Key'),
+    ]
 
     substance = models.ForeignKey(Substances, on_delete=models.CASCADE)
-    type = models.CharField(max_length=2, choices=IDTypes.choices, default=IDTypes.CASRN)
-    value = models.CharField(max_length=1024, default='')
+    type = models.CharField(max_length=2, choices=TYPE_CHOICES, default=CASRN)
+    value = models.CharField(max_length=768, default='')
+    source = models.CharField(max_length=64, default='')
 
     class Meta:
         managed = False
@@ -52,5 +63,3 @@ class Systems(models.Model):
     substance3 = models.ForeignKey(Substances, null=True, related_name='substance3', on_delete=models.CASCADE)
     substance4 = models.ForeignKey(Substances, null=True, related_name='substance4', on_delete=models.CASCADE)
     substance5 = models.ForeignKey(Substances, null=True, related_name='substance5', on_delete=models.CASCADE)
-
-
