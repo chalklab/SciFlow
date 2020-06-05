@@ -6,16 +6,15 @@ from substances.models import Identifiers, Substances
 
 normcheck = {}
 
-def normalize(path, loginfo):
+def normalize(path, compound, target, loginfo):
     try:
-        compound, target = getsystem(path)
         logwrite("act", loginfo, "System:\n\t- Compound: " + str(compound))
         logwrite("act", loginfo, "\t- Target: " + str(target))
         findprofile(path, compound, loginfo)
-        normalizationcheck(path, loginfo)
     except:
         pass
 
+    normalizationcheck(path, loginfo)
     i = 0
     for value in normcheck.values():
         if value is False:
@@ -41,7 +40,7 @@ def getsystem(path):
                         if b == '@id' and c.startswith('target'):
                             target.update({'targetchembl':(a['chembl_id'])})
                         if b == '@id' and c.startswith('compound'):
-                            compound.update({'inchi':(a['identifiers']['standard_inchi_key'])})
+                            compound.update({'inchikey':(a['identifiers']['standard_inchi_key'])})
         if compound:
             return compound, target
 

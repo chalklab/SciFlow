@@ -41,9 +41,9 @@ def ingest(type, auto):
             actloginit("t", loginfo)
 
             if validate(path, type, loginfo) is True: #validate.py
-
-                if normalize(path, loginfo) is True: #normalization.py
-                    updatedb(loginfo) #updatedb.py
+                compound, target = getsystem(path)
+                if normalize(path, compound, target, loginfo) is True: #normalization.py
+                    updatedb(compound, loginfo) #updatedb.py
 
             finalize(path, output, error, loginfo)
 
@@ -59,7 +59,7 @@ def finalize(path, output, error, loginfo):
         i += 1
     except:
         logwrite("act", loginfo, "Status: Success!")
-
+    logwrite("act", loginfo, "----------------------------------")
     #Moves the file
     if i == 0:
         dest = output
