@@ -24,7 +24,7 @@ def getidtype(identifier):
     # is the string a ChEMBL ID?
     p = re.search('^CHEMBL[0-9]+$', identifier)
     if p:
-        return "chembid"
+        return "chemblid"
 
     # is the string a DSSTOX ID?
     q = re.search('^DTXSID[0-9]+$', identifier)
@@ -40,6 +40,7 @@ def getsubdata(identifier):
     pubchem(identifier, meta, ids, descs)
     classyfire(identifier, meta, ids, descs)
     wikidata(identifier, meta, ids, descs)
+    chembl(identifier, meta, ids, descs)
     return meta, ids, descs
 
 

@@ -11,8 +11,9 @@ class Substances(models.Model):
     monomass = models.FloatField(default=0.00)
     molweight = models.FloatField(default=0.00)
     casrn = models.CharField(max_length=16, default='')
+    graphdb = models.CharField(max_length=256, null=True)
+    comments = models.CharField(max_length=256, null=True)
     updated = models.DateTimeField(auto_now=True)
-    graphdb = models.CharField(max_length=256, default='')
 
     class Meta:
         managed = False
@@ -20,7 +21,7 @@ class Substances(models.Model):
 
 
 class Identifiers(models.Model):
-    """ getting data from the identifiers DB table"""
+    """ accessing the identifiers DB table"""
     CASRN = 'casrn'
     INCHI = 'inchi'
     INCHIKEY = 'inchikey'
@@ -29,17 +30,29 @@ class Identifiers(models.Model):
     CSPR = 'chemspider'
     PUBCHEM = 'pubchem'
     INAME = 'iupacname'
-
+    SPRNGR = 'springer'
+    OTHER = 'othername'
+    ATC = 'atc'
+    REAXYS = 'reaxys'
+    GMELIN = 'gmelin'
+    CHEBI = 'chebi'
+    CHEMBL = 'chembl'
+    RTECS = 'rtecs'
+    DSSTOX = 'dsstox'
     TYPE_CHOICES = [
-        (CASRN, 'CAS Registry Number'),
-        (INCHI, 'IUPAC InChI String'),
-        (INCHIKEY, 'IUPAC InChI Key'),
+        (CASRN, 'CAS Registry Number'), (INCHI, 'IUPAC InChI String'), (INCHIKEY, 'IUPAC InChI Key'),
+        (CSMILES, 'Canonical SMILES'), (ISMILES, 'Isomeric SMILES'), (CSPR, 'Chemspider ID'),
+        (PUBCHEM, 'PubChem Compound ID'), (INAME, 'IUPAC Name'), (SPRNGR, 'Springer ID'),
+        (OTHER, 'Other Name'), (ATC, 'ATC Code'), (REAXYS, 'Reaxys ID'),
+        (GMELIN, 'Gmelin ID'), (CHEBI, 'ChEBI ID'), (CHEMBL, 'ChEMBL ID'),
+        (RTECS, 'RTECS ID'), (DSSTOX, 'DSSTOX ID')
     ]
 
     substance = models.ForeignKey(Substances, on_delete=models.CASCADE)
-    type = models.CharField(max_length=8, choices=TYPE_CHOICES, default=CASRN)
+    type = models.CharField(max_length=10, choices=TYPE_CHOICES, default=CASRN)
     value = models.CharField(max_length=768, default='')
     source = models.CharField(max_length=64, default='')
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
@@ -64,5 +77,17 @@ class Systems(models.Model):
     substance3 = models.ForeignKey(Substances, null=True, related_name='substance3', on_delete=models.CASCADE)
     substance4 = models.ForeignKey(Substances, null=True, related_name='substance4', on_delete=models.CASCADE)
     substance5 = models.ForeignKey(Substances, null=True, related_name='substance5', on_delete=models.CASCADE)
+    updated = models.DateTimeField(auto_now=True)
 
 
+class Descriptors(models.Model):
+    """ accessing the descriptors DB table"""
+    substance = models.ForeignKey(Substances, on_delete=models.CASCADE)
+    type = models.CharField(max_length=128, default='')
+    value = models.CharField(max_length=768, default='')
+    source = models.CharField(max_length=64, default='')
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        managed = False
+        db_table = 'descriptors'

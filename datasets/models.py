@@ -8,7 +8,7 @@ class Datasets(models.Model):
     """ getting data from the substances DB table"""
     name = models.CharField(max_length=64, default='')
     source = models.CharField(max_length=64, default='')
-    sourceurl = models.FloatField(default=0.00)
+    sourceurl = models.CharField(max_length=256, default='')
     count = models.IntegerField(default=0)
 
     class Meta:

@@ -3,6 +3,7 @@ import re
 from qwikidata.sparql import *
 from qwikidata.entity import *
 from qwikidata.linked_data_interface import *
+from chembl_webresource_client.new_client import new_client
 
 
 def pubchem(identifier, meta, ids, descs):
@@ -63,29 +64,29 @@ def classyfire(identifier, meta, ids, descs):
             descs["classyfire"]["kingdom"] = str(response['kingdom']["chemont_id"])
             descs["classyfire"]["superclass"] = str(response['superclass']["chemont_id"])
             descs["classyfire"]["class"] = str(response['class']["chemont_id"])
-            descs["classyfire"]["subclass"] = str(response['subclass']["chemont_id"])
-            count = 1
-            for node in response['intermediate_nodes']:
-                descs["classyfire"]["node" + str(count)] = node["chemont_id"]
-                count += 1
+            if response["subclass"] is not None:
+                descs["classyfire"]["subclass"] = str(response['subclass']["chemont_id"])
+            if "node" in response.keys():
+                if response["node"] is not None:
+                    descs["classyfire"]["node"] = []
+                    for node in response['intermediate_nodes']:
+                        descs["classyfire"]["node"].append(node["chemont_id"])
             descs["classyfire"]["direct_parent"] = str(response['direct_parent']["chemont_id"])
-            count = 1
-            for node in response['alternative_parents']:
-                descs["classyfire"]["alt_parent" + str(count)] = node["chemont_id"]
-                count += 1
+            descs["classyfire"]["alternative_parent"] = []
+            for alt in response['alternative_parents']:
+                descs["classyfire"]["alternative_parent"].append(alt["chemont_id"])
         else:
             print('Invalid InChIKey')
             return
-
     else:
         print("Invalid InChIKey")
-
+        return
     return meta, ids, descs
 
 
 def wikidata(identifier, meta, ids, descs):
     """ retreive data from wikidata using the qwikidata python package"""
-    # find wikidata code for a compound based off its inchikey
+    # find wikidata code for a compound based off its inchikey (wdt:P35)
     query1 = "SELECT DISTINCT ?compound "
     query2 = "WHERE { ?compound wdt:P235 \"" + identifier + "\" ."
     query3 = "SERVICE wikibase:label { bd:serviceParam wikibase:language \"en\". } }"
@@ -95,7 +96,6 @@ def wikidata(identifier, meta, ids, descs):
     # TODO add code to get the name of a compound in each language...
 
     # now get all data associated with this wikidata entry
-    # create an item representing "Douglas Adams"
     url = res['results']['bindings'][0]['compound']['value']
     wdid = str(url).replace("http://www.wikidata.org/entity/", "")
 
@@ -104,8 +104,8 @@ def wikidata(identifier, meta, ids, descs):
     # response contains many properties from which we need to grab specific chemical ones...
     ids['wikidata'] = {}
     claims = response['claims']
-    propids = {'casrn': 'P231', 'atc': 'P267', 'inchi': 'P234', 'inchikey': 'P235', 'chemspiderid': 'P661',
-               'pubchemid': 'P662', 'reaxys': 'P1579', 'gmelin': 'P1578', 'chebi': 'P683', 'chembl': 'P592',
+    propids = {'casrn': 'P231', 'atc': 'P267', 'inchi': 'P234', 'inchikey': 'P235', 'chemspider': 'P661',
+               'pubchem': 'P662', 'reaxys': 'P1579', 'gmelin': 'P1578', 'chebi': 'P683', 'chembl': 'P592',
                'rtecs': 'P657', 'dsstox': 'P3117'}
     vals = list(propids.values())
     keys = list(propids.keys())
@@ -119,13 +119,75 @@ def wikidata(identifier, meta, ids, descs):
     # get aggregated names/tradenames for this compound
     cdict = get_entity_dict_from_api(wdid)
     cmpd = WikidataItem(cdict)
+    ids['wikidata']['othername'] = []
+    aliases = cmpd.get_aliases()
+    aliases = list(set(aliases))  # deduplicate
+    for alias in aliases:
+        ids['wikidata']['othername'].append(alias)
+    ids['wikidata']['othername'] = list(set(ids['wikidata']['othername']))
+    return meta, ids, descs
 
-    count = 1
-    names = cmpd.get_aliases()
-    for name in names:
-        ids['wikidata']['name' + str(count)] = name
-        count += 1
 
+def chembl(identifier, meta, ids, descs):
+    """ retrieve data from the ChEMBL repository"""
+    # uses chembl_webresource_client
+    molecule = new_client.molecule
+    response = molecule.search(identifier)
+    cmpd = response[0]
+
+    # general metadata
+    meta['chembl'] = {}
+    mprops = ['full_molformula', 'full_mwt', 'mw_freebase', 'mw_monoisotopic']
+    for k, v in cmpd['molecule_properties'].items():
+        if k in mprops:
+            meta['chembl'].update({k: v})
+
+    # identifiers
+    ids['chembl'] = {}
+    # - molecule structures ('canonical smiles' is actually 'isomeric canonical smiles'
+    exclude = ['molfile']
+    rename = {'canonical_smiles': 'ismiles', 'standard_inchi': 'inchi', 'standard_inchi_key': 'inchikey'}
+    for k, v in cmpd['molecule_structures'].items():
+        if k not in exclude:
+            ids['chembl'].update({rename[k]: v})
+    # - molecule synonyms
+    syntypes = []
+    for syn in cmpd['molecule_synonyms']:
+        syntype = syn['syn_type'].lower()
+        syntypes.append(syntype)
+        if syntype not in ids['chembl'].keys():
+            ids['chembl'][syntype] = []
+        ids['chembl'][syntype].append(syn['molecule_synonym'])
+    #   deduplicate entries for synonym types
+    syntypes = set(list(syntypes))
+    for syntype in syntypes:
+        ids['chembl'][syntype] = list(set(ids['chembl'][syntype]))
+    # descriptors
+    descs['chembl'] = {}
+    # - atc
+    descs['chembl'].update(actlvl1=[], actlvl2=[], actlvl3=[], actlvl4=[], actlvl5=[])
+    for c in cmpd['atc_classifications']:
+        descs['chembl']['actlvl1'].append(c[0:1])
+        descs['chembl']['actlvl2'].append(c[0:3])
+        descs['chembl']['actlvl3'].append(c[0:4])
+        descs['chembl']['actlvl4'].append(c[0:5])
+        descs['chembl']['actlvl5'].append(c)
+    descs['chembl']['actlvl1'] = list(set(descs['chembl']['actlvl1']))
+    descs['chembl']['actlvl2'] = list(set(descs['chembl']['actlvl2']))
+    descs['chembl']['actlvl3'] = list(set(descs['chembl']['actlvl3']))
+    descs['chembl']['actlvl4'] = list(set(descs['chembl']['actlvl4']))
+    descs['chembl']['actlvl5'] = list(set(descs['chembl']['actlvl5']))
+    # - molecule properties
+    for k, v in cmpd['molecule_properties'].items():
+        if k not in mprops:
+            if v is not None:
+                descs['chembl'].update({k: v})
+    # - other fields
+    dflds = ['chirality', 'dosed_ingredient', 'indication_class', 'inorganic_flag', 'max_phase', 'molecule_type',
+             'natural_product', 'polymer_flag', 'structure_type', 'therapeutic_flag']
+    for fld in dflds:
+        if cmpd[fld] is not None:
+            descs['chembl'].update({fld: cmpd[fld]})
     return meta, ids, descs
 
 

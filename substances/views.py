@@ -1,9 +1,8 @@
 """imports"""
 from django.shortcuts import render
-from django.utils import timezone
-from .models import Substances
-from .models import Identifiers
-from .models import Systems
+from django.shortcuts import redirect
+from .models import *
+from .actions import *
 from .functions import *
 
 
@@ -26,41 +25,27 @@ def view(request, subid):
     """present an overview page about the substance in sciflow"""
     substance = Substances.objects.get(id=subid)
     ids = substance.identifiers_set.all()
-    # ids = Identifiers.objects.all().filter(substance_id=subid)
-    return render(request, "substances/view.html", {'substance': substance, "ids": ids})
+    descs = substance.descriptors_set.all()
+    if not descs:
+        key = ""
+        for i in ids:
+            if i.type == 'inchikey':
+                key = i.value
+                break
+        m, i, descs = getsubdata(key)
+        savedescs(subid, descs)
+    return render(request, "substances/view.html", {'substance': substance, "ids": ids, "descs": descs})
 
 
 def add(request, identifier):
     """ check the identifier to see if compound alredy in system and if not add """
-
     # id the compound in the database?
     hits = Substances.objects.all().filter(identifiers__value__exact=identifier).count()
-    idtype = getidtype(identifier)
-    meta, ids, descs = {}, {}, {}
     if hits == 0:
-        if idtype == "other" or idtype == "casrn" or idtype == "smiles":
-            # check pubchem for this string
-            key = pubchemkey(identifier)
-
-        meta, ids, descs = getsubdata(key)
-        # save metadata to the substances table
-        nm = ids['pubchem']['iupacname']
-        fm = meta['pubchem']['formula']
-        mw = meta['pubchem']['mw']
-        mm = meta['pubchem']['mim']
-        cn = ids['wikidata']['casrn']
-        sub = Substances(name=nm, formula=fm, molweight=mw, monomass=mm, casrn=cn)
-        sub.save()
-        subid = sub.id
-        # save ids to the identifiers table
-        for k, v in ids['pubchem'].items():
-            ident = Identifiers(substance_id=subid, type=key, value=v, source='pubchem')
-            ident.save()
-
-        # save descs
-
+        meta, ids, descs = addsubstance(identifier)
     else:
-        alldata = {}
+        subid = getsubid(identifier)
+        return redirect("/substances/view/" + str(subid))
 
     return render(request, "substances/add.html",
-                  {"hits": hits, "idtype": idtype, "meta": meta, "ids": ids, "descs": descs})
+                  {"hits": hits, "meta": meta, "ids": ids, "descs": descs})

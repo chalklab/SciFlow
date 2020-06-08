@@ -16,4 +16,9 @@
         <li>{{ id.type }}: {{ id.value }}</li>
     {% endfor %}
     </ul>
-{% endblock %}
+    <h5>Descriptors</h5>
+    <ul>
+    {% for desc in descs %}
+        <li>{{ desc.type }}: {{ desc.value }}</li>
+    {% endfor %}
+    </ul>{% endblock %}
