@@ -38,7 +38,7 @@ def ingest(type, auto):
                 "logname":now + filename.split(".")[0],
              }
             # "t" prints to the terminal, "f" will print to a file
-            actloginit("t", loginfo)
+            actloginit("f", loginfo)
 
             if validate(path, type, loginfo) is True: #validate.py
                 compound, target = getsystem(path)
@@ -55,7 +55,9 @@ def finalize(path, output, error, loginfo):
     i = 0
     try:
         open(logname, "r")
+        logname.close()
         logwrite("act", loginfo, "Status: Failed!")
+        slack.files.upload(logname)
         i += 1
     except:
         logwrite("act", loginfo, "Status: Success!")

@@ -7,9 +7,10 @@ from substances.models import Identifiers, Substances
 normcheck = {}
 
 def normalize(path, compound, target, loginfo):
+    logwrite("act", loginfo, "System:")
     try:
-        logwrite("act", loginfo, "System:\n\t- Compound: " + str(compound))
-        logwrite("act", loginfo, "\t- Target: " + str(target))
+        logwrite("act", loginfo, "\t- Compound: " + str(compound))
+        logwrite("act", loginfo, "\t- Target: " + str(target)+"\n")
         findprofile(path, compound, loginfo)
     except:
         pass

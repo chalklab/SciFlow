@@ -19,7 +19,10 @@ def addsubstance(identifier):
     fm = meta['pubchem']['formula']
     mw = meta['pubchem']['mw']
     mm = meta['pubchem']['mim']
-    cn = ids['wikidata']['casrn']
+    try:
+        cn = ids['wikidata']['casrn']
+    except Exception as ex:
+        cn = None
     sub = Substances(name=nm, formula=fm, molweight=mw, monomass=mm, casrn=cn)
     sub.save()
     subid = sub.id

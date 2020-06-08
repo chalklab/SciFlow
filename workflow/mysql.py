@@ -25,17 +25,3 @@ def createSubstance(inchikey, name, formula):
     Substances.objects.create(name=name, formula=formula)
     subid = Substances.objects.get(name=name, formula=formula).id
     Identifiers.objects.create(substance_id=subid, type="inchikey", value=inchikey)
-
-def populateSubstance(inchikey):
-    name = "name"
-    formula = "formula"
-    createSubstance(inchikey, name, formula)
-    identifiers = {}
-    casrn = "casrn"
-    pubchem = "pubchem"
-    iupacname = "iupacname"
-    inchi = "inchi"
-    chemspider = "chemspider"
-    csmiles = "csmiles"
-    for k, v in identifiers:
-        addIdentifier(inchi, k, v)

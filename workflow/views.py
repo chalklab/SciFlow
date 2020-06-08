@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 from .ingestion import*
@@ -46,6 +47,5 @@ def ingestionresults(response):
     if(response.POST.get('cif')):
         ingest("herg", "m")
         return redirect('/ingestion/results')
-
 
     return render(response, 'workflow/ingestionresults.html', {"herginputfiles":herginputfiles, "cifinputfiles":cifinputfiles, "hergoutputfiles":hergoutputfiles, "cifoutputfiles":cifoutputfiles, "hergerrorfiles":hergerrorfiles, "ciferrorfiles":ciferrorfiles,})
