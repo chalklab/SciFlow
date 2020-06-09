@@ -12,13 +12,14 @@ def validate(path, type, loginfo):
     validity = {}
     #runs a check to make sure the file is in proper scidata format
     validatescidata(path)
+    logwrite("act", loginfo, "Validity:")
     if validatescidata(path) is True:
         isscidata = True
-        logwrite("act", loginfo, "Validity:\n\t- Scidata: Valid")
+        logwrite("act", loginfo, "\t- Scidata: Valid")
     else:
         isscidata = False
         logwrite("err", loginfo, "- Invalid Scidata Format!\n")
-        logwrite("act", loginfo, "Validity:\n\t- Scidata: Invalid!")
+        logwrite("act", loginfo, "\t- Scidata: Invalid!")
     validity.update({"isscidata":isscidata})
 
     #Specialized checks for each dataset type
