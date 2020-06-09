@@ -165,18 +165,19 @@ def chembl(identifier, meta, ids, descs):
     # descriptors
     descs['chembl'] = {}
     # - atc
-    descs['chembl'].update(actlvl1=[], actlvl2=[], actlvl3=[], actlvl4=[], actlvl5=[])
-    for c in cmpd['atc_classifications']:
-        descs['chembl']['actlvl1'].append(c[0:1])
-        descs['chembl']['actlvl2'].append(c[0:3])
-        descs['chembl']['actlvl3'].append(c[0:4])
-        descs['chembl']['actlvl4'].append(c[0:5])
-        descs['chembl']['actlvl5'].append(c)
-    descs['chembl']['actlvl1'] = list(set(descs['chembl']['actlvl1']))
-    descs['chembl']['actlvl2'] = list(set(descs['chembl']['actlvl2']))
-    descs['chembl']['actlvl3'] = list(set(descs['chembl']['actlvl3']))
-    descs['chembl']['actlvl4'] = list(set(descs['chembl']['actlvl4']))
-    descs['chembl']['actlvl5'] = list(set(descs['chembl']['actlvl5']))
+    if cmpd['atc_classifications']:
+        descs['chembl'].update(actlvl1=[], actlvl2=[], actlvl3=[], actlvl4=[], actlvl5=[])
+        for c in cmpd['atc_classifications']:
+            descs['chembl']['actlvl1'].append(c[0:1])
+            descs['chembl']['actlvl2'].append(c[0:3])
+            descs['chembl']['actlvl3'].append(c[0:4])
+            descs['chembl']['actlvl4'].append(c[0:5])
+            descs['chembl']['actlvl5'].append(c)
+        descs['chembl']['actlvl1'] = list(set(descs['chembl']['actlvl1']))
+        descs['chembl']['actlvl2'] = list(set(descs['chembl']['actlvl2']))
+        descs['chembl']['actlvl3'] = list(set(descs['chembl']['actlvl3']))
+        descs['chembl']['actlvl4'] = list(set(descs['chembl']['actlvl4']))
+        descs['chembl']['actlvl5'] = list(set(descs['chembl']['actlvl5']))
     # - molecule properties
     for k, v in cmpd['molecule_properties'].items():
         if k not in mprops:
@@ -200,7 +201,7 @@ def pubchemsyns(identifier):
     syns = response["InformationList"]["Information"][0]["Synonym"]
     inchikey = ""
     for k in syns:
-        m = re.search('[A-Z]{14}-[A-Z]{10}-[A-Z]', k)
+        m = re.search('^[A-Z]{14}-[A-Z]{10}-[A-Z]$', k)
         if m:
             inchikey = k
 

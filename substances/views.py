@@ -8,7 +8,7 @@ from .functions import *
 
 def home(request):
     """view to generare list of substances on homepage"""
-    substances = Substances.objects.all().filter(name__contains='benzene').order_by('name')
+    substances = Substances.objects.all().order_by('name')
     return render(request, "substances/home.html", {'substances': substances})
 
 
