@@ -4,11 +4,6 @@
 {% block header %} Substance {% endblock %}
 
 {% block content %}
-    <ul>
-        <li>hits: {{ hits }}</li>
-        <li>idtype: {{ idtype }}</li>
-    </ul>
-
     <h3>Metadata</h3>
     <ul>
         {% for key, item in meta.items %}
