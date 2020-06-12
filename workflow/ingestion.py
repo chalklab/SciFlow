@@ -1,86 +1,85 @@
-import pathlib
-import shutil
-from .validation import*
-from .normalization import*
-from .logwriter import*
-from .updatedb import*
-from .ingestiondir import*
+import os
 import time
+from datetime import datetime
+import shutil
+from .validation import *
+from .normalization import *
+from .logwriter import logwrite, logprint
+from .updatedb import *
+from .ingestiondir import *
 
 
 
-#functions
-def getfiles(folder, dict):
+# functions
+def getfiles(folder, dirdict):
     for file in folder.iterdir():
         if str(file).endswith('.jsonld'):
             filename = str(file).split("\\")[-1]
-            dict.update({filename:filename})
+            dirdict.update({filename: filename})
 
 
-#ingestion script
-def ingest(type, auto):
+# ingestion script
+def ingest(filetype, auto):
     if auto == "a":
-        input = pathlib.Path(root_path+'/'+type+'/00 '+type+' auto input')
+        inputdir = pathlib.Path(root_path+'/'+filetype+'/00 '+filetype+' auto input')
     if auto == "m":
-        input = pathlib.Path(root_path+'/'+type+'/01 '+type+' input')
-    output = pathlib.Path(root_path+'/'+type+'/02 '+type+' output')
-    error = pathlib.Path(root_path+'/'+type+'/03 '+type+' error')
+        inputdir = pathlib.Path(root_path+'/'+filetype+'/01 '+filetype+' input')
+    outputdir = pathlib.Path(root_path+'/'+filetype+'/02 '+filetype+' output')
+    errordir = pathlib.Path(root_path+'/'+filetype+'/03 '+filetype+' error')
 
-
-    for file in input.iterdir():
+    for file in inputdir.iterdir():
+        now = datetime.today().strftime('%Y%m%d_%H%M%S-')
         if str(file).endswith('.jsonld'):
             path = str(file)
             filename = str(file).split("\\")[-1]
 
             loginfo = {
-                "errlogdir":str(root_path+'/'+type+'/04 '+type+' log'),
-                "actlogdir":str(root_path+'/activitylogs'),
-                "logname":now + filename.split(".")[0],
+                "errlogdir": str(root_path+'/'+filetype+'/04 '+filetype+' log'),
+                "actlogdir": str(root_path+'/activitylogs'),
+                "logname": now + filename.split(".")[0],
              }
-            # "t" prints to the terminal, "f" will print to a file
-            actloginit("f", loginfo)
-
-            if validate(path, type, loginfo) is True: #validate.py
+            actloginit(loginfo)
+            if validate(path, filetype, loginfo) is True:  # validate.py
                 compound, target = getsystem(path)
-                if normalize(path, compound, target, loginfo) is True: #normalization.py
-                    updatedb(compound, loginfo) #updatedb.py
+                if normalize(path, compound, target, loginfo) is True:  # normalization.py
+                    updatedb(compound, loginfo)  # updatedb.py
 
-            finalize(path, output, error, loginfo)
+            finalize(path, outputdir, errordir, loginfo)
 
 
-#finalizes the ingestion, determining whether it was successful, and moving the file
-def finalize(path, output, error, loginfo):
-    #Detemines whether the ingestion was successful or not
+# finalizes the ingestion, determining whether it was successful, and moving the file
+def finalize(path, outputdir, errordir, loginfo):
+    # Detemines whether the ingestion was successful or not
     logname = loginfo["errlogdir"]+'/'+loginfo["logname"]+'.txt'
     i = 0
     try:
-        open(logname, "r")
-        logname.close()
+        file = open(logname, "r")
+        file.close()
         logwrite("act", loginfo, "Status: Failed!")
-        slack.files.upload(logname)
         i += 1
     except:
         logwrite("act", loginfo, "Status: Success!")
-    logwrite("act", loginfo, "----------------------------------")
-    #Moves the file
+    logprint(loginfo)
+    # Moves the file
     if i == 0:
-        dest = output
-        #shutil.move(path, dest)
+        dest = outputdir
+        # shutil.move(path, dest)
     else:
-        dest = error
-        #shutil.move(path, dest)
+        dest = errordir
+        # shutil.move(path, dest)
 
 
-def autoingest(type):
+def autoingest(filetype):
     try:
-        ingest(type, "a")
+        ingest(filetype, "a")
     except:
         pass
     wait(type)
 
-def wait(type):
+
+def wait(filetype):
     time.sleep(10)
-    autoingest(type)
+    autoingest(filetype)
 
 autodir = os.listdir(hergautoinput)
 if len(autodir) > 1:

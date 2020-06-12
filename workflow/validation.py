@@ -1,16 +1,14 @@
 # from .ingestion import *
-from .logwriter import*
+from .logwriter import *
 import json
 # import jsonschema
 # from jsonschema import validate
-import os
 
 
-
-#all-in-one validation function. Includes every check that we would want to do on a file.
-def validate(path, type, loginfo):
+# all-in-one validation function. Includes every check that we would want to do on a file.
+def validate(path, filetype, loginfo):
     validity = {}
-    #runs a check to make sure the file is in proper scidata format
+    # runs a check to make sure the file is in proper scidata format
     validatescidata(path)
     logwrite("act", loginfo, "Validity:")
     if validatescidata(path) is True:
@@ -20,15 +18,15 @@ def validate(path, type, loginfo):
         isscidata = False
         logwrite("err", loginfo, "- Invalid Scidata Format!\n")
         logwrite("act", loginfo, "\t- Scidata: Invalid!")
-    validity.update({"isscidata":isscidata})
+    validity.update({"isscidata": isscidata})
 
-    #Specialized checks for each dataset type
-    if type == "herg":
+    # Specialized checks for each dataset type
+    if filetype == "herg":
         hergcheck(path, validity, loginfo)
-    if type == "cif":
+    if filetype == "cif":
         cifcheck(path, validity, loginfo)
 
-    #Validity Check
+    # Validity Check
     i = 0
     for value in validity.values():
         if value is False:
@@ -38,9 +36,6 @@ def validate(path, type, loginfo):
         return True
     else:
         return False
-
-
-
 
 
 def validatescidata(path):
@@ -66,8 +61,7 @@ def validatescidata(path):
         return False
 
 
-
-#Specialized checks for each dataset type
+# Specialized checks for each dataset type
 def hergcheck(path, validity, loginfo):
     """ check that this is a herg file"""
     searchfile = open(path)

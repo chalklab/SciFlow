@@ -11,4 +11,4 @@ def add(file):
     print(r)
 
 
-add("https://stuchalk.github.io/scidata/examples/cif/1000118.jsonld")
+# add("https://stuchalk.github.io/scidata/examples/cif/1000118.jsonld")

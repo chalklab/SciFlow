@@ -1,14 +1,14 @@
-from .validation import*
-from .ingestion import*
-from .logwriter import*
-from .mysql import*
+from .validation import *
+from .logwriter import logwrite
+from .mysql import *
 
-#function to attempt to push things to the mysql and graph databases. If either fail, the update is reverted to prevent inconsistencies.
+
+# function to attempt to push things to the mysql and graph databases. If either fail, the update is reverted to prevent inconsistencies.
 def updatedb(compound, loginfo):
     updatemysql(compound)
     try:
         updategraphdb()
-        #updatemysql(compound)
+        # updatemysql(compound)
         logwrite("act", loginfo, "Update: Valid\n")
     except:
         logwrite("act", loginfo, "Update: Invalid!\n")
@@ -17,7 +17,6 @@ def updatedb(compound, loginfo):
 
 def updategraphdb():
     print("")
-
 
 
 def updatemysql(compound):
