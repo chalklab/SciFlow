@@ -13,17 +13,18 @@ cifoutputfiles = {}
 ciferrorfiles = {}
 
 def ingestion(response):
+    user = response.user
     getfiles(herginput, herginputfiles)
     getfiles(cifinput, cifinputfiles)
 
     #herg submit button press:
     if(response.POST.get('herg')):
-        ingest("herg", "m")
+        ingest("herg", "m", user)
         return redirect('/ingestion/results')
 
     #cif submit button press:
     if(response.POST.get('cif')):
-        ingest("cif", "m")
+        ingest("cif", "m", user)
         return redirect('/ingestion/results')
 
     return render(response, 'workflow/ingestion.html', {"herginputfiles":herginputfiles, "cifinputfiles":cifinputfiles})
@@ -31,6 +32,7 @@ def ingestion(response):
 
 #Sciflow Ingestion Results
 def ingestionresults(response):
+    user = response.user
     getfiles(herginput, herginputfiles)
     getfiles(hergoutput, hergoutputfiles)
     getfiles(hergerror, hergerrorfiles)
@@ -40,12 +42,12 @@ def ingestionresults(response):
 
     #herg submit button press:
     if(response.POST.get('herg')):
-        ingest("herg", "m")
+        ingest("herg", "m", user)
         return redirect('/ingestion/results')
 
     #cif submit button press:
     if(response.POST.get('cif')):
-        ingest("herg", "m")
+        ingest("herg", "m", user)
         return redirect('/ingestion/results')
 
     return render(response, 'workflow/ingestionresults.html', {"herginputfiles":herginputfiles, "cifinputfiles":cifinputfiles, "hergoutputfiles":hergoutputfiles, "cifoutputfiles":cifoutputfiles, "hergerrorfiles":hergerrorfiles, "ciferrorfiles":ciferrorfiles,})

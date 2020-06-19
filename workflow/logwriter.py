@@ -18,6 +18,7 @@ def actloginit(loginfo):
     actlog = open(loginfo["actlogdir"]+'/'+loginfo["logname"]+'.txt', "w+")
     actlog.write("-----------Activity Log-----------\n")
     actlog.write("Filename: " + loginfo["logname"].split("-")[1] + "\n")
+
     actlog.close()
     # slack.chat.post_message('#workflow-updates', "Filename: " + loginfo["logname"].split("-")[1])
 

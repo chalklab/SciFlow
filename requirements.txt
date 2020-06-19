@@ -7,6 +7,7 @@ certifi==2020.4.5.2
 chardet==3.0.4
 chembl-webresource-client==0.10.2
 Django==3.0.7
+django-crispy==1.8.1
 docutils==0.16
 easydict==1.9
 httplib2==0.18.1
@@ -47,4 +48,4 @@ uritemplate==3.0.1
 urllib3==1.25.9
 
 mysql~=0.0.2
-slacker~=0.9.65
+slacker~=0.14.0

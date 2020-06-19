@@ -9,7 +9,6 @@ from .updatedb import *
 from .ingestiondir import *
 
 
-
 # functions
 def getfiles(folder, dirdict):
     for file in folder.iterdir():
@@ -19,7 +18,7 @@ def getfiles(folder, dirdict):
 
 
 # ingestion script
-def ingest(filetype, auto):
+def ingest(filetype, auto, user):
     if auto == "a":
         inputdir = pathlib.Path(root_path+'/'+filetype+'/00 '+filetype+' auto input')
     if auto == "m":
@@ -39,6 +38,7 @@ def ingest(filetype, auto):
                 "logname": now + filename.split(".")[0],
              }
             actloginit(loginfo)
+            logwrite("act", loginfo, "User: " + str(user))
             if validate(path, filetype, loginfo) is True:  # validate.py
                 compound, target = getsystem(path)
                 if normalize(path, compound, target, loginfo) is True:  # normalization.py
