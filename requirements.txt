@@ -1,5 +1,5 @@
 alabaster==0.7.12
-asgiref==3.2.7
+asgiref==3.2.10
 attrs==19.3.0
 Babel==2.8.0
 cachetools==4.1.0
@@ -30,13 +30,14 @@ pyrsistent==0.16.0
 pytz==2020.1
 PyYAML==5.3.1
 qwikidata==0.4.0
-requests==2.23.0
+requests==2.24.0
 requests-cache==0.5.2
 requests-oauthlib==1.3.0
-rsa==4.0
+rsa==4.6
 six==1.15.0
+slacker==0.14.0
 snowballstemmer==2.0.0
-Sphinx==3.1.0
+Sphinx==3.1.1
 sphinxcontrib-applehelp==1.0.2
 sphinxcontrib-devhelp==1.0.2
 sphinxcontrib-htmlhelp==1.0.3
@@ -46,6 +47,3 @@ sphinxcontrib-serializinghtml==1.1.4
 sqlparse==0.3.1
 uritemplate==3.0.1
 urllib3==1.25.9
-
-mysql~=0.0.2
-slacker~=0.14.0
