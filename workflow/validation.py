@@ -1,50 +1,53 @@
-# from .ingestion import *
+""" validation of SciData JSON-LD files """
+from datasets.mysql import *
 from .logwriter import *
 import json
-# import jsonschema
-# from jsonschema import validate
 
 
-# all-in-one validation function. Includes every check that we would want to do on a file.
 def validate(path, filetype, loginfo):
+    """ all-in-one validation function. Includes every check that we would want to do on a file m"""
+
     validity = {}
+
     # runs a check to make sure the file is in proper scidata format
-    validatescidata(path)
-    logwrite("act", loginfo, "Validity:")
-    if validatescidata(path) is True:
-        isscidata = True
-        logwrite("act", loginfo, "\t- Scidata: Valid")
-    else:
-        isscidata = False
-        logwrite("err", loginfo, "- Invalid Scidata Format!\n")
-        logwrite("act", loginfo, "\t- Scidata: Invalid!")
-    validity.update({"isscidata": isscidata})
+    check_scidata(path, validity, loginfo)
 
     # Specialized checks for each dataset type
-    if filetype == "herg":
-        hergcheck(path, validity, loginfo)
-    if filetype == "cif":
-        cifcheck(path, validity, loginfo)
+    searchstrings = getcodesnames()
+    string = searchstrings[filetype]
+    check_type(path, validity, loginfo, filetype, string)
 
     # Validity Check
-    i = 0
-    for value in validity.values():
-        if value is False:
-            i += 1
-
-    if i == 0:
+    if all(validity.values()):
         return True
     else:
         return False
 
+    # if filetype == "herg":
+    #     hergcheck(path, validity, loginfo)
+    # if filetype == "cif":
+    #    cifcheck(path, validity, loginfo)
 
-def validatescidata(path):
-    """ validation script """
+    # i = 0
+    # for value in validity.values():
+    #     if value is False:
+    #         i += 1
+    #         break
+    #
+    # if i == 0:
+    #     return True
+    # else:
+    #     return False
+
+
+def check_scidata(path, validity, loginfo):
+    """ checks that file is present, is valid json, and conforms to the SciData specification """
     try:
         with open(path) as json_file:
             data = json.load(json_file)
             keys_a = []
             keys_b = []
+            isscidata = True
             for k, v in data.items():
                 keys_a.append(k)
                 if k == '@graph':
@@ -52,16 +55,39 @@ def validatescidata(path):
                         keys_b.append(y)
             for y in ['@context', '@id', '@graph']:
                 if y not in keys_a:
-                    return False
+                    isscidata = False
             for y in ['scidata']:
                 if y not in keys_b:
-                    return False
-            return True
-    except Exception as ex:
-        return False
+                    isscidata = False
+            # write to logs
+            if isscidata is True:
+                logwrite("act", loginfo, "\t- Scidata: Valid")
+            else:
+                logwrite("act", loginfo, "\t- Scidata: Invalid!")
+                logwrite("err", loginfo, "- Invalid Scidata Format!\n")
+            # update validity
+            validity.update({"isscidata": isscidata})
+    except FileNotFoundError as ex:
+        logwrite("err", loginfo, str(ex) + "\n")
+        validity.update({"validfile": False})
 
 
-# Specialized checks for each dataset type
+def check_type(path, validity, loginfo, filetype, string):
+    """ generic function to check for a specific type of SciData file. assumes that scidata check has been done """
+    found = False
+    with open(path) as file:
+        if string in file.read():
+            found = True
+    if found:
+        logwrite("act", loginfo, "\t- " + filetype + ": Valid\n")
+    else:
+        logwrite("act", loginfo, "\t- " + filetype + ": Invalid!\n")
+        logwrite("err", loginfo, "- " + " not found!\n")
+
+    validity.update({"is" + filetype: found})
+
+
+# not needed
 def hergcheck(path, validity, loginfo):
     """ check that this is a herg file"""
     searchfile = open(path)
@@ -87,7 +113,8 @@ def hergcheck(path, validity, loginfo):
     searchfile.close()
 
 
-def cifcheck(path, validity, loginfo):
+# not needed
+def cifcheck(path):
     """ check that this is a CIF file"""
     searchfile = open(path)
     i = 0

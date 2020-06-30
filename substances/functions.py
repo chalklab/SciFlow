@@ -1,6 +1,42 @@
 """ functions for use with the substances and related tables..."""
-import re
 from .sources import *
+from .mysql import *
+from sciflow.settings_local import gdrive
+from crosswalks.models import *
+from datetime import datetime
+import json
+import os
+
+
+def addsubstance(identifier):
+    """ add a new substance to the database and populate identifiers and descriptors """
+    idtype = getidtype(identifier)
+    key = identifier
+    if idtype != "inchikey":
+        # check pubchem for this string
+        key = pubchemkey(identifier)
+
+    meta, ids, descs = getsubdata(key)
+    # save metadata to the substances table
+    nm = ids['pubchem']['iupacname']
+    fm = meta['pubchem']['formula']
+    mw = meta['pubchem']['mw']
+    mm = meta['pubchem']['mim']
+    try:
+        cn = ids['wikidata']['casrn']
+    except IndexError:
+        cn = None
+    sub = Substances(name=nm, formula=fm, molweight=mw, monomass=mm, casrn=cn)
+    sub.save()
+    subid = sub.id
+
+    # save ids to the identifiers table
+    saveids(subid, ids)
+
+    # save descs to the descriptors table
+    savedescs(subid, descs)
+
+    return meta, ids, descs
 
 
 def getidtype(identifier):
@@ -48,3 +84,134 @@ def pubchemkey(identifier):
     """ searches PubChem for compound inchikey """
     inchikey = pubchemsyns(identifier)
     return inchikey
+
+
+def createsubjld(identifier):
+    """ create a SciData JSON-LD file for a compound, ingest in the graph and update DB with graph location """
+
+    # get the substance template file from the database
+    tmpl = Templates.objects.get(type="compound")
+    sd = json.loads(tmpl.json)
+    cmpd = sd['@graph']['scidata']['system']['facets'][0]
+
+    # get the metadata fields from the database that needs to be included in the file
+    fields = Metadata.objects.filter(sdsubsection="compound")
+
+    # get the substance info (metadata, identifiers, descriptors)
+    subid = getsubid(identifier)
+    substance = Substances.objects.get(id=subid)
+    ids = dict(substance.identifiers_set.all().values_list('type', 'value'))
+    descs = substance.descriptors_set.all().values_list('type', 'value')
+
+    # add general metadata
+    sd['@graph']['title'] = "Substance SciData JSON-LD file for " + substance.name
+    sd['@graph']['starttime'] = str(datetime.now())
+
+    # add general compound metadata
+    cmpd['name'] = substance.name
+    cmpd['formula'] = substance.formula
+    cmpd['molweight'] = substance.molweight
+    cmpd['monoisotopicmass'] = substance.monomass
+
+    # loop through fields to add them to the appropriate sections
+    for field in fields:
+        label = field.label
+        section = field.sdsubsubsection
+        value = []
+        if section == 'identifiers':
+            # if identifier is inchikey then populate other locations in json file
+            value = get_item(ids, label)
+            if label == 'inchikey':
+                base = sd['@context'][3]['@base'].replace('<inchikey>', value)
+                sd['@context'][3]['@base'] = base
+                sd['@id'] = base
+                sd['@graph']['permalink'] = base
+                uid = sd['@graph']['uid'].replace('<inchikey>', value)
+                sd['@graph']['uid'] = uid
+        elif section == 'descriptors':
+            if field.group is None:
+                # expecting only one value in list
+                vlst = get_items(descs, label)
+                if len(vlst) == 1:
+                    value = vlst[0]
+                else:
+                    value = vlst
+            else:
+                gflds = field.group.split(',')
+                for gfld in gflds:
+                    vlst = get_items(descs, gfld)
+                    if vlst is not None:
+                        for val in vlst:
+                            if field.datatype == "xsd:string":
+                                value.append(val)
+                            elif field.datatype == "xsd:integer" or field.datatype == "xsd:nonNegativeInteger":
+                                value.append(int(val))
+
+        # add field to cmpd
+        if field.output == "datum":
+            cmpd[section].update({label: value})
+        elif field.output == "array":
+            cmpd[section][label] = value
+
+    # TODO add molecular graph
+
+    # add compound data into sd file
+    sd['@graph']['scidata']['system']['facets'][0] = cmpd
+
+    # save file
+    filename = identifier + '.jsonld'
+    filepath = os.path.join(gdrive, 'tmp', filename)
+    with open(filepath, 'w') as outfile:
+        json.dump(sd, outfile)
+        outfile.close()
+        os.chmod(filepath, 0o777)
+    try:
+        f = open(filepath)
+        f.close()
+        # TODO add logging here
+    except FileNotFoundError as fnf_error:
+        print(fnf_error)  # TODO add logging here
+        return False
+    return filename
+
+
+def get_item(d, key):
+    """ extracts the value of dictionary using the key variable for the field name """
+    return d.get(key)
+
+
+def get_items(tpls, key):
+    """ extracts values from tuples where the first value is equal to the key """
+    lst = []
+    for tpl in tpls:
+        if tpl[0] == key:
+            lst.append(tpl[1])
+    return lst
+
+
+def saveids(subid, ids):
+    """ save identifier metadata """
+    for source, e in ids.items():
+        for k, v in e.items():
+            # check if value is list or string
+            if isinstance(v, list):
+                for x in v:
+                    ident = Identifiers(substance_id=subid, type=k, value=x, source=source)
+                    ident.save()
+            else:
+                ident = Identifiers(substance_id=subid, type=k, value=v, source=source)
+                ident.save()
+
+
+def savedescs(subid, descs):
+    """ save descriptor metadata """
+    for source, e in descs.items():
+        for k, v in e.items():
+            # check if value is list or string
+            if isinstance(v, list):
+                for x in v:
+                    desc = Descriptors(substance_id=subid, type=k, value=x, source=source)
+                    desc.save()
+            else:
+                desc = Descriptors(substance_id=subid, type=k, value=v, source=source)
+                desc.save()

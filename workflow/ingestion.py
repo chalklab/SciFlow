@@ -1,24 +1,25 @@
+""" ingestion functions """
+from .normalization import *
+from .updatedb import *
+from .settings import *
+from datetime import datetime
 import os
 import time
-from datetime import datetime
 import shutil
-from .validation import *
-from .normalization import *
-from .logwriter import logwrite, logprint
-from .updatedb import *
-from .ingestiondir import *
+import platform
 
 
-# functions
 def getfiles(folder, dirdict):
+    """ get a list of files in a folder """
     for file in folder.iterdir():
         if str(file).endswith('.jsonld'):
             filename = str(file).split("\\")[-1]
             dirdict.update({filename: filename})
 
 
-# ingestion script
 def ingest(filetype, auto, user):
+    """ ingest SciData JSON-LD file """
+    inputdir = ""  # initialize variable
     if auto == "a":
         inputdir = pathlib.Path(root_path+'/'+filetype+'/00 '+filetype+' auto input')
     if auto == "m":
@@ -30,8 +31,10 @@ def ingest(filetype, auto, user):
         now = datetime.today().strftime('%Y%m%d_%H%M%S-')
         if str(file).endswith('.jsonld'):
             path = str(file)
-            filename = str(file).split("\\")[-1]
-
+            if platform.system() == 'Windows':
+                filename = str(file).split("\\")[-1]
+            else:
+                filename = str(file).split("/")[-1]
             loginfo = {
                 "errlogdir": str(root_path+'/'+filetype+'/04 '+filetype+' log'),
                 "actlogdir": str(root_path+'/activitylogs'),
@@ -39,47 +42,63 @@ def ingest(filetype, auto, user):
              }
             actloginit(loginfo)
             logwrite("act", loginfo, "User: " + str(user))
+
+            # validate and check file for different unique sections of the document (most in system)
+            sections = {}
             if validate(path, filetype, loginfo) is True:  # validate.py
-                compound, target = getsystem(path)
-                if normalize(path, compound, target, loginfo) is True:  # normalization.py
-                    updatedb(compound, loginfo)  # updatedb.py
+                types = ['compound']  # this would be expanded as we get me code written for other unique types...
+                for systype in types:
+                    found = getfacet(path, systype)
+                    if found:
+                        sections.update({systype: found[systype]})
 
-            finalize(path, outputdir, errordir, loginfo)
+            if sections:
+                if normalize(path, sections, loginfo) is True:  # normalization.py
+                    finalize(path, outputdir, errordir, loginfo)
+                else:
+                    print("file could not be normalized")  # convert to act/err log entries
+            else:
+                print("no system sections found!")  # convert to act/err log entries
 
 
-# finalizes the ingestion, determining whether it was successful, and moving the file
 def finalize(path, outputdir, errordir, loginfo):
+    """ finalizes the ingestion, determining whether it was successful, and moving the file """
     # Detemines whether the ingestion was successful or not
     logname = loginfo["errlogdir"]+'/'+loginfo["logname"]+'.txt'
     i = 0
     try:
-        file = open(logname, "r")
+        # if the file is found then it has not been successfully ingested
+        file = open(logname)
         file.close()
         logwrite("act", loginfo, "Status: Failed!")
         i += 1
-    except:
+    except FileNotFoundError:
+        # if the file is not present then it has been successfully ingested
         logwrite("act", loginfo, "Status: Success!")
-    logprint(loginfo)
-    # Moves the file
+    logprint("act", loginfo)
+
+    # move the file
     if i == 0:
-        dest = outputdir
-        # shutil.move(path, dest)
+        shutil.move(path, outputdir)
     else:
-        dest = errordir
-        # shutil.move(path, dest)
+        shutil.move(path, errordir)
 
 
 def autoingest(filetype):
+    """ autoingest files """
     try:
-        ingest(filetype, "a")
-    except:
+        ingest(filetype, "a", "bot")
+    except FileNotFoundError as fnf_error:
+        print(fnf_error)
         pass
     wait(type)
 
 
 def wait(filetype):
+    """ to ingest file """
     time.sleep(10)
     autoingest(filetype)
+
 
 autodir = os.listdir(hergautoinput)
 if len(autodir) > 1:

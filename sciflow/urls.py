@@ -1,4 +1,4 @@
-"""sciflow URL Configuration
+""" sciflow URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -24,5 +24,5 @@ urlpatterns = [
     path('', include('users.urls')),
     path('admin/', admin.site.urls),
     path('substances/', include('substances.urls')),
-    path('ingestion/', include('workflow.urls')),
+    path('workflow/', include('workflow.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

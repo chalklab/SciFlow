@@ -1,9 +1,10 @@
-"""imports"""
+""" views for substances """
 from django.shortcuts import render
 from django.shortcuts import redirect
 from .models import *
-from .actions import *
+from .mysql import *
 from .functions import *
+from sciflow.settings import BASE_DIR
 
 
 def home(request):
@@ -38,7 +39,7 @@ def view(request, subid):
 
 
 def add(request, identifier):
-    """ check the identifier to see if compound alredy in system and if not add """
+    """ check the identifier to see if compound already in system and if not add """
     # id the compound in the database?
     hits = Substances.objects.all().filter(identifiers__value__exact=identifier).count()
     if hits == 0:
@@ -47,5 +48,31 @@ def add(request, identifier):
         subid = getsubid(identifier)
         return redirect("/substances/view/" + str(subid))
 
-    return render(request, "substances/add.html",
-                  {"hits": hits, "meta": meta, "ids": ids, "descs": descs})
+    return render(request, "substances/add.html", {"hits": hits, "meta": meta, "ids": ids, "descs": descs})
+
+
+def ingestlist(request):
+    """ add many compounds from a text file list of identifiers """
+    path = BASE_DIR + "/json/herg_chemblids.txt"
+    file = open(path)
+    lines = file.readlines()
+    # get a list of all chemblids currently in the DB
+    qset = Identifiers.objects.all().filter(type__exact='chembl').values_list('value', flat=True)
+    chemblids = list(qset)
+    count = 0
+    names = []
+    for identifier in lines:
+        identifier = identifier.rstrip("\n")
+        if identifier not in chemblids:
+            meta, ids, descs = addsubstance(identifier)
+            names.append(ids['pubchem']['iupacname'])
+        count += 1
+        if count == 1:
+            break
+    return names
+
+
+def normalize(request, identifier):
+    """ create a SciData JSON-LD file for a compound, ingest in the graph and update data file with graph location """
+    success = createsubjld(identifier)
+    return render(request, "substances/normalize.html", {"success": success})

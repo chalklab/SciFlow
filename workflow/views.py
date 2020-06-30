@@ -1,10 +1,10 @@
-from django.http import JsonResponse
+""" view definitions for the workflow app """
 from django.shortcuts import redirect
 from django.shortcuts import render
-from .ingestion import*
-# Create your views here.
+from .ingestion import *
 
-#Sciflow Ingestion
+
+# Sciflow ingestion variables
 herginputfiles = {}
 hergoutputfiles = {}
 hergerrorfiles = {}
@@ -12,26 +12,36 @@ cifinputfiles = {}
 cifoutputfiles = {}
 ciferrorfiles = {}
 
+
+def dashboard(response):
+    """ main view of workflow activity """
+    # TODO add dashboard page
+
+
 def ingestion(response):
+    """ ingestion SciData JSON-LD file """
     user = response.user
     getfiles(herginput, herginputfiles)
     getfiles(cifinput, cifinputfiles)
 
-    #herg submit button press:
-    if(response.POST.get('herg')):
+    # TODO ingestion definition needs to be generic
+
+    # herg submit button press:
+    if response.POST.get('herg'):
         ingest("herg", "m", user)
-        return redirect('/ingestion/results')
+        return redirect('/workflow/results')
 
-    #cif submit button press:
-    if(response.POST.get('cif')):
+    # cif submit button press:
+    if response.POST.get('cif'):
         ingest("cif", "m", user)
-        return redirect('/ingestion/results')
+        return redirect('/workflow/results')
 
-    return render(response, 'workflow/ingestion.html', {"herginputfiles":herginputfiles, "cifinputfiles":cifinputfiles})
+    return render(response, 'workflow/ingestion.html', {
+        "herginputfiles": herginputfiles, "cifinputfiles": cifinputfiles})
 
 
-#Sciflow Ingestion Results
 def ingestionresults(response):
+    """ ingestion results """
     user = response.user
     getfiles(herginput, herginputfiles)
     getfiles(hergoutput, hergoutputfiles)
@@ -40,14 +50,28 @@ def ingestionresults(response):
     getfiles(cifoutput, cifoutputfiles)
     getfiles(ciferror, ciferrorfiles)
 
-    #herg submit button press:
-    if(response.POST.get('herg')):
+    # TODO ingestionresults definition needs to be generic
+
+    # herg submit button press:
+    if response.POST.get('herg'):
         ingest("herg", "m", user)
         return redirect('/ingestion/results')
 
-    #cif submit button press:
-    if(response.POST.get('cif')):
+    # cif submit button press:
+    if response.POST.get('cif'):
         ingest("herg", "m", user)
         return redirect('/ingestion/results')
 
-    return render(response, 'workflow/ingestionresults.html', {"herginputfiles":herginputfiles, "cifinputfiles":cifinputfiles, "hergoutputfiles":hergoutputfiles, "cifoutputfiles":cifoutputfiles, "hergerrorfiles":hergerrorfiles, "ciferrorfiles":ciferrorfiles,})
+    return render(response, 'workflow/ingestionresults.html', {
+        "herginputfiles": herginputfiles, "cifinputfiles": cifinputfiles,
+        "hergoutputfiles": hergoutputfiles, "cifoutputfiles": cifoutputfiles,
+        "hergerrorfiles": hergerrorfiles, "ciferrorfiles": ciferrorfiles})
+
+
+def test(response):
+    """ retrieve the shortnames of all the datasets """
+    qset = Datasets.objects.all().values_list('sourcecode', flat=True).order_by('id')
+    lst = list(qset)
+    print(lst)
+    x = 0
+    return render(response, "substances/add.html", {"lst": lst})

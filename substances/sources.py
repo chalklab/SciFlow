@@ -11,6 +11,7 @@ def pubchem(identifier, meta, ids, descs):
     apipath = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/"
 
     # retrieve full record if available based on name
+    path = apipath + 'name/' + identifier + '/json'
     response = requests.get(apipath + 'name/' + identifier + '/json').json()
     full = response["PC_Compounds"][0]
     props = full["props"]
@@ -166,18 +167,18 @@ def chembl(identifier, meta, ids, descs):
     descs['chembl'] = {}
     # - atc
     if cmpd['atc_classifications']:
-        descs['chembl'].update(actlvl1=[], actlvl2=[], actlvl3=[], actlvl4=[], actlvl5=[])
+        descs['chembl'].update(atclvl1=[], atclvl2=[], atclvl3=[], atclvl4=[], atclvl5=[])
         for c in cmpd['atc_classifications']:
-            descs['chembl']['actlvl1'].append(c[0:1])
-            descs['chembl']['actlvl2'].append(c[0:3])
-            descs['chembl']['actlvl3'].append(c[0:4])
-            descs['chembl']['actlvl4'].append(c[0:5])
-            descs['chembl']['actlvl5'].append(c)
-        descs['chembl']['actlvl1'] = list(set(descs['chembl']['actlvl1']))
-        descs['chembl']['actlvl2'] = list(set(descs['chembl']['actlvl2']))
-        descs['chembl']['actlvl3'] = list(set(descs['chembl']['actlvl3']))
-        descs['chembl']['actlvl4'] = list(set(descs['chembl']['actlvl4']))
-        descs['chembl']['actlvl5'] = list(set(descs['chembl']['actlvl5']))
+            descs['chembl']['atclvl1'].append(c[0:1])
+            descs['chembl']['atclvl2'].append(c[0:3])
+            descs['chembl']['atclvl3'].append(c[0:4])
+            descs['chembl']['atclvl4'].append(c[0:5])
+            descs['chembl']['atclvl5'].append(c)
+        descs['chembl']['atclvl1'] = list(set(descs['chembl']['atclvl1']))
+        descs['chembl']['atclvl2'] = list(set(descs['chembl']['atclvl2']))
+        descs['chembl']['atclvl3'] = list(set(descs['chembl']['atclvl3']))
+        descs['chembl']['atclvl4'] = list(set(descs['chembl']['atclvl4']))
+        descs['chembl']['atclvl5'] = list(set(descs['chembl']['atclvl5']))
     # - molecule properties
     for k, v in cmpd['molecule_properties'].items():
         if k not in mprops:

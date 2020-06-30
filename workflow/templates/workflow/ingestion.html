@@ -15,9 +15,9 @@
         <!-- Button -->
         <form action="" method="POST">
             {% csrf_token %}
-        <br><button type="button" class="btn btn-success" data-toggle="modal" data-target="#hergmodal">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#hergmodal">
           Ingest hERG Data
-        </button></br>
+        </button>
 
         <!-- Modal -->
         <div class="modal fade" id="hergmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -32,8 +32,9 @@
               <div class="modal-body">
                 The following files will be ingested into the hERG database:
                     {% for value in herginputfiles %}
-                    <br>{{value}}</br>
+                        {{value}}<br/>
                     {% endfor %}
+                <br/>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
@@ -50,9 +51,9 @@
         <!-- Button -->
         <form action="" method="POST">
             {% csrf_token %}
-        <br><button type="button" class="btn btn-success" data-toggle="modal" data-target="#cifmodal">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#cifmodal">
           Ingest CIF Data
-        </button></br>
+        </button><br/>
 
         <!-- Modal -->
         <div class="modal fade" id="cifmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -65,12 +66,11 @@
                 </button>
               </div>
               <div class="modal-body">
-                The following files will be ingested into the CIF database:
-                  <br>
+                The following files will be ingested into the CIF database
                     {% for value in cifinputfiles %}
-                  <br>{{value}}</br>
+                        {{value}}<br/>
                     {% endfor %}
-                  </br>
+                  <br/>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
