@@ -1,6 +1,6 @@
 from .validation import *
 from .logwriter import logwrite
-from .mysql import *
+
 
 
 # function to attempt to push things to the mysql and graph databases. If either fail, the update is reverted to prevent inconsistencies.
