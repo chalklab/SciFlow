@@ -1,73 +1,36 @@
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
-from django.utils.encoding import force_text
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.views import View
-from .forms import RegisterForm
-from django.contrib.auth import login
-from .models import Request
+from social_core.exceptions import AuthFailed
+
 from .requests import *
+from django.contrib.auth.decorators import login_required
+import json
+from django.contrib.auth import logout as log_out
+from django.conf import settings
+from django.http import HttpResponseRedirect
+from urllib.parse import urlencode
 
 
-def register(response):
-    if response.method == "POST":
-        form = RegisterForm(response.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False
-            user.save()
-            content = {"Username":user.username, "Email":user.email, "First Name":user.first_name, "Last Name":user.last_name}
-            makerequest(user, "Registration", "Registration", content, user.id)
-
-
-
-            return redirect("/login")
+def index(request):
+    user = request.user
+    if user.is_authenticated:
+        return redirect(dashboard)
     else:
-        form = RegisterForm()
+        return render(request, 'users/index.html')
 
-    return render(response, 'users/register.html', {"register":form})
+def error(request):
+    return render(request, 'users/error.html')
 
-class LoginView(View):
-    def get(self, request):
-        return render(request, 'registration/login.html', { 'form':  AuthenticationForm() })
-
-    def post(self, request):
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            try:
-                form.clean()
-            except ValidationError:
-                return render(
-                    request,
-                    'registration/login.html',
-                    { 'form': form, 'invalid_creds': True }
-                )
-
-            login(request, form.get_user())
-
-            return redirect("/")
-
-        return render(request, 'registration/login.html', { 'form': form })
-
-class ConfirmRegistrationView(View):
-    def get(self, request, user_id, token):
-        user_id = force_text(urlsafe_base64_decode(user_id))
-
-        user = User.objects.get(pk=user_id)
-
-        context = {
-          'form': AuthenticationForm(),
-          'message': 'Registration confirmation error. Please click the reset password to generate a new confirmation email.'
-        }
-        if user and user_tokenizer.check_token(user, token):
-            user.is_active = True
-            user.save()
-            context['message'] = 'Registration complete. Please login'
-
-        return render(request, 'home.html', context)
-
+@login_required
+def dashboard(request):
+    user = request.user
+    auth0user = user.social_auth.get(provider='auth0')
+    userdata = {
+        'user_id': auth0user.uid,
+        'name': user.first_name,
+        'picture': auth0user.extra_data['picture'],
+        'email': auth0user.extra_data['email'],
+    }
+    return render(request, 'users/dashboard.html', {'auth0User': auth0user,'userdata': json.dumps(userdata, indent=4)})
 
 
 def requests(response):
@@ -86,3 +49,10 @@ def requests(response):
                 rejectrequest(request)
 
     return render(response, 'users/requests.html', {"request":request, "allrequests":allrequests})
+
+def logout(request):
+    log_out(request)
+    return_to = urlencode({'returnTo': request.build_absolute_uri('/')})
+    logout_url = 'https://%s/v2/logout?client_id=%s&%s' % \
+                 (settings.SOCIAL_AUTH_AUTH0_DOMAIN, settings.SOCIAL_AUTH_AUTH0_KEY, return_to)
+    return HttpResponseRedirect(logout_url)

@@ -37,12 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crosswalks',
     'crispy_forms',
-    'substances',
+    'social_django',
+    'crosswalks',
     'datasets',
+    'substances',
+    'users',
     'workflow',
-    'users'
 ]
 
 MIDDLEWARE = [
@@ -129,14 +130,6 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Slack settings
-
-SLACK_CLIENT_ID = '4596507645.1171018047123'
-SLACK_CLIENT_SECRET = '497b35bbd6b1ae0b721bff4ca1e0660b'
-SLACK_VERIFICATION_TOKEN = '83qbRMdzma6QJBlF5LnV4XnN'
-SLACK_BOT_USER_TOKEN = 'xoxb-4596507645-1171034330099-eP4swGipytYQHLnomPvBoOPO'
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
@@ -148,10 +141,38 @@ STATIC_URL = '/static/'
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 
+# graphdb ingest directory on sds
+gdrivesds = "/Users/n00002621/GoogleDrive/Research/sciflow"
+
+
 # User settings
 
+LOGIN_URL = '/login/auth0'
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-# graphdb ingest directory on sds
-gdrivesds = "/Users/n00002621/GoogleDrive/Research/sciflow"
+# Slack settings
+
+SLACK_CLIENT_ID = '4596507645.1171018047123'
+SLACK_CLIENT_SECRET = '497b35bbd6b1ae0b721bff4ca1e0660b'
+SLACK_VERIFICATION_TOKEN = '83qbRMdzma6QJBlF5LnV4XnN'
+SLACK_BOT_USER_TOKEN = 'xoxb-4596507645-1171034330099-eP4swGipytYQHLnomPvBoOPO'
+
+
+# Auth0 Settings
+
+SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
+SOCIAL_AUTH_AUTH0_DOMAIN = 'sciflow.us.auth0.com'
+SOCIAL_AUTH_AUTH0_KEY = 'yqDlGgfUFMr9GUNW7nEFLrc92IoccnNU'
+SOCIAL_AUTH_AUTH0_SECRET = 'QWZvHaULslFysaVMaXqYPqinzKfMLo8MrgLEEMBmRKy99vb-q2LpuTCurSDWhSJR'
+
+SOCIAL_AUTH_AUTH0_SCOPE = [
+    'openid',
+    'profile',
+    'email'
+]
+
+AUTHENTICATION_BACKENDS = {
+    'users.auth0backend.Auth0',
+    'django.contrib.auth.backends.ModelBackend'
+}
