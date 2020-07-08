@@ -96,6 +96,10 @@ if "x" == "y":
     updategraphdb
     updatemysql
 
+    from workflow.utils import *
+    file2sds
+    movesdsfile
+
     from workflow.validation import *
     validate
     check_scidata

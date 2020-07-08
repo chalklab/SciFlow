@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block title %} FAIR Molecules {% endblock %}
-{% block header %} All Compounds {% endblock %}
+{% block header %} Search {% endblock %}
 {% block content %}
-    <h4>Search:</h4>
+    <h4>New Search:</h4>
     <form action="" method="post">
         {% csrf_token %}
         <input name="q" type="text" placeholder="Search for a substance">
@@ -11,9 +11,10 @@
     </form>
 
 
-    <h4>Compound List:</h4>
+    <h4>Results for {{query}}:</h4>
     <ul>
-    {% for substance in substances %}
+        {{ results }}
+    {% for substance in results %}
         <li><a href="/substances/view/{{ substance.id }}">{{ substance.name }}</a></li>
     {% endfor %}
     </ul>

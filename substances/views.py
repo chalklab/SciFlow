@@ -5,10 +5,17 @@ from .models import *
 from .mysql import *
 from .functions import *
 from sciflow.settings import BASE_DIR
+from django.db.models import Q
+from django.views.generic import ListView
 
 
 def home(request):
     """view to generare list of substances on homepage"""
+    if request.method == "POST":
+        query = request.POST.get('q')
+        return redirect('search/'+str(query))
+
+
     substances = Substances.objects.all().order_by('name')
     return render(request, "substances/home.html", {'substances': substances})
 
@@ -76,3 +83,25 @@ def normalize(request, identifier):
     """ create a SciData JSON-LD file for a compound, ingest in the graph and update data file with graph location """
     success = createsubjld(identifier)
     return render(request, "substances/normalize.html", {"success": success})
+
+
+def search(request, query):
+    if query is not None:
+        lookups = Q(value__icontains=query)
+        j = Identifiers.objects.filter(lookups).distinct()
+        ids = []
+        results = []
+        for i in j:
+            subid = i.substance_id
+            if subid not in ids:
+                ids.append(subid)
+        for i in ids:
+            sub = Substances.objects.get(id=i)
+            results.append(sub)
+        context = {'results': results, "query": query}
+
+    if request.method == "POST":
+        query = request.POST.get('q')
+        return redirect('/substances/search/'+str(query))
+
+    return render(request, "substances/search.html", context)
