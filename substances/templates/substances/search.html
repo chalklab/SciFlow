@@ -13,7 +13,6 @@
 
     <h4>Results for {{query}}:</h4>
     <ul>
-        {{ results }}
     {% for substance in results %}
         <li><a href="/substances/view/{{ substance.id }}">{{ substance.name }}</a></li>
     {% endfor %}

@@ -5,8 +5,6 @@ from .models import *
 from .mysql import *
 from .functions import *
 from sciflow.settings import BASE_DIR
-from django.db.models import Q
-from django.views.generic import ListView
 
 
 def home(request):
@@ -86,19 +84,7 @@ def normalize(request, identifier):
 
 
 def search(request, query):
-    if query is not None:
-        lookups = Q(value__icontains=query)
-        j = Identifiers.objects.filter(lookups).distinct()
-        ids = []
-        results = []
-        for i in j:
-            subid = i.substance_id
-            if subid not in ids:
-                ids.append(subid)
-        for i in ids:
-            sub = Substances.objects.get(id=i)
-            results.append(sub)
-        context = {'results': results, "query": query}
+    context = subsearch(query)
 
     if request.method == "POST":
         query = request.POST.get('q')

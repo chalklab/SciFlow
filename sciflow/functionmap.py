@@ -29,6 +29,7 @@ if "x" == "y":
     clearsubstancefield
     addidentifier
     createsubstance
+    subsearch
 
     from substances.sources import *
     pubchem
