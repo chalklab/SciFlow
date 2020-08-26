@@ -60,6 +60,8 @@ def ingest(filetype, auto, user):
             else:
                 print("no system sections found!")  # convert to act/err log entries
 
+            # TODO confirm normalization
+
 
 def finalize(path, outputdir, errordir, loginfo):
     """ finalizes the ingestion, determining whether it was successful, and moving the file """

@@ -84,6 +84,7 @@ def normalize(request, identifier):
 
 
 def search(request, query):
+    """ search for a substance """
     context = subsearch(query)
 
     if request.method == "POST":

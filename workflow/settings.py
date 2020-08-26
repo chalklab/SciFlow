@@ -28,7 +28,6 @@ ciflog = pathlib.Path(root_path + '/cif/04 cif log')
 # headers for files
 jsonhrs = {'Content-type': 'application/json', 'Accept': 'application/json'}
 
-
 # list of strings to find in the metadata names, to identify important identifiers to search on
 searchterms = {
     "compound": ['name', 'inchi', 'smiles', 'chembl', 'pubchem', 'wiki'],

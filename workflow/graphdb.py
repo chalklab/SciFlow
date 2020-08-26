@@ -4,6 +4,7 @@ from urllib.parse import quote
 from workflow.settings import *
 import requests
 
+
 def addgraph(file, locale):
     """ add a file to GraphDB """
     data = '{"fileNames": ["' + file + '"]}'

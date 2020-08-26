@@ -11,42 +11,45 @@ def pubchem(identifier, meta, ids, descs):
     apipath = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/"
 
     # retrieve full record if available based on name
-    path = apipath + 'name/' + identifier + '/json'
-    response = requests.get(apipath + 'name/' + identifier + '/json').json()
-    full = response["PC_Compounds"][0]
-    props = full["props"]
-    counts = dict(full["count"])
-    descs["pubchem"] = {}
-    for k, v in counts.items():
-        descs["pubchem"][k] = v
+    url = apipath + 'inchikey/' + identifier + '/json'
+    response = requests.get(url)
+    if response.status_code == 200:
+        json = requests.get(url).json()
+        full = json["PC_Compounds"][0]
+        props = full["props"]
+        counts = dict(full["count"])
+        descs["pubchem"] = {}
+        for k, v in counts.items():
+            descs["pubchem"][k] = v
 
-    ids["pubchem"] = {}
-    meta["pubchem"] = {}
-    for prop in props:
-        if prop['urn']['label'] == "IUPAC Name" and prop['urn']['name'] == "Preferred":
-            ids["pubchem"]["iupacname"] = prop["value"]["sval"]
-        elif prop['urn']['label'] == "InChI":
-            ids["pubchem"]["inchi"] = prop["value"]["sval"]
-        elif prop['urn']['label'] == "InChIKey":
-            ids["pubchem"]["inchikey"] = prop["value"]["sval"]
-        elif prop['urn']['label'] == "SMILES" and prop['urn']['name'] == "Canonical":
-            ids["pubchem"]["csmiles"] = prop["value"]["sval"]
-        elif prop['urn']['label'] == "SMILES" and prop['urn']['name'] == "Isomeric":
-            ids["pubchem"]["ismiles"] = prop["value"]["sval"]
-        elif prop['urn']['label'] == "Molecular Formula":
-            meta["pubchem"]["formula"] = prop["value"]["sval"]
-        elif prop['urn']['label'] == "Molecular Weight":
-            meta["pubchem"]["mw"] = prop["value"]["fval"]
-        elif prop['urn']['label'] == "Weight":
-            meta["pubchem"]["mim"] = prop["value"]["fval"]
-        elif prop['urn']['label'] == "Count" and prop['urn']['name'] == "Hydrogen Bond Acceptor":
-            descs["pubchem"]["h_bond_acceptor"] = prop["value"]["ival"]
-        elif prop['urn']['label'] == "Count" and prop['urn']['name'] == "Hydrogen Bond Donor":
-            descs["pubchem"]["h_bond_donor"] = prop["value"]["ival"]
-        elif prop['urn']['label'] == "Count" and prop['urn']['name'] == "Rotatable Bond":
-            descs["pubchem"]["rotatable_bond"] = prop["value"]["ival"]
-
-    return meta, ids, descs
+        ids["pubchem"] = {}
+        meta["pubchem"] = {}
+        for prop in props:
+            if prop['urn']['label'] == "IUPAC Name" and prop['urn']['name'] == "Preferred":
+                ids["pubchem"]["iupacname"] = prop["value"]["sval"]
+            elif prop['urn']['label'] == "InChI":
+                ids["pubchem"]["inchi"] = prop["value"]["sval"]
+            elif prop['urn']['label'] == "InChIKey":
+                ids["pubchem"]["inchikey"] = prop["value"]["sval"]
+            elif prop['urn']['label'] == "SMILES" and prop['urn']['name'] == "Canonical":
+                ids["pubchem"]["csmiles"] = prop["value"]["sval"]
+            elif prop['urn']['label'] == "SMILES" and prop['urn']['name'] == "Isomeric":
+                ids["pubchem"]["ismiles"] = prop["value"]["sval"]
+            elif prop['urn']['label'] == "Molecular Formula":
+                meta["pubchem"]["formula"] = prop["value"]["sval"]
+            elif prop['urn']['label'] == "Molecular Weight":
+                meta["pubchem"]["mw"] = prop["value"]["fval"]
+            elif prop['urn']['label'] == "Weight":
+                meta["pubchem"]["mim"] = prop["value"]["fval"]
+            elif prop['urn']['label'] == "Count" and prop['urn']['name'] == "Hydrogen Bond Acceptor":
+                descs["pubchem"]["h_bond_acceptor"] = prop["value"]["ival"]
+            elif prop['urn']['label'] == "Count" and prop['urn']['name'] == "Hydrogen Bond Donor":
+                descs["pubchem"]["h_bond_donor"] = prop["value"]["ival"]
+            elif prop['urn']['label'] == "Count" and prop['urn']['name'] == "Rotatable Bond":
+                descs["pubchem"]["rotatable_bond"] = prop["value"]["ival"]
+    else:
+        print('InChIKey not found on PubChem')
+    return
 
 
 def classyfire(identifier, meta, ids, descs):
@@ -77,12 +80,10 @@ def classyfire(identifier, meta, ids, descs):
             for alt in response['alternative_parents']:
                 descs["classyfire"]["alternative_parent"].append(alt["chemont_id"])
         else:
-            print('Invalid InChIKey')
-            return
+            print('InChIKey not found on ClassyFire')
     else:
         print("Invalid InChIKey")
-        return
-    return meta, ids, descs
+    return
 
 
 def wikidata(identifier, meta, ids, descs):
@@ -101,32 +102,36 @@ def wikidata(identifier, meta, ids, descs):
     wdid = str(url).replace("http://www.wikidata.org/entity/", "")
 
     mwurl = "https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&entity=" + wdid
-    response = requests.get(mwurl).json()
-    # response contains many properties from which we need to grab specific chemical ones...
-    ids['wikidata'] = {}
-    claims = response['claims']
-    propids = {'casrn': 'P231', 'atc': 'P267', 'inchi': 'P234', 'inchikey': 'P235', 'chemspider': 'P661',
+    response = requests.get(mwurl)
+    if response.status_code == 200:
+        # response contains many properties from which we need to grab specific chemical ones...
+        ids['wikidata'] = {}
+        json = requests.get(mwurl).json()
+        claims = json['claims']
+        propids = {'casrn': 'P231', 'atc': 'P267', 'inchi': 'P234', 'inchikey': 'P235', 'chemspider': 'P661',
                'pubchem': 'P662', 'reaxys': 'P1579', 'gmelin': 'P1578', 'chebi': 'P683', 'chembl': 'P592',
                'rtecs': 'P657', 'dsstox': 'P3117'}
-    vals = list(propids.values())
-    keys = list(propids.keys())
-    for propid, prop in claims.items():
-        if propid in vals:
-            if 'datavalue' in prop[0]['mainsnak']:
-                value = prop[0]['mainsnak']['datavalue']['value']
-                key = keys[vals.index(propid)]
-                ids['wikidata'].update({key: value})
+        vals = list(propids.values())
+        keys = list(propids.keys())
+        for propid, prop in claims.items():
+            if propid in vals:
+                if 'datavalue' in prop[0]['mainsnak']:
+                    value = prop[0]['mainsnak']['datavalue']['value']
+                    key = keys[vals.index(propid)]
+                    ids['wikidata'].update({key: value})
 
-    # get aggregated names/tradenames for this compound
-    cdict = get_entity_dict_from_api(wdid)
-    cmpd = WikidataItem(cdict)
-    ids['wikidata']['othername'] = []
-    aliases = cmpd.get_aliases()
-    aliases = list(set(aliases))  # deduplicate
-    for alias in aliases:
-        ids['wikidata']['othername'].append(alias)
-    ids['wikidata']['othername'] = list(set(ids['wikidata']['othername']))
-    return meta, ids, descs
+        # get aggregated names/tradenames for this compound
+        cdict = get_entity_dict_from_api(wdid)
+        cmpd = WikidataItem(cdict)
+        ids['wikidata']['othername'] = []
+        aliases = cmpd.get_aliases()
+        aliases = list(set(aliases))  # deduplicate
+        for alias in aliases:
+            ids['wikidata']['othername'].append(alias)
+        ids['wikidata']['othername'] = list(set(ids['wikidata']['othername']))
+    else:
+        print("Invalid InChIKey")
+    return
 
 
 def chembl(identifier, meta, ids, descs):
@@ -190,7 +195,6 @@ def chembl(identifier, meta, ids, descs):
     for fld in dflds:
         if cmpd[fld] is not None:
             descs['chembl'].update({fld: cmpd[fld]})
-    return meta, ids, descs
 
 
 def pubchemsyns(identifier):
