@@ -48,7 +48,7 @@ def add(request, identifier):
     # id the compound in the database?
     hits = Substances.objects.all().filter(identifiers__value__exact=identifier).count()
     if hits == 0:
-        meta, ids, descs = addsubstance(identifier)
+        meta, ids, descs, srcs = addsubstance(identifier)
     else:
         subid = getsubid(identifier)
         return redirect("/substances/view/" + str(subid))

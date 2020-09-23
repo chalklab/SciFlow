@@ -6,7 +6,7 @@ from qwikidata.linked_data_interface import *
 from chembl_webresource_client.new_client import new_client
 
 
-def pubchem(identifier, meta, ids, descs):
+def pubchem(identifier, meta, ids, descs, srcs):
     """ this definition allows retreival of data from the PugRest API at PubChem"""
     apipath = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/"
 
@@ -47,12 +47,14 @@ def pubchem(identifier, meta, ids, descs):
                 descs["pubchem"]["h_bond_donor"] = prop["value"]["ival"]
             elif prop['urn']['label'] == "Count" and prop['urn']['name'] == "Rotatable Bond":
                 descs["pubchem"]["rotatable_bond"] = prop["value"]["ival"]
+            srcs["pubchem"] = "Success"
     else:
         print('InChIKey not found on PubChem')
+        srcs["pubchem"] = "Not Found"
     return
 
 
-def classyfire(identifier, meta, ids, descs):
+def classyfire(identifier, meta, ids, descs, srcs):
     """ get classyfire classification for a specific compound """
     # best to use InChIKey to get the data
     apipath = "http://classyfire.wishartlab.com/entities/"
@@ -79,14 +81,18 @@ def classyfire(identifier, meta, ids, descs):
             descs["classyfire"]["alternative_parent"] = []
             for alt in response['alternative_parents']:
                 descs["classyfire"]["alternative_parent"].append(alt["chemont_id"])
+            srcs["classyfire"] = 1
+
         else:
             print('InChIKey not found on ClassyFire')
+            srcs["classyfire"] = "Not Found"
     else:
         print("Invalid InChIKey")
+        srcs["classyfire"] = "Invalid"
     return
 
 
-def wikidata(identifier, meta, ids, descs):
+def wikidata(identifier, meta, ids, descs, srcs):
     """ retreive data from wikidata using the qwikidata python package"""
     # find wikidata code for a compound based off its inchikey (wdt:P35)
     query1 = "SELECT DISTINCT ?compound "
@@ -98,6 +104,7 @@ def wikidata(identifier, meta, ids, descs):
     # TODO add code to get the name of a compound in each language...
 
     # now get all data associated with this wikidata entry
+
     url = res['results']['bindings'][0]['compound']['value']
     wdid = str(url).replace("http://www.wikidata.org/entity/", "")
 
@@ -129,12 +136,15 @@ def wikidata(identifier, meta, ids, descs):
         for alias in aliases:
             ids['wikidata']['othername'].append(alias)
         ids['wikidata']['othername'] = list(set(ids['wikidata']['othername']))
+        srcs["wikidata"] = "Success"
+
     else:
         print("Invalid InChIKey")
+        srcs["wikidata"] = "Invalid"
     return
 
 
-def chembl(identifier, meta, ids, descs):
+def chembl(identifier, meta, ids, descs, srcs):
     """ retrieve data from the ChEMBL repository"""
     # uses chembl_webresource_client
     molecule = new_client.molecule
@@ -195,6 +205,9 @@ def chembl(identifier, meta, ids, descs):
     for fld in dflds:
         if cmpd[fld] is not None:
             descs['chembl'].update({fld: cmpd[fld]})
+
+    #sources
+    srcs["chembl"] = "Success"
 
 
 def pubchemsyns(identifier):

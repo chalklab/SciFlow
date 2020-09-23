@@ -16,7 +16,7 @@ def addsubstance(identifier):
         # check pubchem for this string
         key = pubchemkey(identifier)
 
-    meta, ids, descs = getsubdata(key)
+    meta, ids, descs, srcs = getsubdata(key)
     # save metadata to the substances table
     nm = ids['pubchem']['iupacname']
     fm = meta['pubchem']['formula']
@@ -24,7 +24,7 @@ def addsubstance(identifier):
     mm = meta['pubchem']['mim']
     try:
         cn = ids['wikidata']['casrn']
-    except IndexError:
+    except:
         cn = None
     sub = Substances(name=nm, formula=fm, molweight=mw, monomass=mm, casrn=cn)
     sub.save()
@@ -36,7 +36,11 @@ def addsubstance(identifier):
     # save descs to the descriptors table
     savedescs(subid, descs)
 
-    return meta, ids, descs
+    #savesrcs to sources table
+    savesrcs(subid, srcs)
+
+
+    return meta, ids, descs, srcs
 
 
 def getidtype(identifier):
@@ -72,12 +76,30 @@ def getidtype(identifier):
 
 def getsubdata(identifier):
     """ searches for compound in database and gets its data or adds new compound with data """
-    meta, ids, descs = {}, {}, {}
-    pubchem(identifier, meta, ids, descs)
-    classyfire(identifier, meta, ids, descs)
-    wikidata(identifier, meta, ids, descs)
-    chembl(identifier, meta, ids, descs)
-    return meta, ids, descs
+    meta, ids, descs, srcs = {}, {}, {}, {}
+    try:
+        pubchem(identifier, meta, ids, descs, srcs)
+        #update sources table with 'success'
+    except Exception as exception:
+        #update sources table with exception
+        meta["pubchem"] = {"error: "+str(exception)}
+        srcs["pubchem"] = "Failed"
+    try:
+        classyfire(identifier, meta, ids, descs, srcs)
+    except Exception as exception:
+        meta["classyfire"] = {"error: "+str(exception)}
+        srcs["classyfire"] = "Failed"
+    try:
+        wikidata(identifier, meta, ids, descs, srcs)
+    except Exception as exception:
+        meta["wikidata"] = {"error: "+str(exception)}
+        srcs["wikidata"] = "Failed"
+    try:
+        chembl(identifier, meta, ids, descs, srcs)
+    except Exception as exception:
+        meta["chembl"] = {"error: "+str(exception)}
+        srcs["chembl"] = "Failed"
+    return meta, ids, descs, srcs
 
 
 def pubchemkey(identifier):
@@ -215,3 +237,10 @@ def savedescs(subid, descs):
             else:
                 desc = Descriptors(substance_id=subid, type=k, value=v, source=source)
                 desc.save()
+
+
+def savesrcs(subid, srcs):
+    """ save sources data """
+    src = Sources(substance_id=subid, chembl=srcs["chembl"], classyfire=srcs["classyfire"],
+                  pubchem=srcs["pubchem"], wikidata=srcs["wikidata"])
+    src.save()

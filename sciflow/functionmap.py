@@ -1,5 +1,22 @@
 if "x" == "y":
 
+    """
+    Backend Scheme
+    1) Load JSON-LD (workflow.ingestion)
+    2) Check if compound is already present in SQL DB (substances.*)
+    ) Scrape for compound data (substances.sources)
+    ) Add compound to SQL DB (substances.*)
+    ) Check if compound is already present in GraphDB and add if not
+    ) Process JSON-LD to add links to GraphDB (workflow.graph_link)
+    )
+    ) Add JSON-LD to GraphDB (workflow.graphdb)
+    
+    Frontend Scheme
+    ) Views
+    ) Manually add compounds
+    ) 
+    """
+
 # crosswalks
 
 # datasets

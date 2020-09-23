@@ -59,6 +59,19 @@ class Identifiers(models.Model):
         db_table = 'identifiers'
 
 
+class Sources(models.Model):
+    id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
+    substance_id = models.SmallIntegerField()
+    chembl = models.CharField(max_length=750)
+    classyfire = models.CharField(max_length=750)
+    pubchem = models.CharField(max_length=750)
+    wikidata = models.CharField(max_length=750)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        managed = False
+        db_table = 'sources'
+
 class Systems(models.Model):
     """ getting data from the identifiers DB table"""
     class CompTypes(models.TextChoices):
