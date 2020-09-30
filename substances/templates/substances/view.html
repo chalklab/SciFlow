@@ -22,4 +22,30 @@
         <li>{{ desc.type }}: {{ desc.value }}</li>
     {% endfor %}
     </ul>
+    <h5>Sources</h5>
+    <ul>
+    {% for src in srcs %}
+        {% if src.chembl == '1' %}
+        <li>Chembl: Success </li>
+        {% else %}
+        <li>Chembl: Failed </li>
+        {% endif %}
+        {% if src.classyfire == '1' %}
+        <li>ClassyFire: Success </li>
+        {% else %}
+        <li>ClassyFire: Failed </li>
+        {% endif %}
+        {% if src.pubchem == '1' %}
+        <li>Pubchem: Success </li>
+        {% else %}
+        <li>Pubchem: Failed </li>
+        {% endif %}
+        {% if src.wikidata == '1' %}
+        <li>WikiData: Success </li>
+        {% else %}
+        <li>WikiData: Failed </li>
+        {% endif %}
+        <li>Updated: {{ src.updated }}</li>
+    {% endfor %}
+    </ul>
 {% endblock %}

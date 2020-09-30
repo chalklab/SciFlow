@@ -47,10 +47,10 @@ def pubchem(identifier, meta, ids, descs, srcs):
                 descs["pubchem"]["h_bond_donor"] = prop["value"]["ival"]
             elif prop['urn']['label'] == "Count" and prop['urn']['name'] == "Rotatable Bond":
                 descs["pubchem"]["rotatable_bond"] = prop["value"]["ival"]
-            srcs["pubchem"] = "Success"
+            srcs["pubchem"] = 1
     else:
         print('InChIKey not found on PubChem')
-        srcs["pubchem"] = "Not Found"
+        srcs["pubchem"] = "InChIKey Not Found"
     return
 
 
@@ -85,10 +85,10 @@ def classyfire(identifier, meta, ids, descs, srcs):
 
         else:
             print('InChIKey not found on ClassyFire')
-            srcs["classyfire"] = "Not Found"
+            srcs["classyfire"] = "InChIKey Not Found"
     else:
         print("Invalid InChIKey")
-        srcs["classyfire"] = "Invalid"
+        srcs["classyfire"] = "Invalid InChIKey"
     return
 
 
@@ -136,11 +136,11 @@ def wikidata(identifier, meta, ids, descs, srcs):
         for alias in aliases:
             ids['wikidata']['othername'].append(alias)
         ids['wikidata']['othername'] = list(set(ids['wikidata']['othername']))
-        srcs["wikidata"] = "Success"
+        srcs["wikidata"] = 1
 
     else:
         print("Invalid InChIKey")
-        srcs["wikidata"] = "Invalid"
+        srcs["wikidata"] = "Invalid InChIKey"
     return
 
 
@@ -207,7 +207,7 @@ def chembl(identifier, meta, ids, descs, srcs):
             descs['chembl'].update({fld: cmpd[fld]})
 
     #sources
-    srcs["chembl"] = "Success"
+    srcs["chembl"] = 1
 
 
 def pubchemsyns(identifier):

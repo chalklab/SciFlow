@@ -61,7 +61,7 @@ class Identifiers(models.Model):
 
 class Sources(models.Model):
     id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
-    substance_id = models.SmallIntegerField()
+    substance = models.ForeignKey(Substances, on_delete=models.CASCADE)
     chembl = models.CharField(max_length=750)
     classyfire = models.CharField(max_length=750)
     pubchem = models.CharField(max_length=750)

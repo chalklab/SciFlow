@@ -83,22 +83,22 @@ def getsubdata(identifier):
     except Exception as exception:
         #update sources table with exception
         meta["pubchem"] = {"error: "+str(exception)}
-        srcs["pubchem"] = "Failed"
+        srcs["pubchem"] = 0
     try:
         classyfire(identifier, meta, ids, descs, srcs)
     except Exception as exception:
         meta["classyfire"] = {"error: "+str(exception)}
-        srcs["classyfire"] = "Failed"
+        srcs["classyfire"] = 0
     try:
         wikidata(identifier, meta, ids, descs, srcs)
     except Exception as exception:
         meta["wikidata"] = {"error: "+str(exception)}
-        srcs["wikidata"] = "Failed"
+        srcs["wikidata"] = 0
     try:
         chembl(identifier, meta, ids, descs, srcs)
     except Exception as exception:
         meta["chembl"] = {"error: "+str(exception)}
-        srcs["chembl"] = "Failed"
+        srcs["chembl"] = 0
     return meta, ids, descs, srcs
 
 

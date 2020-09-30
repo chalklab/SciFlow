@@ -8,7 +8,7 @@ from sciflow.settings import BASE_DIR
 
 
 def home(request):
-    """view to generare list of substances on homepage"""
+    """view to generate list of substances on homepage"""
     if request.method == "POST":
         query = request.POST.get('q')
         return redirect('search/'+str(query))
@@ -32,6 +32,7 @@ def view(request, subid):
     substance = Substances.objects.get(id=subid)
     ids = substance.identifiers_set.all()
     descs = substance.descriptors_set.all()
+    srcs = substance.sources_set.all()
     if not descs:
         key = ""
         for i in ids:
@@ -40,7 +41,7 @@ def view(request, subid):
                 break
         m, i, descs = getsubdata(key)
         savedescs(subid, descs)
-    return render(request, "substances/view.html", {'substance': substance, "ids": ids, "descs": descs})
+    return render(request, "substances/view.html", {'substance': substance, "ids": ids, "descs": descs, "srcs": srcs})
 
 
 def add(request, identifier):
