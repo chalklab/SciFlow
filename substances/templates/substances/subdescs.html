@@ -11,35 +11,78 @@
         <li> CAS Registry #: {{ substance.casrn }}</li>
     </ul>
     <h5>Descriptors</h5>
-    <ul>
-    {% for desc in descs %}
-        <li>{{ desc.type }}: {{ desc.value }}</li>
-    {% endfor %}
-    </ul>
-    <h5>Sources</h5>
-    <ul>
-    {% for src in srcs %}
-        {% if src.chembl == '1' %}
-        <li>Chembl: Success </li>
-        {% else %}
-        <li>Chembl: Failed </li>
-        {% endif %}
-        {% if src.classyfire == '1' %}
-        <li>ClassyFire: Success </li>
-        {% else %}
-        <li>ClassyFire: Failed </li>
-        {% endif %}
-        {% if src.pubchem == '1' %}
-        <li>Pubchem: Success </li>
-        {% else %}
-        <li>Pubchem: Failed </li>
-        {% endif %}
-        {% if src.wikidata == '1' %}
-        <li>WikiData: Success </li>
-        {% else %}
-        <li>WikiData: Failed </li>
-        {% endif %}
-        <li>Updated: {{ src.updated }}</li>
-    {% endfor %}
-    </ul>
+ <table
+          data-toggle="table"
+          data-search="true"
+          data-show-columns="true"
+          data-detail-view="true"
+          data-detail-formatter="detailFormatter"
+          data-pagination="true"
+          data-page-list="[10, 25, 50, all]"
+          data-show-export="true">
+
+          <thead>
+            <tr class="tr-class-1">
+              <th data-field="name" rowspan="2" data-valign="middle" data-sortable="true">Descriptor</th>
+              <th colspan="4">Source</th>
+            </tr>
+            <tr class="tr-class-2">
+              <th data-field="Chembl" data-sortable="true">Chembl</th>
+              <th data-field="Classyfire" data-sortable="true">Classyfire</th>
+              <th data-field="Pubchem" data-sortable="true">Pubchem</th>
+              <th data-field="Wikidata" data-sortable="true">Wikidata</th>
+            </tr>
+          </thead>
+          <tbody>
+              {% for desc in descs %}
+              <tr>
+                <td>{{desc.type}}</td>
+                <td>
+                    {% if desc.source == "chembl" %}
+                        {{desc.value}}
+                    {% else %}
+                        Null
+                    {% endif %}
+                </td>
+                <td>
+                    {% if desc.source == "classyfire" %}
+                        {{desc.value}}
+                    {% else %}
+                        Null
+                    {% endif %}
+                </td>
+                <td>
+                    {% if desc.source == "pubchem" %}
+                        {{desc.value}}
+                    {% else %}
+                        Null
+                    {% endif %}
+                </td>
+                <td>
+                    {% if desc.source == "wikidata" %}
+                        {{desc.value}}
+                    {% else %}
+                        Null
+                    {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+        </table>
+
+        <script>
+          function detailFormatter(index, row) {
+            var html = ['<form action="" method="post">{% csrf_token %}']
+            $.each(row, function (key, value) {
+              var c = key.includes('_')
+              if (c != true) {
+                html.push('<p><b>' + key + ':</b> ' + value + '  '
+                + '<input name="'+key+'_'+value+'" type="text" placeholder="Edit '+key+'">' + '</p>')
+              }})
+              html.push('<button class="btn btn-primary" type="submit" name="action">Submit</button>')
+            return html.join('')
+          }
+        </script>
+
+
 {% endblock %}
