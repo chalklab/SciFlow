@@ -7,27 +7,28 @@ from .functions import *
 from sciflow.settings import BASE_DIR
 
 
-def home(request):
-    """view to generate list of substances on homepage"""
+
+def list(request):
+    """view to generare list of substances on homepage"""
     if request.method == "POST":
         query = request.POST.get('q')
         return redirect('search/'+str(query))
 
 
     substances = Substances.objects.all().order_by('name')
-    return render(request, "substances/home.html", {'substances': substances})
+    return render(request, "substances/list.html", {'substances': substances})
 
 
-def index(request):
+def home(request):
     """present an overview page about the substance in sciflow"""
     subcount = Substances.objects.count()
     idcount = Identifiers.objects.count()
-    syscount = Systems.objects.count()
+    descount = Descriptors.objects.count()
 
-    return render(request, "substances/index.html", {'subcount': subcount, 'idcount': idcount, 'syscount': syscount})
+    return render(request, "substances/home.html", {'subcount': subcount, 'idcount': idcount, 'descount': descount})
 
 
-def view(request, subid):
+def subview(request, subid):
     """present an overview page about the substance in sciflow"""
     substance = Substances.objects.get(id=subid)
     ids = substance.identifiers_set.all()
@@ -41,7 +42,28 @@ def view(request, subid):
                 break
         m, i, descs = getsubdata(key)
         savedescs(subid, descs)
-    return render(request, "substances/view.html", {'substance': substance, "ids": ids, "descs": descs, "srcs": srcs})
+    return render(request, "substances/subview.html", {'substance': substance, "ids": ids, "descs": descs, "srcs": srcs})
+
+def subids(request, subid):
+    """present an overview page about the substance in sciflow"""
+    substance = Substances.objects.get(id=subid)
+    ids = substance.identifiers_set.all()
+    return render(request, "substances/subids.html", {'substance': substance, "ids": ids})
+
+def subdescs(request, subid):
+    """present an overview page about the substance in sciflow"""
+    substance = Substances.objects.get(id=subid)
+    ids = substance.identifiers_set.all()
+    descs = substance.descriptors_set.all()
+    if not descs:
+        key = ""
+        for i in ids:
+            if i.type == 'inchikey':
+                key = i.value
+                break
+        m, i, descs = getsubdata(key)
+        savedescs(subid, descs)
+    return render(request, "substances/subdescs.html", {'substance': substance, "descs": descs})
 
 
 def add(request, identifier):
@@ -56,6 +78,15 @@ def add(request, identifier):
 
     return render(request, "substances/add.html", {"hits": hits, "meta": meta, "ids": ids, "descs": descs})
 
+def ingest(request):
+
+    if request.method == "POST":
+        inchikey = request.POST.get('ingest')
+        return redirect("/substances/add/" + str(inchikey))
+
+
+
+    return render(request, "substances/ingest.html",)
 
 def ingestlist(request):
     """ add many compounds from a text file list of identifiers """

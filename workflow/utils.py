@@ -23,4 +23,4 @@ def movesdsfile(filepath, destination):
     """ move a file on the SDS server to a new folder """
 
 
-# file2sds('/Users/n00002621/Google Drive/Research/sciflow/tmp/LYCAIKOWRPUZTN-UHFFFAOYSA-N.jsonld')
+file2sds('C:/Users/Caleb Desktop/Google Drive/sciflow/herg/01 herg input/fail240_51366_1086273.jsonld')

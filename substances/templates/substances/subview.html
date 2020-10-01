@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %} Substances Index {% endblock %}
+{% block header %} Substance {% endblock %}
+
+{% block content %}
+     <ul>
+        <li> Name: {{ substance.name }}</li>
+        <li> Formula: {{ substance.formula }}</li>
+        <li> Molecular Weight: {{ substance.molweight }} g/mol</li>
+        <li> CAS Registry #: {{ substance.casrn }}</li>
+    </ul>
+
+    <h5>Sources</h5>
+    <ul>
+    {% for src in srcs %}
+        {% if src.chembl == '1' %}
+        <li>Chembl: Success </li>
+        {% else %}
+        <li>Chembl: Failed </li>
+        {% endif %}
+        {% if src.classyfire == '1' %}
+        <li>ClassyFire: Success </li>
+        {% else %}
+        <li>ClassyFire: Failed </li>
+        {% endif %}
+        {% if src.pubchem == '1' %}
+        <li>Pubchem: Success </li>
+        {% else %}
+        <li>Pubchem: Failed </li>
+        {% endif %}
+        {% if src.wikidata == '1' %}
+        <li>WikiData: Success </li>
+        {% else %}
+        <li>WikiData: Failed </li>
+        {% endif %}
+        <li>Updated: {{ src.updated }}</li>
+    {% endfor %}
+    </ul>
+    <div class="d-flex flex-wrap justify-content-center">
+        <br>
+            <button type="button"  class="m-4 btn btn-success" style="width: 300px" onclick="document.location.href = '/substances/view/{{substance.id}}/subids'">View Identifiers</button>
+            <button type="button"  class="m-4 btn btn-success" style="width: 300px" onclick="document.location.href = '/substances/view/{{substance.id}}/subdescs'">View Descriptors</button>
+        </br>
+    </div>
+{% endblock %}

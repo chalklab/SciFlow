@@ -10,12 +10,6 @@
         <li> Molecular Weight: {{ substance.molweight }} g/mol</li>
         <li> CAS Registry #: {{ substance.casrn }}</li>
     </ul>
-    <h5>Identifiers</h5>
-    <ul>
-    {% for id in ids %}
-        <li>{{ id.type }}: {{ id.value }}</li>
-    {% endfor %}
-    </ul>
     <h5>Descriptors</h5>
     <ul>
     {% for desc in descs %}

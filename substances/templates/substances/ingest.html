@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %} Substances Ingest {% endblock %}
+{% block header %} Substance {% endblock %}
+
+{% block content %}
+
+<form action="" method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="ingest">Ingest Substance</label>
+    <input name="ingest" type="text" class="form-control" id="ingest" aria-describedby="ingesthelp">
+    <small id="ingesthelp" class="form-text text-muted">Input an Inchikey to add a substance.</small>
+  </div>
+  <button type="submit" class="btn btn-success">Submit</button>
+</form>
+
+
+
+
+{% endblock %}

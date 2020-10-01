@@ -1,20 +1,39 @@
 {% extends 'base.html' %}
 
-{% block title %} FAIR Molecules {% endblock %}
-{% block header %} All Compounds {% endblock %}
+{% block title %} Substances Dashboard {% endblock %}
+{% block header %} Substances Dashboard {% endblock %}
+
 {% block content %}
-    <h4>Search:</h4>
-    <form action="" method="post">
-        {% csrf_token %}
-        <input name="q" type="text" placeholder="Search for a substance">
-        <button class="btn btn-success" type="submit" name="action">Search</button>
-    </form>
-
-
-    <h4>Compound List:</h4>
+<div>
+    The Scidata Substance Database is Home to:
     <ul>
-    {% for substance in substances %}
-        <li><a href="/substances/view/{{ substance.id }}">{{ substance.name }}</a></li>
-    {% endfor %}
+        <li> {{ subcount }} Substances!</li>
+        <li> {{ idcount }} Identifiers!</li>
+        <li> {{ descount }} Descriptors!</li>
     </ul>
+
+    This is an intermediary staging point for data to be transferred to the Scidata GraphDB, which currently has 0 substances!
+    <div class="d-flex flex-wrap justify-content-center">
+        <br>
+            <button type="button"  class="m-4 btn btn-success" style="width: 300px" onclick="document.location.href = '/substances/list'">View Substance List</button>
+            <button type="button"  class="m-4 btn btn-success" style="width: 300px" onclick="document.location.href = '/substances/ingest'">Ingest New Substance</button>
+        </br>
+    </div>
+
+    <div class="card">
+        <div class="w-100 m-4">
+            <div class="overflow-auto" style="height: 500px">
+            Look at all these identifier problems!
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="w-100 m-4">
+            <div class="overflow-auto" style="height: 500px">
+            Look at all these descriptor problems!
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

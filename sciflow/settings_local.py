@@ -1,2 +1,6 @@
 """" settings for my instance of sciflow"""
-gdrive = "/Users/n00002621/Google Drive/Research/sciflow"
+gdrive = "C:/Users/Caleb Desktop/Google Drive/sciflow"
+
+# sdsftp
+sdsuser = "crg"
+sdspass = "sciflow@2020"

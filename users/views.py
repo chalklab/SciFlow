@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from social_core.exceptions import AuthFailed
-
 from .requests import *
 from django.contrib.auth.decorators import login_required
 import json

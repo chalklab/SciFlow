@@ -19,7 +19,6 @@ def normalize(path, sections, loginfo):
     for section, meta in sections.items():
         if section == "compound":
             found = findsub(section, meta)
-
     # either add a new compound or find out of the compound is in the graph database
     if found:
         if ingraph(found):  # find if compound is already in the graph (uses graphdb field in substances)
@@ -39,31 +38,10 @@ def normalize(path, sections, loginfo):
                     gname = getgraphname(key)
                     # normalize data file
                     print(gname)
-
     else:
         # compound not found in DB
         print("not found in DB")
     print(section)
-
-    # needed?
-    # logwrite("act", loginfo, "System:")
-    # try:
-    #     logwrite("act", loginfo, "\t- Compound: " + str(section))
-    #     logwrite("act", loginfo, "\t- Target: " + str(section)+"\n")
-    # except FileNotFoundError:
-    #     pass
-    #
-    # normalizationcheck(path, loginfo)
-    # i = 0
-    # for value in normcheck.values():
-    #     if value is False:
-    #         i += 1
-    #
-    # if i == 0:
-    #     return True
-    # else:
-    #     return False
-
 
 def findsub(section, meta):
     """ take an array of metadata from a compounds section and find out if it is the database """
@@ -94,35 +72,6 @@ def getfacet(path, systype):
             return False
     except FileNotFoundError:
         pass
-
-
-# move profile definitions to profile.py file
-
-def findprofile(path, compound, loginfo):
-    """ searches the database for a profile matching the found inchikey """
-    inchi = compound.get("inchi")
-    if Identifiers.objects.all().filter(value=inchi).exists() is True:
-        getprofile(inchi, loginfo)
-    else:
-        makeprofile(inchi, loginfo)
-    addprofile(inchi, loginfo)
-
-
-def getprofile(inchi, loginfo):
-    """ if the profile is found, this pulls it """
-    subid = Identifiers.objects.get(value=inchi).substance_id
-    substance = Substances.objects.get(id=subid)
-    logwrite("act", loginfo, "Substance Name: " + substance.name)
-
-
-def makeprofile(inchi, loginfo):
-    """ if the profile is not found, this creates it """
-    print("no inchi found")
-
-
-def addprofile(inchi, loginfo):
-    """ once the profile has been created or obtained, this integrates it to the main file """
-    print("adding...")
 
 
 def normalizationcheck(path, loginfo):

@@ -40,3 +40,5 @@ graphreponame = 'scidata'
 graphuploadlocalurl = graphserverurl + 'rest/data/import/server/' + graphreponame
 graphuploadremoteurl = graphserverurl + 'rest/data/upload/server/' + graphreponame + '/url/'
 graphsparqlurl = graphserverurl + 'repositories/' + graphreponame
+
+sdsnewpath = "/Users/Shared/sciflow"

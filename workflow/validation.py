@@ -5,7 +5,7 @@ import json
 
 
 def validate(path, filetype, loginfo):
-    """ all-in-one validation function. Includes every check that we would want to do on a file m"""
+    """all-in-one validation function. Includes every check that we would want to do on a file"""
 
     validity = {}
 
@@ -22,22 +22,6 @@ def validate(path, filetype, loginfo):
         return True
     else:
         return False
-
-    # if filetype == "herg":
-    #     hergcheck(path, validity, loginfo)
-    # if filetype == "cif":
-    #    cifcheck(path, validity, loginfo)
-
-    # i = 0
-    # for value in validity.values():
-    #     if value is False:
-    #         i += 1
-    #         break
-    #
-    # if i == 0:
-    #     return True
-    # else:
-    #     return False
 
 
 def check_scidata(path, validity, loginfo):
@@ -85,45 +69,3 @@ def check_type(path, validity, loginfo, filetype, string):
         logwrite("err", loginfo, "- " + " not found!\n")
 
     validity.update({"is" + filetype: found})
-
-
-# not needed
-def hergcheck(path, validity, loginfo):
-    """ check that this is a herg file"""
-    searchfile = open(path)
-    a = 0
-    b = 0
-    for line in searchfile:
-        # checking if it is actually herg
-        if "\"CHEMBL240\"" in line:
-            a += 1
-        # verifying author (an example used for testing purposes)
-        if "Fray MJ" in line:
-            b += 1
-
-    if a > 0:
-        isherg = True
-        logwrite("act", loginfo, "\t- Herg: Valid\n")
-    else:
-        isherg = False
-        logwrite("act", loginfo, "\t- Herg: Invalid!\n")
-        logwrite("err", loginfo, "- No instance of CHEMBL240 found!\n")
-
-    validity.update({"isherg": isherg})
-    searchfile.close()
-
-
-# not needed
-def cifcheck(path):
-    """ check that this is a CIF file"""
-    searchfile = open(path)
-    i = 0
-    for line in searchfile:
-        if "potato" in line:
-            i += 1
-    if i > 0:
-        valid = True
-    else:
-        valid = False
-    searchfile.close()
-    return valid
