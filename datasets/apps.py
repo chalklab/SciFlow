@@ -1,6 +1,7 @@
+""" django app config file """
 from django.apps import AppConfig
 
 
 class DatasetsConfig(AppConfig):
-    """config"""
+    """ dataset configuration """
     name = 'datasets'

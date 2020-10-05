@@ -1,3 +1,8 @@
+""" django admin config """
 from django.contrib import admin
+from .models import *
 
-# Register your models here.
+
+admin.site.register(Nspaces)
+admin.site.register(Ontterms)
+admin.site.register(Metadata)

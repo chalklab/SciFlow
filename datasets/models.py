@@ -2,8 +2,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-# Create your models here.
-
 
 class Datasets(models.Model):
     """ getting data from the substances DB table"""

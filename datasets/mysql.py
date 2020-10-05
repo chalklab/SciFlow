@@ -2,6 +2,7 @@
 from .models import *
 
 
+# used in datasets/mysql.py:getcodenames
 def getdatasetnames():
     """ retrieve the shortnames of all the datasets """
     qset = Datasets.objects.all().values_list('datasetname', flat=True).order_by('id')
@@ -9,6 +10,7 @@ def getdatasetnames():
     return lst
 
 
+# used in datasets/mysql.py:getcodenames
 def getsourcecodes():
     """ retrieve the shortnames of all the datasets """
     qset = Datasets.objects.all().values_list('sourcecode', flat=True).order_by('id')
@@ -16,6 +18,7 @@ def getsourcecodes():
     return lst
 
 
+# used in validation.py:validate
 def getcodesnames():
     """ create unique string to match a file to a dataset """
     codes = getsourcecodes()
