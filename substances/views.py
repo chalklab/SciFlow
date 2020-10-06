@@ -1,11 +1,8 @@
 """ views for substances """
 from django.shortcuts import render
 from django.shortcuts import redirect
-from .models import *
-from .mysql import *
 from .functions import *
 from sciflow.settings import BASE_DIR
-
 
 
 def list(request):
@@ -24,7 +21,6 @@ def home(request):
     subcount = Substances.objects.count()
     idcount = Identifiers.objects.count()
     descount = Descriptors.objects.count()
-
     return render(request, "substances/home.html", {'subcount': subcount, 'idcount': idcount, 'descount': descount})
 
 
@@ -40,15 +36,17 @@ def subview(request, subid):
             if i.type == 'inchikey':
                 key = i.value
                 break
-        m, i, descs = getsubdata(key)
+        m, i, descs, srcs = getsubdata(key)
         savedescs(subid, descs)
     return render(request, "substances/subview.html", {'substance': substance, "ids": ids, "descs": descs, "srcs": srcs})
+
 
 def subids(request, subid):
     """present an overview page about the substance in sciflow"""
     substance = Substances.objects.get(id=subid)
     ids = substance.identifiers_set.all()
     return render(request, "substances/subids.html", {'substance': substance, "ids": ids})
+
 
 def subdescs(request, subid):
     """present an overview page about the substance in sciflow"""
@@ -78,15 +76,14 @@ def add(request, identifier):
 
     return render(request, "substances/add.html", {"hits": hits, "meta": meta, "ids": ids, "descs": descs})
 
-def ingest(request):
 
+def ingest(request):
     if request.method == "POST":
         inchikey = request.POST.get('ingest')
         return redirect("/substances/add/" + str(inchikey))
 
-
-
     return render(request, "substances/ingest.html",)
+
 
 def ingestlist(request):
     """ add many compounds from a text file list of identifiers """

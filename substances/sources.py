@@ -1,4 +1,4 @@
-""" functions to get metdata, identifiers, and descriptors from external websites"""
+""" functions to get metadata, identifiers, and descriptors from external websites"""
 import re
 from qwikidata.sparql import *
 from qwikidata.entity import *
@@ -7,12 +7,13 @@ from chembl_webresource_client.new_client import new_client
 
 
 def pubchem(identifier, meta, ids, descs, srcs):
-    """ this definition allows retreival of data from the PugRest API at PubChem"""
+    """ this definition allows retrieval of data from the PugRest API at PubChem"""
     apipath = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/"
 
     # retrieve full record if available based on name
     url = apipath + 'inchikey/' + identifier + '/json'
     response = requests.get(url)
+    srcs.update({"pubchem": {"result": None, "notes": None}})
     if response.status_code == 200:
         json = requests.get(url).json()
         full = json["PC_Compounds"][0]
@@ -47,10 +48,9 @@ def pubchem(identifier, meta, ids, descs, srcs):
                 descs["pubchem"]["h_bond_donor"] = prop["value"]["ival"]
             elif prop['urn']['label'] == "Count" and prop['urn']['name'] == "Rotatable Bond":
                 descs["pubchem"]["rotatable_bond"] = prop["value"]["ival"]
-            srcs["pubchem"] = 1
+            srcs["pubchem"].update({"result": 1})
     else:
-        print('InChIKey not found on PubChem')
-        srcs["pubchem"] = "InChIKey Not Found"
+        srcs["pubchem"].update({"result": 0, "notes": "InChIKey not found on PubChem"})
     return
 
 
@@ -61,6 +61,7 @@ def classyfire(identifier, meta, ids, descs, srcs):
 
     # check identifier for inchikey pattern
     m = re.search('[A-Z]{14}-[A-Z]{10}-[A-Z]', identifier)
+    srcs.update({"classyfire": {"result": None, "notes": None}})
 
     if m:
         response = requests.get(apipath + identifier + '.json')
@@ -81,14 +82,12 @@ def classyfire(identifier, meta, ids, descs, srcs):
             descs["classyfire"]["alternative_parent"] = []
             for alt in response['alternative_parents']:
                 descs["classyfire"]["alternative_parent"].append(alt["chemont_id"])
-            srcs["classyfire"] = 1
+            srcs["classyfire"].update({"result": 1})
 
         else:
-            print('InChIKey not found on ClassyFire')
-            srcs["classyfire"] = "InChIKey Not Found"
+            srcs["classyfire"].update({"result": 0, "notes": "InChIKey Not Found"})
     else:
-        print("Invalid InChIKey")
-        srcs["classyfire"] = "Invalid InChIKey"
+        srcs["classyfire"].update({"result": 0, "notes": "Invalid InChIKey"})
     return
 
 
@@ -100,53 +99,59 @@ def wikidata(identifier, meta, ids, descs, srcs):
     query3 = "SERVICE wikibase:label { bd:serviceParam wikibase:language \"en\". } }"
     query = query1 + query2 + query3
     res = return_sparql_query_results(query)
-
+    srcs.update({"wikidata": {"result": None, "notes": None}})
     # TODO add code to get the name of a compound in each language...
 
     # now get all data associated with this wikidata entry
+    try:
+        url = res['results']['bindings'][0]['compound']['value']
+        try:
+            wdid = str(url).replace("http://www.wikidata.org/entity/", "")
 
-    url = res['results']['bindings'][0]['compound']['value']
-    wdid = str(url).replace("http://www.wikidata.org/entity/", "")
+            mwurl = "https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&entity=" + wdid
+            response = requests.get(mwurl)
+            if response.status_code == 200:
+                # response contains many properties from which we need to grab specific chemical ones...
+                ids['wikidata'] = {}
+                json = requests.get(mwurl).json()
+                claims = json['claims']
+                propids = {'casrn': 'P231', 'atc': 'P267', 'inchi': 'P234', 'inchikey': 'P235', 'chemspider': 'P661',
+                           'pubchem': 'P662', 'reaxys': 'P1579', 'gmelin': 'P1578', 'chebi': 'P683', 'chembl': 'P592',
+                           'rtecs': 'P657', 'dsstox': 'P3117'}
+                vals = list(propids.values())
+                keys = list(propids.keys())
+                for propid, prop in claims.items():
+                    if propid in vals:
+                        if 'datavalue' in prop[0]['mainsnak']:
+                            value = prop[0]['mainsnak']['datavalue']['value']
+                            key = keys[vals.index(propid)]
+                            ids['wikidata'].update({key: value})
 
-    mwurl = "https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&entity=" + wdid
-    response = requests.get(mwurl)
-    if response.status_code == 200:
-        # response contains many properties from which we need to grab specific chemical ones...
-        ids['wikidata'] = {}
-        json = requests.get(mwurl).json()
-        claims = json['claims']
-        propids = {'casrn': 'P231', 'atc': 'P267', 'inchi': 'P234', 'inchikey': 'P235', 'chemspider': 'P661',
-               'pubchem': 'P662', 'reaxys': 'P1579', 'gmelin': 'P1578', 'chebi': 'P683', 'chembl': 'P592',
-               'rtecs': 'P657', 'dsstox': 'P3117'}
-        vals = list(propids.values())
-        keys = list(propids.keys())
-        for propid, prop in claims.items():
-            if propid in vals:
-                if 'datavalue' in prop[0]['mainsnak']:
-                    value = prop[0]['mainsnak']['datavalue']['value']
-                    key = keys[vals.index(propid)]
-                    ids['wikidata'].update({key: value})
+                # get aggregated names/tradenames for this compound
+                cdict = get_entity_dict_from_api(wdid)
+                cmpd = WikidataItem(cdict)
+                ids['wikidata']['othername'] = []
+                aliases = cmpd.get_aliases()
+                aliases = list(set(aliases))  # deduplicate
+                for alias in aliases:
+                    ids['wikidata']['othername'].append(alias)
+                ids['wikidata']['othername'] = list(set(ids['wikidata']['othername']))
+                srcs["wikidata"] = {"result": 1}
 
-        # get aggregated names/tradenames for this compound
-        cdict = get_entity_dict_from_api(wdid)
-        cmpd = WikidataItem(cdict)
-        ids['wikidata']['othername'] = []
-        aliases = cmpd.get_aliases()
-        aliases = list(set(aliases))  # deduplicate
-        for alias in aliases:
-            ids['wikidata']['othername'].append(alias)
-        ids['wikidata']['othername'] = list(set(ids['wikidata']['othername']))
-        srcs["wikidata"] = 1
+            else:
+                srcs["wikidata"].update({"result": 0, "notes": "Invalid InChIKey"})
+        except Exception as exception:
+            srcs["wikidata"].update({"result": 0, "notes": exception})
 
-    else:
-        print("Invalid InChIKey")
-        srcs["wikidata"] = "Invalid InChIKey"
+    except Exception as exception:
+        srcs["wikidata"].update({"result": 0, "notes": "Error in 'url = res['results']['bindings'][0]['compound']["
+                                                       "'value']', Full exception: " + str('exception')})
+
     return
 
 
 def chembl(identifier, meta, ids, descs, srcs):
     """ retrieve data from the ChEMBL repository"""
-    # uses chembl_webresource_client
     molecule = new_client.molecule
     response = molecule.search(identifier)
     cmpd = response[0]
@@ -206,8 +211,8 @@ def chembl(identifier, meta, ids, descs, srcs):
         if cmpd[fld] is not None:
             descs['chembl'].update({fld: cmpd[fld]})
 
-    #sources
-    srcs["chembl"] = 1
+    # sources
+    srcs.update({"chembl": {"result": 1, "notes": None}})
 
 
 def pubchemsyns(identifier):

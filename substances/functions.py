@@ -1,22 +1,24 @@
 """ functions for use with the substances and related tables..."""
-from .sources import *
-from .mysql import *
-from sciflow.settings_local import gdrive
+from substances.sources import *
+from substances.mysql import *
 from crosswalks.models import *
 from datetime import datetime
 import json
-import os
 
 
 def addsubstance(identifier):
-    """ add a new substance to the database and populate identifiers and descriptors """
+    """
+    add a new substance to the database and populate identifiers and descriptors
+
+    """
     idtype = getidtype(identifier)
     key = identifier
+    # check pubchem for this string
     if idtype != "inchikey":
-        # check pubchem for this string
-        key = pubchemkey(identifier)
+        key = pubchemsyns(identifier)  # Modified to call this definition directly. Deleted pubchemkey
 
     meta, ids, descs, srcs = getsubdata(key)
+
     # save metadata to the substances table
     nm = ids['pubchem']['iupacname']
     fm = meta['pubchem']['formula']
@@ -24,7 +26,7 @@ def addsubstance(identifier):
     mm = meta['pubchem']['mim']
     try:
         cn = ids['wikidata']['casrn']
-    except:
+    except Exception as exception:  # TODO add to error log
         cn = None
     sub = Substances(name=nm, formula=fm, molweight=mw, monomass=mm, casrn=cn)
     sub.save()
@@ -36,10 +38,8 @@ def addsubstance(identifier):
     # save descs to the descriptors table
     savedescs(subid, descs)
 
-    #savesrcs to sources table
+    # savesrcs to sources table
     savesrcs(subid, srcs)
-
-
     return meta, ids, descs, srcs
 
 
@@ -79,33 +79,21 @@ def getsubdata(identifier):
     meta, ids, descs, srcs = {}, {}, {}, {}
     try:
         pubchem(identifier, meta, ids, descs, srcs)
-        #update sources table with 'success'
     except Exception as exception:
-        #update sources table with exception
-        meta["pubchem"] = {"error: "+str(exception)}
-        srcs["pubchem"] = 0
+        srcs.update({"pubchem": {"result": 0, "notes": exception}})
     try:
         classyfire(identifier, meta, ids, descs, srcs)
     except Exception as exception:
-        meta["classyfire"] = {"error: "+str(exception)}
-        srcs["classyfire"] = 0
+        srcs.update({"classyfire": {"result": 0, "notes": exception}})
     try:
         wikidata(identifier, meta, ids, descs, srcs)
     except Exception as exception:
-        meta["wikidata"] = {"error: "+str(exception)}
-        srcs["wikidata"] = 0
+        srcs.update({"wikidata": {"result": 0, "notes": exception}})
     try:
         chembl(identifier, meta, ids, descs, srcs)
     except Exception as exception:
-        meta["chembl"] = {"error: "+str(exception)}
-        srcs["chembl"] = 0
+        srcs.update({"chembl": {"result": 0, "notes": exception}})
     return meta, ids, descs, srcs
-
-
-def pubchemkey(identifier):
-    """ searches PubChem for compound inchikey """
-    inchikey = pubchemsyns(identifier)
-    return inchikey
 
 
 def createsubjld(identifier):
@@ -180,21 +168,21 @@ def createsubjld(identifier):
     # add compound data into sd file
     sd['@graph']['scidata']['system']['facets'][0] = cmpd
 
+    # TODO modify to save file to database
     # save file
-    filename = identifier + '.jsonld'
-    filepath = os.path.join(gdrive, 'tmp', filename)
-    with open(filepath, 'w') as outfile:
-        json.dump(sd, outfile)
-        outfile.close()
-        os.chmod(filepath, 0o777)
-    try:
-        f = open(filepath)
-        f.close()
-        # TODO add logging here
-    except FileNotFoundError as fnf_error:
-        print(fnf_error)  # TODO add logging here
-        return False
-    return filename
+    # filename = identifier + '.jsonld'
+    # filepath = os.path.join(gdrive, 'tmp', filename)
+    # with open(filepath, 'w') as outfile:
+    #     json.dump(sd, outfile)
+    #     outfile.close()
+    #     os.chmod(filepath, 0o777)
+    # try:
+    #     f = open(filepath)
+    #     f.close()
+    # except FileNotFoundError as fnf_error:
+    #     print(fnf_error)
+    #     return False
+    # return filename
 
 
 def get_item(d, key):
@@ -241,6 +229,7 @@ def savedescs(subid, descs):
 
 def savesrcs(subid, srcs):
     """ save sources data """
-    src = Sources(substance_id=subid, chembl=srcs["chembl"], classyfire=srcs["classyfire"],
-                  pubchem=srcs["pubchem"], wikidata=srcs["wikidata"])
-    src.save()
+    # srcs = {"pubchem": {"result":1, "notes":None}
+    for x, y in srcs.items():
+        src = Sources(substance_id=subid, source=x, result=y["result"], notes=y["notes"])
+        src.save()

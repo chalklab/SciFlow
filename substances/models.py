@@ -3,9 +3,9 @@ from django.db import models
 
 # Create your models here.
 
-
 class Substances(models.Model):
     """ getting data from the substances DB table"""
+    id = models.SmallAutoField(primary_key=True)
     name = models.CharField(max_length=256, default='')
     formula = models.CharField(max_length=256, default='')
     monomass = models.FloatField(default=0.00)
@@ -61,12 +61,11 @@ class Identifiers(models.Model):
 
 class Sources(models.Model):
     id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
-    substance = models.ForeignKey(Substances, on_delete=models.CASCADE)
-    chembl = models.CharField(max_length=750)
-    classyfire = models.CharField(max_length=750)
-    pubchem = models.CharField(max_length=750)
-    wikidata = models.CharField(max_length=750)
-    updated = models.DateTimeField(auto_now=True)
+    substance = models.ForeignKey('Substances', models.DO_NOTHING)
+    source = models.CharField(max_length=32)
+    result = models.CharField(max_length=1)
+    notes = models.CharField(max_length=2000, blank=True, null=True)
+    updated = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -91,6 +90,16 @@ class Systems(models.Model):
     substance4 = models.ForeignKey(Substances, null=True, related_name='substance4', on_delete=models.CASCADE)
     substance5 = models.ForeignKey(Substances, null=True, related_name='substance5', on_delete=models.CASCADE)
     updated = models.DateTimeField(auto_now=True)
+
+
+class Templates(models.Model):
+    type = models.CharField(max_length=16)
+    json = models.TextField()
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'templates'
 
 
 class Descriptors(models.Model):
