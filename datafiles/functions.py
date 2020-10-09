@@ -9,7 +9,8 @@ def addfile(finfo=None):
     Add a data jsonld file to the database
     Required dictionary entries
         dataset_id: id of dataset to which the data belongs
-        path: path to data jsonld file
+        path: path to data jsonld file (OR file)
+        file: file contents (OR path)
     :param finfo: data jsonld file information
     :return: boolean
     """

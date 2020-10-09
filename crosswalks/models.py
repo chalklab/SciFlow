@@ -61,14 +61,3 @@ class Metadata(models.Model):
     class Meta:
         managed = False
         db_table = 'metadata'
-
-
-class Templates(models.Model):
-    """ unique entity templates table """
-    type = models.CharField(max_length=16)
-    json = models.TextField()
-    updated = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'templates'

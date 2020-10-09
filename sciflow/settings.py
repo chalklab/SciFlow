@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'substances',
     'users',
     'workflow',
+    'datafiles',
 ]
 
 MIDDLEWARE = [
@@ -95,6 +96,9 @@ UNFDB = {
         'PASSWORD': 'letthedatafl0w',
         'HOST': '127.0.0.1',
         'PORT': '3307',
+        'TEST': {
+            'NAME': 'test_sciflow',
+        }
     }
 }
 
