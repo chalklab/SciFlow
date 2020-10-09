@@ -81,8 +81,8 @@ def wait(filetype):
     autoingest(filetype)
 
 
-autodir = os.listdir(hergautoinput)
-if len(autodir) > 1:
-    autoingest("herg")
-else:
-    print("no files detected in auto input; auto input disabled")
+# autodir = os.listdir(hergautoinput)
+# if len(autodir) > 1:
+#     autoingest("herg")
+# else:
+#     print("no files detected in auto input; auto input disabled")

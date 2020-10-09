@@ -8,6 +8,7 @@ from substances.models import Substances
 from substances.models import Identifiers
 import json
 import time
+import os
 
 normcheck = {}
 
