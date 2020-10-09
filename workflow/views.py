@@ -1,8 +1,11 @@
 """ view definitions for the workflow app """
+import ast
+from zipfile import ZipFile
+
 from django.shortcuts import redirect
 from django.shortcuts import render
 from .ingestion import *
-
+from .models import *
 
 # Sciflow ingestion variables
 herginputfiles = {}
@@ -18,26 +21,30 @@ def dashboard(response):
     # TODO add dashboard page
 
 
-def ingestion(response):
+def ingestion(request):
     """ ingestion SciData JSON-LD file """
-    user = response.user
-    getfiles(herginput, herginputfiles)
-    getfiles(cifinput, cifinputfiles)
+    user = request.user
+    if request.method == "POST":
+        file = request.FILES['upload']
+        print(file)
+        if "jsonld" in file.name:
+            ingest(file, user)
+            # data = file.readlines()
+            # print(data)
 
-    # TODO ingestion definition needs to be generic
+        if "zip" in file.name:
+            with ZipFile(file, 'r') as zip:
+                filenames = []
+                for info in zip.infolist():
+                    name = info.filename
+                    filenames.append(name)
+                for file in filenames:
+                    ingest(file, user)
+                    # data = file.readlines()
+                    # print(data)
 
-    # herg submit button press:
-    if response.POST.get('herg'):
-        ingest("herg", "m", user)
-        return redirect('/workflow/results')
-
-    # cif submit button press:
-    if response.POST.get('cif'):
-        ingest("cif", "m", user)
-        return redirect('/workflow/results')
-
-    return render(response, 'workflow/ingestion.html', {
-        "herginputfiles": herginputfiles, "cifinputfiles": cifinputfiles})
+    context = {}
+    return render(request, 'workflow/ingestion.html', context)
 
 
 def ingestionresults(response):
@@ -73,5 +80,17 @@ def test(response):
     qset = Datasets.objects.all().values_list('sourcecode', flat=True).order_by('id')
     lst = list(qset)
     print(lst)
-    x = 0
     return render(response, "substances/add.html", {"lst": lst})
+
+def errors(response):
+    """ for testing and displaying errorcodes"""
+
+    if response.method == "POST":
+        if 'errortest' in response.POST:
+            errorcode = response.POST.get('errortest')
+            adderror(2,errorcode)
+
+    errors = readerrors(1)
+
+    context = {"errors":errors}
+    return render(response, "workflow/errors.html", context)

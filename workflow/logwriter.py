@@ -1,4 +1,7 @@
 """ logging activity in sciflow """
+import ast
+
+from .models import *
 from slacker import Slacker
 from requests.sessions import Session
 with Session() as session:
@@ -50,3 +53,46 @@ def logprint(logtype, loginfo):
     # slack.chat.post_message('#workflow-updates', actcontent)
     # slack.chat.post_message('#workflow-updates', errcontent)
     # slack.chat.post_message('#workflow-updates', "-------------End Log-------------")
+
+
+def adderror(errorid, errorcode):
+    e = JsonErrors.objects.get(id=errorid)
+    s_list = e.errorcode
+    l_list = ast.literal_eval(s_list)
+    l_list.append(str(errorcode))
+    e.errorcode = l_list
+    e.save()
+
+def readerrors(eid):
+    e = JsonErrors.objects.get(id=eid)
+    ec = e.errorcode
+    ecl = ast.literal_eval(ec)
+    print(type(ecl))
+    print(ecl)
+    reports = []
+    for error in ecl:
+        print(error)
+        x=str(error)[0]
+        y=str(error)[1]
+
+        ingesterrors = ["The first ingestion error!",
+                        "The second ingestion error!"]
+
+        verificationerrors = ["The first verification error!",
+                              "The second verification error!"]
+
+        normalizationerrors = ["The first normalization error!",
+                               "The second normalization error!"]
+
+        uploaderrors = ["The first upload error!",
+                        "The second upload error!"]
+
+        errorcodes = [ingesterrors[y],
+                      verificationerrors[y],
+                      normalizationerrors[y],
+                      uploaderrors[y],]
+
+        print(errorcodes[x])
+        report = errorcodes[x]
+        reports.append(report)
+    return reports

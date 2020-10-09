@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %} Ingestion Errors {% endblock %}
+{% block header %} Errors {% endblock %}
+
+{% block content %}
+
+<form action="" method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="errortest">Input Errorcode for Testing</label>
+    <input name="errortest" type="text" class="form-control" id="errortest">
+  </div>
+  <button type="submit" class="btn btn-success">Submit</button>
+</form>
+
+Errors:
+
+{% for error in errors %}
+{{error}}
+{%endfor%}
+{% endblock %}

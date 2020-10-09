@@ -30,18 +30,18 @@ def isgraph(name):
     else:
         return False
 
+
 def getgraphname(identifier):
     """ get the name of a named graph using substring """
     headers = {'Accept': 'application/sparql-results+json'}
     params = {'query': 'SELECT DISTINCT ?g WHERE { GRAPH ?g { ?s ?p ?o. } FILTER(contains(str(?g),"'+identifier+'"))}'}
-
     # response format {'head': {'vars': ['g']}, 'results': {'bindings': [{'g': {'type': 'uri', 'value': <graphname>}}]}}
     temp = graphsparqlurl
     response = requests.get(temp, headers=headers, params=params).json()
     return response['results']['bindings'][0]['g']['value']
 
 
-def graphadd(file, repo): # DONE
+def graphadd(file, repo):
     """ post /rest/data/import/upload/{repositoryID}/url
         add a file to GraphDB """
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
@@ -52,14 +52,15 @@ def graphadd(file, repo): # DONE
 
 
 # misc
-def graphsize(repo): # DONE
+def graphsize(repo):
     """ get /rest/repositories/{repositoryID}/size
         get the size of the graph"""
     headers = {'Accept': 'application/json'}
     r = requests.get("http://localhost:7200/rest/repositories/"+repo+"/size", headers=headers)
     print(r.text)
 
-def graphdownload(repo): # TODO: Make it so this actually writes a file instead of printing
+
+def graphdownload(repo):  # TODO: Make it so this actually writes a file instead of printing
     """ get /rest/repositories/{repositoryID}/download
         downloads the graph """
     headers = {'Accept': 'application/json'}
@@ -67,14 +68,16 @@ def graphdownload(repo): # TODO: Make it so this actually writes a file instead 
 
     print(r.text)
 
-def graphrepos(): # DONE
+
+def graphrepos():
     """ get /repositories
         gets repos """
     headers = {'Accept': 'application/sparql-results+json'}
     r = requests.get("http://localhost:7200/repositories", headers=headers)
     print(r.text)
 
-def graphcontexts(repo): # DONE
+
+def graphcontexts(repo):
     """ get /repositories/{repositoryID}/contexts
         gets context """
     headers = {'Accept': 'application/sparql-results+json'}
@@ -83,15 +86,15 @@ def graphcontexts(repo): # DONE
 
 
 # statements
-
-def graphstatementsget(graph, repo): # TODO: ???
+def graphstatementsget(graph, repo):  # TODO: ???
     """ get /repositories/{repositoryID}
         gets all statements of a given graph """
     headers = {'Accept': 'text/plain'}
     r = requests.get("http://localhost:7200/repositories/"+repo+"/rdf-graphs/"+graph, headers=headers)
     print(r.text)
 
-def graphstatementedit(baseuri, update, repo): #DONE??
+
+def graphstatementedit(baseuri, update, repo):  # DONE??
     """ put /repositories/{repositoryID}/statements
         updates a statement in the repo """
     headers = {'Content-type': ' application/rdf+xml', 'Accept': 'text/plain'}
@@ -100,7 +103,7 @@ def graphstatementedit(baseuri, update, repo): #DONE??
 
 
 # queries
-def graphqueryrun(query, repo): # DONE
+def graphqueryrun(query, repo):
     """ get /repositories/{repositoryID}
     runs a query """
     headers = {'Accept': 'application/sparql-results+json'}
@@ -108,14 +111,16 @@ def graphqueryrun(query, repo): # DONE
     print(r.text)
     print(r)
 
-def graphqueryget(): # TODO: It prints but it doesn't look nice
+
+def graphqueryget():  # TODO: It prints but it doesn't look nice
     """ get /rest/sparql/saved-queries
     gets queries """
     headers = {'Accept': 'application/json'}
     r = requests.get("http://localhost:7200/rest/sparql/saved-queries", headers=headers)
     print(json.loads(r.text))
 
-def graphqueryedit(query): # DONE
+
+def graphqueryedit(query):
     """ put /rest/sparql/saved-queries
     edit a query preset """
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
@@ -123,7 +128,8 @@ def graphqueryedit(query): # DONE
     r = requests.put("http://localhost:7200/rest/sparql/saved-queries", data=data, headers=headers)
     print(r.text)
 
-def graphquerycreate(newquery): # DONE
+
+def graphquerycreate(newquery):
     """ post /rest/sparql/saved-queries
     create a query preset """
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
@@ -131,19 +137,22 @@ def graphquerycreate(newquery): # DONE
     r = requests.post("http://localhost:7200/rest/sparql/saved-queries", data=data, headers=headers)
     print(r.text)
 
-def graphquerydelete(query): # DONE
+
+def graphquerydelete(query):
     """ deletes a query preset """
     headers = {'Accept': 'application/json'}
     r = requests.delete("http://localhost:7200/rest/sparql/saved-queries?name="+query, headers=headers)
     print(r.text)
 
+
 # namespaces
-def graphnamespaceget(prefix, repo): # DONE
+def graphnamespaceget(prefix, repo):
     """ get /repositories/{repositoryID}/namespaces/{namespacesPrefix}
         gets a namespace prefix """
     headers = {'Accept': 'text/plain'}
     r = requests.get("http://localhost:7200/repositories/"+repo+"/namespaces/"+prefix, headers=headers)
     print(r.text)
+
 
 def graphnamespacecreate(uri, prefix, repo): #TODO: Can't see the format currently
     """ put /repositories/{repositoryID}/namespaces/{namespacesPrefix}

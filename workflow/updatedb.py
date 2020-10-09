@@ -2,7 +2,6 @@ from .validation import *
 from .logwriter import logwrite
 
 
-
 # function to attempt to push things to the mysql and graph databases. If either fail, the update is reverted to prevent inconsistencies.
 def updatedb(compound, loginfo):
     updatemysql(compound)
@@ -20,6 +19,6 @@ def updategraphdb():
 
 
 def updatemysql(compound):
-    inchikey = compound["inchikey"]
-
+    # inchikey = compound["inchikey"]
+    print("")
 

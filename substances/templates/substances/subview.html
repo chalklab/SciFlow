@@ -23,6 +23,43 @@
 
 
     {% endfor %}
+
+
+<div class="m-4 card-group">
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+              <li class="nav-item">
+                <a class="nav-link" href="#chembl" data-toggle="collapse" data-target="#chembl" aria-expanded="true" aria-controls="chembl">Chembl</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#classyfire" data-toggle="collapse" data-target="#classyfire" aria-expanded="false" aria-controls="classyfire">Classyfire</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#pubchem" data-toggle="collapse" data-target="#pubchem" aria-expanded="false" aria-controls="pubchem">Pubchem</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#wikidata" data-toggle="collapse" data-target="#wikidata" aria-expanded="false" aria-controls="wikidata">Wikidata</a>
+              </li>
+            </ul>
+        </div>
+        <div class="overflow-auto" style="height: 700px">
+            <div class="accordion" id="data">
+                <div id="chembl" class="collapse" aria-labelledby="chembl" data-parent="#data">
+                    <div class="card card-body">
+                            chembl
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
     </ul>
     <div class="d-flex flex-wrap justify-content-center">
         <br>

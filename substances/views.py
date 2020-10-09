@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from .functions import *
 from sciflow.settings import BASE_DIR
-
+from zipfile import ZipFile
 
 def list(request):
     """view to generare list of substances on homepage"""
@@ -79,11 +79,32 @@ def add(request, identifier):
 
 def ingest(request):
     if request.method == "POST":
-        inchikey = request.POST.get('ingest')
-        return redirect("/substances/add/" + str(inchikey))
+        if 'ingest' in request.POST:
+            inchikey = request.POST.get('ingest')
+            return redirect("/substances/add/" + str(inchikey))
+        else:
+            file = request.FILES['upload']
+            with ZipFile(file, 'r') as zip:
+                filenames = []
+                for info in zip.infolist():
+                    name = info.filename
+                    filenames.append(name)
+                for file in filenames:
+                    data = zip.read(file)
+                    m = re.search('^[A-Z]{14}-[A-Z]{10}-[A-Z]$', str(data))
+                    if m:
+                        print(m)
+                    else:
+                        print(':(')
 
     return render(request, "substances/ingest.html",)
 
+    """for file in files:
+        print(file)
+        lines = file.readlines()
+        for line in lines:
+            inchikey = str(line)[2:29]
+            print(inchikey)"""
 
 def ingestlist(request):
     """ add many compounds from a text file list of identifiers """

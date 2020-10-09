@@ -4,18 +4,19 @@ from .logwriter import *
 import json
 
 
-def validate(path, filetype, loginfo):
+def validate(file):
     """all-in-one validation function. Includes every check that we would want to do on a file"""
 
     validity = {}
 
     # runs a check to make sure the file is in proper scidata format
-    check_scidata(path, validity, loginfo)
+    check_scidata(file, validity)
 
+    # TODO: See check_type function below
     # Specialized checks for each dataset type
-    searchstrings = getcodesnames()
-    string = searchstrings[filetype]
-    check_type(path, validity, loginfo, filetype, string)
+    # searchstrings = getcodesnames()
+    # string = searchstrings[filetype]
+    # check_type(path, validity, loginfo, filetype, string)
 
     # Validity Check
     if all(validity.values()):
@@ -24,10 +25,10 @@ def validate(path, filetype, loginfo):
         return False
 
 
-def check_scidata(path, validity, loginfo):
+def check_scidata(file, validity):
     """ checks that file is present, is valid json, and conforms to the SciData specification """
     try:
-        with open(path) as json_file:
+        with file as json_file:
             data = json.load(json_file)
             keys_a = []
             keys_b = []
@@ -45,17 +46,21 @@ def check_scidata(path, validity, loginfo):
                     isscidata = False
             # write to logs
             if isscidata is True:
-                logwrite("act", loginfo, "\t- Scidata: Valid")
+                print("valid!")
+                # logwrite("act", loginfo, "\t- Scidata: Valid")
             else:
-                logwrite("act", loginfo, "\t- Scidata: Invalid!")
-                logwrite("err", loginfo, "- Invalid Scidata Format!\n")
+                print("invalid!")
+                # logwrite("act", loginfo, "\t- Scidata: Invalid!")
+                # logwrite("err", loginfo, "- Invalid Scidata Format!\n")
             # update validity
             validity.update({"isscidata": isscidata})
     except FileNotFoundError as ex:
-        logwrite("err", loginfo, str(ex) + "\n")
+        # logwrite("err", loginfo, str(ex) + "\n")
+        print("Error: file not found!")
         validity.update({"validfile": False})
 
 
+# TODO: Needs rewritten using the new uniqueid system
 def check_type(path, validity, loginfo, filetype, string):
     """ generic function to check for a specific type of SciData file. assumes that scidata check has been done """
     found = False

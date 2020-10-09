@@ -8,4 +8,5 @@ urlpatterns = [
     path('ingestion/', views.ingestion, name='ingestion'),
     path('results/', views.ingestionresults, name='ingestionresults'),
     path('test/', views.test, name='test'),
+    path('errors/', views.errors, name='errors'),
 ]
