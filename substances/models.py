@@ -1,7 +1,6 @@
 """import models"""
 from django.db import models
 
-# Create your models here.
 
 class Substances(models.Model):
     """ getting data from the substances DB table"""
@@ -91,8 +90,13 @@ class Systems(models.Model):
     substance5 = models.ForeignKey(Substances, null=True, related_name='substance5', on_delete=models.CASCADE)
     updated = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        managed = False
+        db_table = 'systems'
+
 
 class Templates(models.Model):
+    """ getting data from the template """
     type = models.CharField(max_length=16)
     json = models.TextField()
     updated = models.DateTimeField()
@@ -113,3 +117,17 @@ class Descriptors(models.Model):
     class Meta:
         managed = False
         db_table = 'descriptors'
+
+
+class SubstancesSystems(models.Model):
+    """ getting data from the substances_systems join table """
+    substance = models.ForeignKey(Substances, null=True, related_name='substance_id', on_delete=models.CASCADE)
+    system = models.ForeignKey(Systems, null=True, related_name='system_id', on_delete=models.CASCADE)
+    role = models.CharField(max_length=13, blank=True, null=True)
+    constituent = models.PositiveIntegerField(blank=True, null=True)
+    mixture_id = models.IntegerField(blank=True, null=True)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'substances_systems'
