@@ -2,6 +2,7 @@
 from .normalization import *
 from .updatedb import *
 from .settings import *
+from datafiles.functions import *
 from datetime import datetime
 import os
 import time
@@ -22,7 +23,9 @@ def ingest(file, user):
     if str(file).endswith('.jsonld'):
         # validate and check file for different unique sections of the document (most in system)
         sections = {}
+        initfile(None)
         if validate(file) is True:  # validate.py
+            addfile(None)
             types = ['compound']  # this would be expanded as we get me code written for other unique types...
             for systype in types:
                 found = getfacet(file, systype)

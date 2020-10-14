@@ -79,9 +79,9 @@ def getfacet(file, systype):
         pass
 
 
-url = "https://stuchalk.github.io/scidata/examples/cif/1000118.jsonld"
-cifs = '/Users/n01448636/Documents/Google Drive/CIF_scidata_jsonlds/'
-directory = os.fsencode(cifs)
+# url = "https://stuchalk.github.io/scidata/examples/cif/1000118.jsonld"
+# cifs = '/Users/n01448636/Documents/Google Drive/CIF_scidata_jsonlds/'
+# directory = os.fsencode(cifs)
 
 
 def graph_link_a(file):
