@@ -1,12 +1,11 @@
 """ view definitions for the workflow app """
 import ast
 from zipfile import ZipFile
-
+from datasets.forms import *
 from django.shortcuts import redirect
 from django.shortcuts import render
 from .ingestion import *
 from .models import *
-from substances.forms import *
 
 # Sciflow ingestion variables
 herginputfiles = {}
@@ -26,28 +25,18 @@ def ingestion(request):
     """ ingestion SciData JSON-LD file """
     user = request.user
     if request.method == "POST":
-        file = request.FILES['upload']
-        print(file)
-        if "jsonld" in file.name:
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
             ingest(file, user)
-            # data = file.readlines()
-            # print(data)
-
-        if "zip" in file.name:
-            with ZipFile(file, 'r') as zip:
-                filenames = []
-                for info in zip.infolist():
-                    name = info.filename
-                    filenames.append(name)
-                for file in filenames:
-                    ingest(file, user)
-                    # data = file.readlines()
-                    # print(data)
-
-    context = {}
+    else:
+        form = UploadFileForm()
+    context = {'form': form}
     return render(request, 'workflow/ingestion.html', context)
 
 
+
+# TODO: Delete, perhaps
 def ingestionresults(response):
     """ ingestion results """
     user = response.user

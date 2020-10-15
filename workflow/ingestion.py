@@ -19,14 +19,12 @@ def getfiles(folder, dirdict):
 
 
 
-def ingest(file):
+def ingest(file, user):
     """ ingest SciData JSON-LD file """
     if str(file).endswith('.jsonld'):
-        # validate and check file for different unique sections of the document (most in system)
+        # initfile(file, user)
+        # addfile(file, user)
         sections = {}
-        # initfile(None)
-        # if validate(file) is True:  # validate.py
-        #     addfile(None)
         types = ['compound']  # this would be expanded as we get me code written for other unique types...
         for systype in types:
             found = getfacet(file, systype)
@@ -36,6 +34,7 @@ def ingest(file):
         if sections:
             print(sections)
             # if normalize(file) is True:  # normalization.py
+            # addfile(file, user)
             #     print("finished!")
             #     #finalize(path, outputdir, errordir, loginfo)
             # else:
