@@ -18,27 +18,28 @@ def getfiles(folder, dirdict):
             dirdict.update({filename: filename})
 
 
-def ingest(file, user):
+
+def ingest(file):
     """ ingest SciData JSON-LD file """
     if str(file).endswith('.jsonld'):
         # validate and check file for different unique sections of the document (most in system)
         sections = {}
-        initfile(None)
-        if validate(file) is True:  # validate.py
-            addfile(None)
-            types = ['compound']  # this would be expanded as we get me code written for other unique types...
-            for systype in types:
-                found = getfacet(file, systype)
-                if found:
-                    sections.update({systype: found[systype]})
+        # initfile(None)
+        # if validate(file) is True:  # validate.py
+        #     addfile(None)
+        types = ['compound']  # this would be expanded as we get me code written for other unique types...
+        for systype in types:
+            found = getfacet(file, systype)
+            if found:
+                sections.update({systype: found[systype]})
 
         if sections:
             print(sections)
-            if normalize(file) is True:  # normalization.py
-                print("finished!")
-                #finalize(path, outputdir, errordir, loginfo)
-            else:
-                print("file could not be normalized")  # convert to act/err log entries
+            # if normalize(file) is True:  # normalization.py
+            #     print("finished!")
+            #     #finalize(path, outputdir, errordir, loginfo)
+            # else:
+            #     print("file could not be normalized")  # convert to act/err log entries
         else:
             print("no system sections found!")  # convert to act/err log entries
 

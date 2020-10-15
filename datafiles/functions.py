@@ -1,6 +1,6 @@
 """ functions file for the datafiles app"""
 import json
-from datafiles.models import *
+from datasets.models import *
 from django.contrib.auth.models import *
 
 

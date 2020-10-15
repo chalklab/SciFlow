@@ -10,7 +10,7 @@ def validate(file):
     validity = {}
 
     # runs a check to make sure the file is in proper scidata format
-    check_scidata(file, validity)
+    # check_scidata(file, validity)
 
     # TODO: See check_type function below
     # Specialized checks for each dataset type

@@ -63,20 +63,40 @@ def getfacet(file, systype):
     """ gets the compound and target within the scidata file """
     output = {}
     try:
-        # x = json.loads(open(path).read())
-        x = json.loads(file)
-        for k, v in x.items():
-            if k == '@graph':
-                for a in x['@graph']['scidata']['system']['facets']:
-                    for b, c in a.items():
-                        if b == '@type' and c.startswith('sdo:' + systype):
-                            output.update({systype: a})
-        if bool(output):
+        for x in file.chunks():
+            y = json.loads(x)
+            for k,v in y.items():
+                if k == '@graph':
+                    for a in v['scidata']['system']['facets']:
+                        for b, c in a.items():
+                            if b == '@type' and c.startswith('sci:' + systype):
+                                output.update({systype: a})
+        if output:
             return output
         else:
             return False
     except FileNotFoundError:
         pass
+
+
+# def getfacet(file, systype):
+#     """ gets the compound and target within the scidata file """
+#     output = {}
+#     try:
+#         # x = json.loads(open(path).read())
+#         x = json.loads(file)
+#         for k, v in x.items():
+#             if k == '@graph':
+#                 for a in x['@graph']['scidata']['system']['facets']:
+#                     for b, c in a.items():
+#                         if b == '@type' and c.startswith('sdo:' + systype):
+#                             output.update({systype: a})
+#         if bool(output):
+#             return output
+#         else:
+#             return False
+#     except FileNotFoundError:
+#         pass
 
 
 # url = "https://stuchalk.github.io/scidata/examples/cif/1000118.jsonld"

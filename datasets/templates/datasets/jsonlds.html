@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %} JSON-LD Files {% endblock %}
+{% block header %} All JSON-LD Files {% endblock %}
+{% block content %}
+    <h4>Search:</h4>
+    <form action="" method="post">
+        {% csrf_token %}
+        <input name="q" type="text" placeholder="Search for a JSON-LD">
+        <button class="btn btn-success" type="submit" name="action">Search</button>
+    </form>
+
+
+    <h4>JSON-LD List:</h4>
+    <ul>
+    {% for jsonld in jsonldlist %}
+        <li><a href="/jsonlds/view/{{ jsonld.id }}">{{ jsonld.id }}</a></li>
+    {% endfor %}
+    </ul>
+
+
+{% endblock %}

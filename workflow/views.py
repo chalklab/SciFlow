@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from .ingestion import *
 from .models import *
+from substances.forms import *
 
 # Sciflow ingestion variables
 herginputfiles = {}
