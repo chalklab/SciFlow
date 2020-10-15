@@ -1,21 +1,21 @@
 """ django views file for the datasets app """
 from django.shortcuts import render
-from .models import *
+from datasets.serializer import *
 
 
 def home(request):
     """view to generate list of substances on homepage"""
-    dscount = Datasets.objects.count()
+    dscount = Datasets.objects.exclude(sourcecode='chalklab').count()
     return render(request, "datasets/home.html", {'dscount': dscount})
 
-def jsonlds(request):
-    """view to generate list of substances on homepage"""
-    jsonldlist = JsonFiles.objects.filter()
-    return render(request, "datasets/jsonlds.html", {'jsonldlist': jsonldlist})
-    # return render(request, "datasets/jsonlds.html")
 
-def jsonldview(request, jsonldid):
+def index(request):
     """view to generate list of substances on homepage"""
-    jsonld= JsonFiles.objects.get(id=jsonldid)
-    return render(request, "datasets/jsonldview.html", {'jsonld': jsonld})
-    # return render(request, "datasets/jsonlds.html")
+    datasets = Datasets.objects.exclude(sourcecode='chalklab')
+    return render(request, "datasets/index.html", {'datasets': datasets})
+
+
+def view(request, setid):
+    """view a dataset list of files"""
+    dataset = DatasetSerializer(Datasets.objects.get(id=setid))
+    return render(request, "datasets/view.html", {'dataset': dataset.data})

@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Datasets(models.Model):
-    """ getting data from the substances DB table"""
+    """model for the datasets table"""
 
     class Protected(models.TextChoices):
         """ choice for protected field """
@@ -26,6 +26,7 @@ class Datasets(models.Model):
 
 
 class JsonActlog(models.Model):
+    """model for the json_actlogs table"""
     json_lookup_id = models.IntegerField()
     json_file_id = models.IntegerField()
     activitycode = models.CharField(max_length=16)
@@ -38,6 +39,7 @@ class JsonActlog(models.Model):
 
 
 class JsonAspects(models.Model):
+    """model for the json_aspects join table"""
     json_lookup_id = models.IntegerField()
     aspects_lookup_id = models.IntegerField()
     updated = models.DateTimeField()
@@ -48,6 +50,7 @@ class JsonAspects(models.Model):
 
 
 class JsonErrors(models.Model):
+    """model for the json_errors table"""
     json_lookup_id = models.IntegerField()
     json_file_id = models.IntegerField()
     errorcode = models.CharField(max_length=16)
@@ -60,6 +63,8 @@ class JsonErrors(models.Model):
 
 
 class JsonFacets(models.Model):
+    """model for the json_facets join table"""
+
     json_lookup_id = models.IntegerField()
     facets_lookup_id = models.IntegerField()
     updated = models.DateTimeField()
@@ -69,20 +74,9 @@ class JsonFacets(models.Model):
         db_table = 'json_facets'
 
 
-class JsonFiles(models.Model):
-    json_lookup_id = models.IntegerField()
-    file = models.TextField()
-    type = models.CharField(max_length=32)
-    version = models.IntegerField()
-    updated = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'json_files'
-
-
 class JsonLookup(models.Model):
-    dataset_id = models.IntegerField()
+    """model for the json_lookup table"""
+    dataset = models.ForeignKey(Datasets, models.DO_NOTHING, db_column="dataset_id")
     uniqueid = models.CharField(max_length=128)
     title = models.CharField(max_length=256)
     graphname = models.CharField(max_length=256)
@@ -93,3 +87,17 @@ class JsonLookup(models.Model):
     class Meta:
         managed = False
         db_table = 'json_lookup'
+
+
+class JsonFiles(models.Model):
+    """model for the json_files table"""
+    meta = models.ForeignKey(JsonLookup, models.DO_NOTHING, db_column="json_lookup_id")
+
+    file = models.TextField()
+    type = models.CharField(max_length=32)
+    version = models.IntegerField()
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'json_files'

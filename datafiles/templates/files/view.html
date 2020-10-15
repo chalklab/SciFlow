@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %} SciFlow Files {% endblock %}
+{% block header %} Data File: {{ file.graphname }} {% endblock %}
+{% block content %}
+    <h4>Current Versions</h4>
+    <ul>
+        {% for ver in file.vers %}
+            <li>{{ ver.version }}: {{ ver.type }} ({{ ver.updated }})</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

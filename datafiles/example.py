@@ -1,4 +1,4 @@
-""" functions file for the datafiles app"""
+""" example code for the datafiles app"""
 import os
 import django
 

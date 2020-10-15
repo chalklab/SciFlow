@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
-{% block title %} JSON-LD Files {% endblock %}
-{% block header %} All JSON-LD Files {% endblock %}
+{% block title %} SciFlow Datasets {% endblock %}
+{% block header %} Datasets {% endblock %}
 {% block content %}
     <h4>Search:</h4>
     <form action="" method="post">
@@ -11,10 +11,10 @@
     </form>
 
 
-    <h4>JSON-LD List:</h4>
+    <h4>Current Datasets</h4>
     <ul>
-    {% for jsonld in jsonldlist %}
-        <li><a href="/jsonlds/view/{{ jsonld.id }}">{{ jsonld.id }}</a></li>
+    {% for set in datasets %}
+        <li><a href="/datasets/view/{{ set.id }}">{{ set.name }}</a></li>
     {% endfor %}
     </ul>
 

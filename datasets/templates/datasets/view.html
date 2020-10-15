@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %} SciFlow Datasets {% endblock %}
+{% block header %} Dataset: {{ dataset.name }} {% endblock %}
+{% block content %}
+    <h4>Current Files</h4>
+    <ul>
+    {% for file in dataset.files %}
+        <li><a href="/files/view/{{ file.id }}">{{ file.uniqueid }}</a></li>
+        <ul>
+        {% for ver in file.vers %}
+                <li>{{ ver.version }}: {{ ver.type }}</li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
+    </ul>
+
+
+{% endblock %}

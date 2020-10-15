@@ -5,7 +5,7 @@ from datasets import views
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('jsonlds/', views.jsonlds, name='jsonlds'),
-    path("jsonlds/view/<jsonldid>", views.jsonldview, name='jsonldview'),
+    path('datasets/index/', views.index, name='index'),
+    path("datasets/view/<setid>", views.view, name='view'),
 
 ]
