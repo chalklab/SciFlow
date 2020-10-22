@@ -1,6 +1,6 @@
 """ serializers for reports data"""
 from rest_framework import serializers
-from datasets.models import *
+from datafiles.models import *
 
 
 class JsonFileSerializer(serializers.ModelSerializer):

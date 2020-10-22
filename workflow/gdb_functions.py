@@ -3,7 +3,8 @@ import json
 from urllib.parse import quote
 from workflow.settings import *
 import requests
-
+from substances.models import Substances
+from substances.models import Identifiers
 
 def addgraph(file, locale):
     """ add a file to GraphDB """
@@ -159,3 +160,36 @@ def graphnamespacecreate(uri, prefix, repo): #TODO: Can't see the format current
         creates a namespace prefix """
     print(prefix)
 
+
+def graph_link_a(file):
+    jsonfile = json.load(file)
+    try:
+        for group in jsonfile['@graph']['scidata']['system']['facets']:
+            if group['@id'].startswith(('compound/', 'crystal/')):
+                newgroup = graph_link_b(group)
+                group.clear()
+                group.update(newgroup)
+    except:
+        pass
+    return jsonfile
+
+
+def graph_link_b(group):
+    # group = {'@id': 'compound/1/', '@type': 'cif:compound', '_chemical_formula_moiety': 'C12 H8', '_chemical_name_systematic': 'Q194207'}
+    tablematch = {"compound": [Identifiers, Substances, 'substance_id'], "crystal": [Identifiers, Substances, 'substance_id']}
+    identifier = {'@id': group['@id']}
+    category = group['@id'].split('/')[0]
+    for line in list(tablematch[category][0].objects.values()):
+        try:
+            if any(line['value'] in q for q in group.values()):
+                if line['value'] in group.values():
+                    group = identifier
+                    group.update(tablematch[category][1].objects.values('graphdb').get(id=line[tablematch[category][2]]))
+                    # Post(y)
+            else:
+                # compound/crystal/etc not found in database. Needs to be added first in order to link
+                # then GraphLinkB(group)
+                pass
+        except:
+            print('exception')
+    return group

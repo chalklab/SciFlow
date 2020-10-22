@@ -4,5 +4,6 @@ from datafiles import views
 
 
 urlpatterns = [
-    path("files/view/<fileid>", views.view, name='view'),
+    path("ingest/", views.ingestion, name='view'),
+    path("view/<fileid>", views.viewfile, name='view'),
 ]

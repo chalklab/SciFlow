@@ -20,7 +20,7 @@ if "x" == "y":
 # crosswalks
 
 # datasets
-    from datasets.mysql import *
+    from datasets.ds_functions import *
     getdatasetnames
     getsourcecodes
     getcodesnames
@@ -62,12 +62,12 @@ if "x" == "y":
     approverequest
 
 # workflow
-    from workflow.graph_link import *
+    from workflow.gdb_functions import *
+
     Post
     GraphLinkA
     GraphLinkB
 
-    from workflow.graphdb import *
     addgraph
     isgraph
     getgraphname
@@ -86,39 +86,25 @@ if "x" == "y":
     graphnamespaceget
     graphnamespacecreate
 
-    from workflow.ingestion import *
-    getfiles
+    from workflow.wf_functions import *
+    #ingestion
     ingest
     finalize
-    autoingest
-    wait
 
-    from workflow.logwriter import *
+    #logwriter
     errloginit
     actloginit
     logwrite
     logprint
 
-    from workflow.normalization import *
+    #normalization
     normalize
     findsub
     getfacet
-    findprofile
-    getprofile
-    makeprofile
-    addprofile
-    normalizationcheck
 
-    from workflow.updatedb import *
-    updatedb
-    updategraphdb
-    updatemysql
 
-    from workflow.utils import *
-    file2sds
-    movesdsfile
 
-    from workflow.validation import *
+    from datafiles.validation import *
     validate
     check_scidata
     check_type

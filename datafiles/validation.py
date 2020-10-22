@@ -1,6 +1,5 @@
 """ validation of SciData JSON-LD files """
-from datasets.mysql import *
-from .logwriter import *
+from datasets.ds_functions import *
 import json
 
 
@@ -68,9 +67,11 @@ def check_type(path, validity, loginfo, filetype, string):
         if string in file.read():
             found = True
     if found:
-        logwrite("act", loginfo, "\t- " + filetype + ": Valid\n")
+        print('Found!')
+        # logwrite("act", loginfo, "\t- " + filetype + ": Valid\n")
     else:
-        logwrite("act", loginfo, "\t- " + filetype + ": Invalid!\n")
-        logwrite("err", loginfo, "- " + " not found!\n")
+        print('Not found')
+        # logwrite("act", loginfo, "\t- " + filetype + ": Invalid!\n")
+        # logwrite("err", loginfo, "- " + " not found!\n")
 
     validity.update({"is" + filetype: found})
