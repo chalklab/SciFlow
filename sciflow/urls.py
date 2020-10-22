@@ -24,6 +24,6 @@ urlpatterns = [
     path('files/', include('datafiles.urls')),
     path('', include('datasets.urls')),
     path('substances/', include('substances.urls')),
-    path('users/', include('users.urls')),
+    path('', include('users.urls')),
     path('workflow/', include('workflow.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
