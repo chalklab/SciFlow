@@ -1,0 +1,306 @@
+{
+    "@context": [
+        "https://stuchalk.github.io/scidata/contexts/chembl.jsonld",
+        "https://stuchalk.github.io/scidata/contexts/scidata.jsonld",
+        {
+            "sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#",
+            "w3i": "https://w3id.org/skgo/modsci#",
+            "obo": "http://purl.obolibrary.org/obo/",
+            "ss": "http://semanticscience.org/resource/",
+            "mesh": "http://purl.bioontology.org/ontology/MESH",
+            "edam": "http://edamontology.org",
+            "bao": "http://www.bioassayontology.org/bao#",
+            "cco": "http://rdf.ebi.ac.uk/terms/chembl#"
+        },
+        {"@base": "https://scidata.unf.edu/chembl:covid:240_72215_2324237/"}
+    ],
+    "@id": "https://scidata.unf.edu/data/00000002",
+    "generatedAt": "2020-08-26 15:39:52.076172",
+    "version": 1,
+    "@graph": {
+        "@id": "https://scidata.unf.edu/chembl:covid:240_72215_2324237/",
+        "@type": "sdo:scidataFramework",
+        "uid": "chembl:covid:240_72215_2324237",
+        "title": "Strategies to reduce HERG K+ channel blockade. Exploring heteroaromaticity and rigidity in novel pyridine analogues of dofetilide.",
+        "author": [
+            {
+                "@id": "author/1/",
+                "@type": "dc:author",
+                "name": "Carvalho JF"
+            },
+            {
+                "@id": "author/2/",
+                "@type": "dc:author",
+                "name": "Louvel J"
+            },
+            {
+                "@id": "author/3/",
+                "@type": "dc:author",
+                "name": "Doornbos ML"
+            },
+            {
+                "@id": "author/4/",
+                "@type": "dc:author",
+                "name": "Klaasse E"
+            },
+            {
+                "@id": "author/5/",
+                "@type": "dc:author",
+                "name": "Yu Z"
+            },
+            {
+                "@id": "author/6/",
+                "@type": "dc:author",
+                "name": "Brussee J"
+            },
+            {
+                "@id": "author/7/",
+                "@type": "dc:author",
+                "name": "IJzerman AP."
+            }
+        ],
+        "description": "Drug-induced blockade of the human ether-a-go-go-related gene K(+) channel (hERG) represents one of the major antitarget concerns in pharmaceutical industry. SAR studies of this ion channel have shed light on the structural requirements for hERG interaction but most importantly may reveal drug design principles to reduce hERG affinity. In the present study, a novel library of neutral and positively charged heteroaromatic derivatives of the class III antiarrhythmic agent dofetilide was synthesized and assessed for hERG affinity in radioligand binding and manual patch clamp assays. Structural modifications of the pyridine moiety, side chain, and peripheral aromatic moieties were evaluated, thereby revealing approaches for reducing hERG binding affinity. In particular, we found that the extra rigidity imposed close to the positively charged pyridine moiety can be very efficient in decreasing hERG affinity.",
+        "publisher": "J. Med. Chem.",
+        "version": "version from DB",
+        "dateTime": "datetime from DB",
+        "keywords": [
+            "IC50",
+            "HERG",
+            "Small molecule",
+            "INH",
+            "IC60"
+        ],
+        "permalink": "https://scidata.unf.edu/data/00000002",
+        "toc": [
+            "sci:assay",
+            "sci:cell",
+            "sci:compound",
+            "sci:datagroup",
+            "sci:target"
+        ],
+        "ids": [
+            "bao:BAO_0000181",
+            "cco:CO_000001",
+            "cco:CO_000003",
+            "cco:CO_000005",
+            "cco:CO_000007",
+            "cco:CO_000008",
+            "cco:CO_000009",
+            "cco:CO_000016",
+            "cco:CO_000021",
+            "cco:CO_000046",
+            "co:CO_000074",
+            "co:CO_000075",
+            "co:CO_000076",
+            "edam:data_1179",
+            "edam:data_2646",
+            "mesh:D008970",
+            "obo:CHEBI_24835",
+            "obo:CLO_0000001",
+            "obo:CLO_0037227",
+            "obo:CLO_0037229",
+            "obo:MI_1101",
+            "obo:MI_2010",
+            "obo:MI_2039",
+            "obo:OBI_0100026",
+            "ss:CHEMINF_000244",
+            "ss:CHEMINF_000245",
+            "ss:CHEMINF_000254",
+            "ss:CHEMINF_000295",
+            "ss:CHEMINF_000300",
+            "ss:CHEMINF_000307",
+            "ss:CHEMINF_000315",
+            "ss:CHEMINF_000321",
+            "ss:CHEMINF_000323",
+            "ss:CHEMINF_000325",
+            "ss:CHEMINF_000327",
+            "ss:CHEMINF_000350",
+            "ss:CHEMINF_000367",
+            "ss:CHEMINF_000431",
+            "ss:CHEMINF_000485",
+            "ss:CHEMINF_000490",
+            "ss:SIO_000070",
+            "ss:SIO_000074",
+            "ss:SIO_000117",
+            "ss:SIO_000136",
+            "ss:SIO_000618",
+            "ss:SIO_010072",
+            "ss:SIO_010781"
+        ],
+        "scidata": {
+            "@id": "scidata/",
+            "@type": "sci:scientificData",
+            "discipline": "w3i:Chemistry",
+            "subdiscipline": "w3i:MedicinalChemistry",
+            "methodology": {
+                "@id": "methodology/",
+                "@type": "sci:methodology",
+                "aspects": [
+                    {
+                        "@id": "assay/1/",
+                        "@type": "sci:assay",
+                        "chembl_id": "CHEMBL2330781",
+                        "description": "Displacement of [3H]astemizole from human ERG K+ channel expressed in HEK293 cells by scintillation spectrophotometric analysis",
+                        "assay_organism": "Homo sapiens",
+                        "assay_tax_id": "9606",
+                        "assay_cell_type": "HEK293"
+                    }
+                ]
+            },
+            "system": {
+                "@id": "system/",
+                "@type": "sci:system",
+                "facets": [
+                    {
+                        "@id": "compound/1/",
+                        "@type": "sci:compound",
+                        "identifiers": {
+                            "@id": "compound/1/identifiers/1/",
+                            "@type": "sci:identifiers",
+                            "standard_inchi": "InChI=1S/C23H25N/c1-18-6-10-20(11-7-18)14-16-22-4-3-5-23(24-22)17-15-21-12-8-19(2)9-13-21/h3-13H,14-17H2,1-2H3",
+                            "standard_inchi_key": "AOAOXSUNFXXSGI-UHFFFAOYSA-N",
+                            "canonical_smiles": "Cc1ccc(CCc2cccc(CCc3ccc(C)cc3)n2)cc1",
+                            "chembl_id": "CHEMBL2324237"
+                        },
+                        "compound_name": "2,6-bis(4-methylphenethyl)pyridine",
+                        "descriptors": {
+                            "@id": "compound/1/descriptors/1/",
+                            "@type": "sci:descriptors",
+                            "structure_type": "MOL",
+                            "molecule_type": "Small molecule",
+                            "chirality": "-1",
+                            "inorganic_flag": "-1",
+                            "polymer_flag": "0",
+                            "alogp": "5.27",
+                            "hba": "1",
+                            "hbd": "0",
+                            "psa": "12.89",
+                            "rtb": "6",
+                            "ro3_pass": "N",
+                            "num_ro5_violations": "1",
+                            "molecular_species": "NEUTRAL",
+                            "aromatic_rings": "3",
+                            "heavy_atoms": "24",
+                            "qed_weighted": "0.60",
+                            "hba_lipinski": "1",
+                            "hbd_lipinski": "0",
+                            "cx_most_bpka": "6.09",
+                            "cx_logp": "6.60",
+                            "cx_logd": "6.58"
+                        },
+                        "mw_freebase": "315.46",
+                        "full_mwt": "315.46",
+                        "mw_monoisotopic": "315.1987",
+                        "full_molformula": "C23H25N"
+                    },
+                    {
+                        "@id": "target/1/",
+                        "@type": "sci:target",
+                        "pref_name": "HERG",
+                        "tax_id": "9606",
+                        "organism": "Homo sapiens",
+                        "chembl_id": "CHEMBL240",
+                        "target_type": "SINGLE PROTEIN",
+                        "target_desc": "Target is a single protein chain",
+                        "parent_type": "PROTEIN"
+                    },
+                    {
+                        "@id": "cell/1/",
+                        "@type": "sci:cell",
+                        "cell_name": "HEK293",
+                        "cell_source_tissue": "Embryonic kidney fibroblasts",
+                        "cell_source_organism": "Homo sapiens",
+                        "cell_source_tax_id": "9606",
+                        "chembl_id": "CHEMBL3307715"
+                    }
+                ]
+            },
+            "dataset": {
+                "@id": "dataset/1/",
+                "@type": "sci:dataset",
+                "datagroup": [
+                    {
+                        "@id": "datagroup/1/",
+                        "@type": "sci:datagroup",
+                        "chembl_id": "CHEMBL2324237",
+                        "datapoints": ["datapoint/1/"]
+                    }
+                ],
+                "datapoint": [
+                    {
+                        "@id": "datapoint/1/",
+                        "@type": "sci:datapoint",
+                        "activity_id": 12644656,
+                        "data": [
+                            {
+                                "table_name__placeholder": "activities",
+                                "@id": "datapoint/1/datum/1/",
+                                "@type": "sci:suppdata",
+                                "value": {
+                                    "potential_duplicate": "0",
+                                    "@id": "datapoint/1/datum/1/value/1/",
+                                    "@type": "sci:value"
+                                }
+                            },
+                            {
+                                "table_name__placeholder": "activities",
+                                "@id": "datapoint/1/datum/2/",
+                                "@type": "sci:deriveddata",
+                                "value": {
+                                    "standard_relation": ">",
+                                    "@id": "datapoint/1/datum/2/value/1/",
+                                    "@type": "sci:value",
+                                    "standard_value": "10.000000000000000000000000000000",
+                                    "standard_units": "uM",
+                                    "standard_type": "IC60"
+                                }
+                            },
+                            {
+                                "table_name__placeholder": "activities",
+                                "@id": "datapoint/1/datum/3/",
+                                "@type": "sci:exptdata",
+                                "value": {
+                                    "uo_units": "UO_0000064",
+                                    "@id": "datapoint/1/datum/3/value/1/",
+                                    "@type": "sci:value",
+                                    "qudt_units": "http://www.openphacts.org/units/Micromolar",
+                                    "type": "IC60",
+                                    "relation": ">",
+                                    "value": "10.000000000000000000000000000000",
+                                    "units": "uM",
+                                    "standard_type": "IC60"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "sources": [
+            {
+                "@id": "source/1/",
+                "@type": "dc:source",
+                "type": "journalArticle",
+                "title": "Strategies to reduce HERG K+ channel blockade. Exploring heteroaromaticity and rigidity in novel pyridine analogues of dofetilide.",
+                "doi": "10.1021/jm301564f",
+                "journal": "J. Med. Chem.",
+                "year": 2013,
+                "volume": "56",
+                "issue": "7"
+            },
+            {
+                "@id": "source/2/",
+                "@type": "dc:source",
+                "type": "database",
+                "url": "https://www.ebi.ac.uk/chembl/document_report_card/CHEMBL2321724/"
+            }
+        ],
+        "rights": [
+            {
+                "@id": "rights/1/",
+                "@type": "dc:rights",
+                "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+            }
+        ]
+    }
+}

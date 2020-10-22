@@ -1,0 +1,130 @@
+{
+    "@context": [
+        "https://stuchalk.github.io/scidata/contexts/scidata.jsonld",
+        "https://stuchalk.github.io/scidata/contexts/fair_molecule.jsonld",
+        {
+            "sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#",
+            "obo": "http://purl.obolibrary.org/obo/",
+            "ss": "http://semanticscience.org/resource/",
+            "atc": "http://purl.bioontology.org/ontology/ATC/",
+            "w3i": "https://w3id.org/skgo/modsci#"
+        },
+        {"@base": "https://scidata.unf.edu/chalklab:substance:LYCAIKOWRPUZTN-UHFFFAOYSA-N/"}
+    ],
+    "@id": "https://scidata.unf.edu/facet/00000001",
+    "generatedAt": "2020-06-23 10:09:12.128587",
+    "version": "1",
+    "@graph": {
+        "@id": "https://scidata.unf.edu/chalklab:substance:LYCAIKOWRPUZTN-UHFFFAOYSA-N/",
+        "@type": "sdo:scidataFramework",
+        "uid": "chalklab:substance:LYCAIKOWRPUZTN-UHFFFAOYSA-N",
+        "title": "Substance SciData JSON-LD file for ethane-1,2-diol",
+        "author": [
+            {
+                "@id": "author/1/",
+                "@type": "dc:author",
+                "name": "Stuart Chalk",
+                "orcid": "0000-0002-0703-7776"
+            }
+        ],
+        "description": "Metadata, identifiers and descriptors about a chemical substance",
+        "publisher": "Chalk Research Laboratory, University of North Florida",
+        "version": "1.0",
+        "keywords": [
+            "chemical substance",
+            "chemical compound"
+        ],
+        "starttime": "2020-06-23 10:09:12.128587",
+        "permalink": "https://scidata.unf.edu/substance/LYCAIKOWRPUZTN-UHFFFAOYSA-N/",
+        "toc": ["sdo:compound"],
+        "scidata": {
+            "@id": "scidata",
+            "@type": "sdo:scientificData",
+            "discipline": "w3i:Chemistry",
+            "system": {
+                "@id": "system/",
+                "@type": "sdo:system",
+                "facets": [
+                    {
+                        "@id": "compound/1/",
+                        "@type": "sdo:compound",
+                        "name": "ethane-1,2-diol",
+                        "formula": "C2H6O2",
+                        "molweight": 62.07,
+                        "monoisotopicmass": 62.0368,
+                        "identifiers": {
+                            "@id": "identifier/",
+                            "@type": "obo:IAO_0000578",
+                            "inchi": "InChI=1S/C2H6O2/c3-1-2-4/h3-4H,1-2H2",
+                            "inchikey": "LYCAIKOWRPUZTN-UHFFFAOYSA-N",
+                            "csmiles": "C(CO)O",
+                            "ismiles": "OCCO",
+                            "casrn": "107-21-1",
+                            "pubchem": "174",
+                            "chemspider": "13835235",
+                            "chebi": "30742",
+                            "chembl": "CHEMBL457299",
+                            "reaxys": "505945",
+                            "dsstox": "DTXSID8020597",
+                            "gmelin": "943",
+                            "wikidata": "Q194207"
+                        },
+                        "descriptors": {
+                            "@id": "descriptor/",
+                            "@type": "ss:CHEMINF_000123",
+                            "heavy_atom": "4",
+                            "atom_chiral": "0",
+                            "bond_chiral": "0",
+                            "isotope_atom": "0",
+                            "h_bond_acceptor": "2",
+                            "h_bond_donor": "2",
+                            "rotatable_bond": "1",
+                            "covalent_unit": "1",
+                            "tautomers": "-1",
+                            "aromatic_rings": "0",
+                            "atccode": [
+                                "A",
+                                "A06",
+                                "A06A",
+                                "A06AD",
+                                "A06AD15",
+                                "A06AD65"
+                            ],
+                            "chemont": [
+                                "CHEMONTID:0000000",
+                                "CHEMONTID:0004603",
+                                "CHEMONTID:0000323",
+                                "CHEMONTID:0000129",
+                                "CHEMONTID:0002467",
+                                "CHEMONTID:0000286",
+                                "CHEMONTID:0004150"
+                            ]
+                        },
+                        "molgraph": {
+                            "@id": "molgraph/",
+                            "@type": "ss:CHEMINF_000022",
+                            "atoms": [],
+                            "bonds": []
+                        }
+                    }
+                ]
+            }
+        },
+        "sources": [
+            {
+                "@id": "source/1/",
+                "@type": "dc:source",
+                "title": "UNF SciFlow System",
+                "url": "https://sciflow.unf.edu"
+            }
+        ],
+        "rights": [
+            {
+                "@id": "rights/1/",
+                "@type": "dc:rights",
+                "holder": "University of North Florida",
+                "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+            }
+        ]
+    }
+}
