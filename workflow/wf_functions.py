@@ -2,7 +2,7 @@ import ast
 from slacker import Slacker
 from requests.sessions import Session
 from .gdb_functions import *
-from substances.functions import *
+from substances.sub_functions import *
 import json
 import time
 from datafiles.models import *

@@ -1,16 +1,16 @@
 """ views for substances """
 from django.shortcuts import render
 from django.shortcuts import redirect
-from .functions import *
+from .sub_functions import *
 from sciflow.settings import BASE_DIR
 from zipfile import ZipFile
 
-def list(request):
+
+def sublist(request):
     """view to generare list of substances on homepage"""
     if request.method == "POST":
         query = request.POST.get('q')
         return redirect('search/'+str(query))
-
 
     substances = Substances.objects.all().order_by('name')
     return render(request, "substances/list.html", {'substances': substances})
@@ -78,19 +78,20 @@ def add(request, identifier):
 
 
 def ingest(request):
+    """ingest a new substance"""
     if request.method == "POST":
         if 'ingest' in request.POST:
             inchikey = request.POST.get('ingest')
             return redirect("/substances/add/" + str(inchikey))
         else:
             file = request.FILES['upload']
-            with ZipFile(file, 'r') as zip:
+            with ZipFile(file) as zfile:
                 filenames = []
-                for info in zip.infolist():
+                for info in zfile.infolist():
                     name = info.filename
                     filenames.append(name)
                 for file in filenames:
-                    data = zip.read(file)
+                    data = zfile.read(file)
                     m = re.search('^[A-Z]{14}-[A-Z]{10}-[A-Z]$', str(data))
                     if m:
                         print(m)
@@ -99,12 +100,6 @@ def ingest(request):
 
     return render(request, "substances/ingest.html",)
 
-    """for file in files:
-        print(file)
-        lines = file.readlines()
-        for line in lines:
-            inchikey = str(line)[2:29]
-            print(inchikey)"""
 
 def ingestlist(request):
     """ add many compounds from a text file list of identifiers """
@@ -113,7 +108,7 @@ def ingestlist(request):
     lines = file.readlines()
     # get a list of all chemblids currently in the DB
     qset = Identifiers.objects.all().filter(type__exact='chembl').values_list('value', flat=True)
-    chemblids = list(qset)
+    chemblids = sublist(qset)
     count = 0
     names = []
     for identifier in lines:

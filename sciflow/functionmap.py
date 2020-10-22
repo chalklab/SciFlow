@@ -26,7 +26,7 @@ if "x" == "y":
     getcodesnames
 
 # substances
-    from substances.functions import *
+    from substances.sub_functions import *
     addsubstance
     getidtype
     getsubdata
@@ -48,7 +48,7 @@ if "x" == "y":
     createsubstance
     subsearch
 
-    from substances.sources import *
+    from substances.external import *
     pubchem
     classyfire
     wikidata
@@ -101,8 +101,6 @@ if "x" == "y":
     normalize
     findsub
     getfacet
-
-
 
     from datafiles.validation import *
     validate

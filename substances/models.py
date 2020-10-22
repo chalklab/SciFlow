@@ -59,6 +59,7 @@ class Identifiers(models.Model):
 
 
 class Sources(models.Model):
+    """ get data from the sources DB table"""
     id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
     substance = models.ForeignKey('Substances', models.DO_NOTHING)
     source = models.CharField(max_length=32)
@@ -69,6 +70,7 @@ class Sources(models.Model):
     class Meta:
         managed = False
         db_table = 'sources'
+
 
 class Systems(models.Model):
     """ getting data from the identifiers DB table"""
