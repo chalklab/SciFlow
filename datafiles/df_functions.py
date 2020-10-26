@@ -8,7 +8,7 @@ import json
 testpath = "C:/Users/Caleb Desktop/PycharmProjects/sciflow/datafiles/test.jsonld"
 
 # Variant that only adds the lookup info so errors can be stored. Upon validation addfile is run and the file is actually added.
-def initfile(finfo=None):
+def initfile(jsonld, uploading_user):
     """
     Add a data jsonld file to the database
     Required dictionary entries
@@ -18,26 +18,17 @@ def initfile(finfo=None):
     :param finfo: data jsonld file information
     :return: boolean
     """
-
+    finfo=None
     if finfo is None:
         #  use the test input
         finfo = {
-            "dataset_id": 1, "auth_user_id": 2, "path": testpath
+            "dataset_id": 1
         }
 
     # return error is required files not included
-    if 'dataset_id' not in finfo and 'path' not in finfo:
+    if 'dataset_id' not in finfo:
         return "error: required fields not provided"
 
-    # load jsonld file if path present (overrides data in finfo['file'])
-    if finfo['path']:
-        with open(finfo['path']) as ld:
-            jsonld = json.load(ld)
-            finfo['file'] = json.dumps(jsonld, separators=(',', ':'))
-
-    # get current user
-    # TODO get access to authenticated user configured
-    # current_user = User
 
     # save metadata
     if JsonLookup.objects.filter(uniqueid = jsonld['@graph']['uid']):
@@ -50,10 +41,8 @@ def initfile(finfo=None):
     m.uniqueid = jsonld['@graph']['uid']
     m.title = jsonld['@graph']['title']
     m.graphname = jsonld['@id']
-    if finfo['auth_user_id']:
-        m.auth_user_id = finfo['auth_user_id']
+    m.auth_user_id = uploading_user.id
     m.save()
-
 
     if m.id:
         return True
@@ -61,7 +50,7 @@ def initfile(finfo=None):
         return False
 
 
-def addfile(finfo=None):
+def updatefile(jsonld):
     """
     Add a data jsonld file to the database
     Requires metadata to be previously established in the lookups table
@@ -72,25 +61,16 @@ def addfile(finfo=None):
     :return: boolean
     """
 
+    finfo=None
     if finfo is None:
         #  use the test input
         finfo = {
-            "dataset_id": 1, "auth_user_id": 2, "path": testpath
+            "dataset_id": 1
         }
 
     # return error is required files not included
-    if 'dataset_id' not in finfo and 'path' not in finfo:
+    if 'dataset_id' not in finfo:
         return "error: required fields not provided"
-
-    # load jsonld file if path present (overrides data in finfo['file'])
-    if finfo['path']:
-        with open(finfo['path']) as ld:
-            jsonld = json.load(ld)
-            finfo['file'] = json.dumps(jsonld, separators=(',', ':'))
-
-    # get current user
-    # TODO get access to authenticated user configured
-    # current_user = User
 
     # get metadata
     m = JsonLookup.objects.get(uniqueid=jsonld['@graph']['uid'])
@@ -100,8 +80,7 @@ def addfile(finfo=None):
     # save json file
     f = JsonFiles()
     f.json_lookup_id = m.id
-    if finfo['file']:
-        f.file = json.dumps(jsonld, separators=(',', ':'))
+    f.file = json.dumps(jsonld, separators=(',', ':'))
     f.type = "raw"
     f.version = m.currentversion
     f.save()
@@ -115,7 +94,6 @@ def addfile(finfo=None):
 
 # ----- Validation -----
 def json_validator(json_file):
-    # json_file_content = json_file.read()
     json_file_content = json.load(json_file)
     keys_a = []
     keys_b = []

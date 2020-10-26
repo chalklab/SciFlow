@@ -2,6 +2,7 @@ import ast
 from slacker import Slacker
 from requests.sessions import Session
 from .gdb_functions import *
+from datafiles.df_functions import *
 from substances.sub_functions import *
 import json
 import time
@@ -9,11 +10,15 @@ from datafiles.models import *
 
 # ----- Ingestion -----
 
-def ingest(file, user):
+def ingest(upload, user):
     """ ingest SciData JSON-LD file """
-    if str(file).endswith('.jsonld'):
-        # initfile(file, user)
-        # addfile(file, user)
+    if str(upload).endswith('.jsonld'):
+        upload.seek(0)
+        text = upload.read()
+        file = json.loads(text)
+        initfile(file, user)
+        # TODO: Extra validation steps here
+        updatefile(file)
         sections = {}
         types = ['compound']  # this would be expanded as we get me code written for other unique types...
         for systype in types:
@@ -23,6 +28,7 @@ def ingest(file, user):
 
         if sections:
             print(sections)
+            # TODO: Normalization
             # if normalize(file) is True:  # normalization.py
             # addfile(file, user)
             #     print("finished!")
@@ -34,7 +40,7 @@ def ingest(file, user):
 
         # TODO confirm normalization
 
-
+# old
 def finalize(path, outputdir, errordir, loginfo):
     """ finalizes the ingestion, determining whether it was successful, and moving the file """
     # Detemines whether the ingestion was successful or not
@@ -113,14 +119,12 @@ def getfacet(file, systype):
     """ gets the compound and target within the scidata file """
     output = {}
     try:
-        for x in file.chunks():
-            y = json.loads(x)
-            for k,v in y.items():
-                if k == '@graph':
-                    for a in v['scidata']['system']['facets']:
-                        for b, c in a.items():
-                            if b == '@type' and c.startswith('sci:' + systype):
-                                output.update({systype: a})
+        for k,v in file.items():
+            if k == '@graph':
+                for a in v['scidata']['system']['facets']:
+                    for b, c in a.items():
+                        if b == '@type' and c.startswith('sci:' + systype):
+                            output.update({systype: a})
         if output:
             return output
         else:

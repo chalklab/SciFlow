@@ -21,7 +21,6 @@ class JsonFiles(models.Model):
     """ model for the json_files DB table """
     json_lookup = models.ForeignKey(JsonLookup, on_delete=models.PROTECT)
     file = models.TextField(default='')
-    filefield = models.TextField(default='')
     type = models.CharField(max_length=32, default='')
     version = models.IntegerField(default='')
     updated = models.DateTimeField(auto_now=True)
