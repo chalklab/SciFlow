@@ -1,6 +1,4 @@
 """ view definitions for the workflow app """
-from datafiles.forms import *
-from django.shortcuts import redirect
 from django.shortcuts import render
 from .wf_functions import *
 
@@ -11,9 +9,9 @@ def errors(response):
     if response.method == "POST":
         if 'errortest' in response.POST:
             errorcode = response.POST.get('errortest')
-            adderror(2,errorcode)
+            adderror(2, errorcode)
 
-    errors = readerrors(1)
+    errs = readerrors(1)
 
-    context = {"errors":errors}
+    context = {"errors": errs}
     return render(response, "workflow/errors.html", context)

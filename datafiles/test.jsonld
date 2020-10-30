@@ -11,11 +11,14 @@
             "dc": "http://purl.org/dc/terms/",
             "xsd": "http://www.w3.org/2001/XMLSchema#"
         },
-        {"@base": "https://stuchalk.github.io/chalklab/examples/ph/"}
+        {"@base": "https://stuchalk.github.io/chalklab/example/ph/"}
     ],
-    "@id": "https://stuchalk.github.io/chalklab/examples/ph/",
+    "@id": "https://stuchalk.github.io/example/000000",
+    "generatedAt": "2020-06-23 10:09:12.128587",
+    "version": "1",
     "@graph": {
-        "@id": "",
+        "@id": "https://stuchalk.github.io/chalklab/example/ph/",
+        "@type": "sdo:scidataFramework",
         "uid": "chalklab:example:ph",
         "title": "pH of cyanide standard",
         "author": [

@@ -69,7 +69,7 @@ def add(request, identifier):
     # id the compound in the database?
     hits = Substances.objects.all().filter(identifiers__value__exact=identifier).count()
     if hits == 0:
-        meta, ids, descs, srcs = addsubstance(identifier)
+        meta, ids, descs, srcs = addsubstance(identifier,'all')
     else:
         subid = getsubid(identifier)
         return redirect("/substances/view/" + str(subid))
@@ -114,7 +114,7 @@ def ingestlist(request):
     for identifier in lines:
         identifier = identifier.rstrip("\n")
         if identifier not in chemblids:
-            meta, ids, descs = addsubstance(identifier)
+            meta, ids, descs, srcs = addsubstance(identifier, 'all')
             names.append(ids['pubchem']['iupacname'])
         count += 1
         if count == 1:

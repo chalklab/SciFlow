@@ -1,7 +1,6 @@
 """import models"""
-from django.db import models
-from django.utils.translation import gettext_lazy as _
 from datasets.models import *
+
 
 class JsonLookup(models.Model):
     """ model for the json_lookup DB table """
@@ -12,6 +11,7 @@ class JsonLookup(models.Model):
     currentversion = models.IntegerField(default=0)
     auth_user_id = models.IntegerField(default='')
     updated = models.DateTimeField(auto_now=True)
+
     class Meta:
         managed = False
         db_table = 'json_lookup'
@@ -19,7 +19,7 @@ class JsonLookup(models.Model):
 
 class JsonFiles(models.Model):
     """ model for the json_files DB table """
-    json_lookup = models.ForeignKey(JsonLookup, on_delete=models.PROTECT)
+    json_lookup = models.ForeignKey(JsonLookup, related_name='json_lookup_id', on_delete=models.PROTECT)
     file = models.TextField(default='')
     type = models.CharField(max_length=32, default='')
     version = models.IntegerField(default='')
@@ -56,6 +56,64 @@ class JsonActlog(models.Model):
         db_table = 'json_actlog'
 
 
+# facet tables
+
+class FacetLookup(models.Model):
+    """ model for the facet_lookup DB table """
+    uniqueid = models.CharField(max_length=128)
+    title = models.CharField(max_length=256)
+    type = models.CharField(max_length=16)
+    graphname = models.CharField(max_length=256)
+    currentversion = models.IntegerField()
+    auth_user_id = models.PositiveIntegerField()
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'facet_lookup'
+
+
+class FacetFiles(models.Model):
+    """ model for the facet_files DB table """
+    facet_lookup = models.ForeignKey(JsonLookup, related_name='facet_lookup_id', on_delete=models.PROTECT, )
+    file = models.TextField()
+    type = models.CharField(max_length=32)
+    version = models.IntegerField()
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'facet_files'
+
+
+class FacetActlog(models.Model):
+    """ model for the facet_actlog DB table """
+    facet_lookup = models.ForeignKey(JsonLookup, related_name='facet_lookup_id', on_delete=models.PROTECT, )
+    facet_file = models.ForeignKey(JsonFiles, related_name='json_lookup_id', on_delete=models.PROTECT, )
+    activitycode = models.CharField(max_length=16)
+    comment = models.CharField(max_length=256)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'facet_actlog'
+
+
+class FacetErrors(models.Model):
+    """ model for the facet_actlog DB table """
+    facet_lookup = models.ForeignKey(JsonLookup, related_name='facet_lookup_id', on_delete=models.PROTECT, )
+    facet_file = models.ForeignKey(JsonFiles, related_name='json_lookup_id', on_delete=models.PROTECT, )
+    errorcode = models.CharField(max_length=16)
+    comment = models.CharField(max_length=256)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'facet_errors'
+
+# join tables
+
+
 class JsonAspects(models.Model):
     """model for the json_aspects join table"""
     json_lookup = models.ForeignKey(JsonLookup, on_delete=models.PROTECT)
@@ -77,4 +135,3 @@ class JsonFacets(models.Model):
     class Meta:
         managed = False
         db_table = 'json_facets'
-

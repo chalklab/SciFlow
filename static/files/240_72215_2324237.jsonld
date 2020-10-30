@@ -1,7 +1,7 @@
 {
     "@context": [
-        "https://stuchalk.github.io/scidata/contexts/chembl.jsonld",
         "https://stuchalk.github.io/scidata/contexts/scidata.jsonld",
+        "https://stuchalk.github.io/scidata/contexts/chembl.jsonld",
         {
             "sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#",
             "w3i": "https://w3id.org/skgo/modsci#",
@@ -129,7 +129,7 @@
         ],
         "scidata": {
             "@id": "scidata/",
-            "@type": "sci:scientificData",
+            "@type": "sdo:scientificData",
             "discipline": "w3i:Chemistry",
             "subdiscipline": "w3i:MedicinalChemistry",
             "methodology": {
@@ -299,6 +299,7 @@
             {
                 "@id": "rights/1/",
                 "@type": "dc:rights",
+                "licensor": "University of North Florida",
                 "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
             }
         ]

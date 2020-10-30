@@ -17,6 +17,7 @@ def pubchem(identifier, meta, ids, descs, srcs):
     if response.status_code == 200:
         json = requests.get(url).json()
         full = json["PC_Compounds"][0]
+        pcid = full["id"]["id"]["cid"]
         props = full["props"]
         counts = dict(full["count"])
         descs["pubchem"] = {}
@@ -25,6 +26,7 @@ def pubchem(identifier, meta, ids, descs, srcs):
 
         ids["pubchem"] = {}
         meta["pubchem"] = {}
+        ids["pubchem"]["pubchem"] = pcid
         for prop in props:
             if prop['urn']['label'] == "IUPAC Name" and prop['urn']['name'] == "Preferred":
                 ids["pubchem"]["iupacname"] = prop["value"]["sval"]
@@ -229,3 +231,33 @@ def pubchemsyns(identifier):
             inchikey = k
 
     return inchikey
+
+
+def pubchemmol(pcid):
+    """
+    allows retrieval of SDF file from the PugRest API at PubChem
+        with two entries - atoms and bonds.  Each value is a list
+                atoms list is x, y, z coords and element symbol
+                bonds list is atom1, atom2, and bond order
+    :param pcid pubchem id for compound
+    :return dict dictionary
+    """
+    apipath = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/"
+    url = apipath + pcid + '/SDF'
+    response = requests.get(url)
+    if response.status_code == 200:
+        sdf = requests.get(url).text
+
+    atoms = []
+    bonds = []
+    for line in sdf.splitlines():
+        a = re.search(r"([0-9\-\.]+)\s+([0-9\-\.]+)\s+([0-9\-\.]+)\s([A-Za-z]{1,2})\s+0\s+0\s+0\s+0", line)
+        if a:
+            lst = [a[1], a[2], a[3], a[4]]
+            atoms.append(lst)
+        b = re.search(r"^\s+(\d{1,2})\s+(\d{1,2})\s+(\d)\s+0\s+0\s+0\s+0$", line)
+        if b:
+            lst = [b[1], b[2], b[3]]
+            bonds.append(lst)
+
+    return {'atoms': atoms, 'bonds': bonds}

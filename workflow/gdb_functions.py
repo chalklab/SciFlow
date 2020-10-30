@@ -6,6 +6,7 @@ import requests
 from substances.models import Substances
 from substances.models import Identifiers
 
+
 def addgraph(file, locale):
     """ add a file to GraphDB """
     data = '{"fileNames": ["' + file + '"]}'
@@ -155,13 +156,14 @@ def graphnamespaceget(prefix, repo):
     print(r.text)
 
 
-def graphnamespacecreate(uri, prefix, repo): #TODO: Can't see the format currently
+def graphnamespacecreate(uri, prefix, repo):  # TODO: Can't see the format currently
     """ put /repositories/{repositoryID}/namespaces/{namespacesPrefix}
         creates a namespace prefix """
     print(prefix)
 
 
 def graph_link_a(file):
+    """graph link a function"""
     jsonfile = json.load(file)
     try:
         for group in jsonfile['@graph']['scidata']['system']['facets']:
@@ -175,6 +177,7 @@ def graph_link_a(file):
 
 
 def graph_link_b(group):
+    """graph link b function"""
     # group = {'@id': 'compound/1/', '@type': 'cif:compound', '_chemical_formula_moiety': 'C12 H8', '_chemical_name_systematic': 'Q194207'}
     tablematch = {"compound": [Identifiers, Substances, 'substance_id'], "crystal": [Identifiers, Substances, 'substance_id']}
     identifier = {'@id': group['@id']}

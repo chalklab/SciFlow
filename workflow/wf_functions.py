@@ -1,3 +1,4 @@
+"""workflow functions"""
 import ast
 from slacker import Slacker
 from requests.sessions import Session
@@ -8,17 +9,17 @@ import json
 import time
 from datafiles.models import *
 
-# ----- Ingestion -----
 
+# ----- Ingestion -----
 def ingest(upload, user):
     """ ingest SciData JSON-LD file """
     if str(upload).endswith('.jsonld'):
         upload.seek(0)
         text = upload.read()
         file = json.loads(text)
-        initfile(file, user)
+        adddatafile(file, user)
         # TODO: Extra validation steps here
-        updatefile(file)
+        updatedatafile(file)
         sections = {}
         types = ['compound']  # this would be expanded as we get me code written for other unique types...
         for systype in types:
@@ -40,6 +41,7 @@ def ingest(upload, user):
 
         # TODO confirm normalization
 
+
 # old
 def finalize(path, outputdir, errordir, loginfo):
     """ finalizes the ingestion, determining whether it was successful, and moving the file """
@@ -58,10 +60,10 @@ def finalize(path, outputdir, errordir, loginfo):
     logprint("act", loginfo)
 
     # move the file
-    if i == 0:
-        shutil.move(path, outputdir)
-    else:
-        shutil.move(path, errordir)
+    # if i == 0:
+    #     shutil.move(path, outputdir)
+    # else:
+    #     shutil.move(path, errordir)
 
 
 # ----- Normalization -----
@@ -119,7 +121,7 @@ def getfacet(file, systype):
     """ gets the compound and target within the scidata file """
     output = {}
     try:
-        for k,v in file.items():
+        for k, v in file.items():
             if k == '@graph':
                 for a in v['scidata']['system']['facets']:
                     for b, c in a.items():
@@ -138,12 +140,14 @@ def getfacet(file, systype):
 with Session() as session:
     slack = Slacker('xoxb-4596507645-1171034330099-eP4swGipytYQHLnomPvBoOPO', session=session)
 
+
 # old
 def errloginit(loginfo):
     """ creates an error log, triggered by the detection of an error """
     errlog = open(loginfo["errlogdir"]+'/'+loginfo["logname"]+'.txt', "w+")
     errlog.write("The following error(s) were encountered while ingesting this file: \n\n")
     errlog.close()
+
 
 # old
 def actloginit(loginfo):
@@ -153,6 +157,7 @@ def actloginit(loginfo):
     actlog.write("Filename: " + loginfo["logname"].split("-")[1] + "\n")
     actlog.close()
     # slack.chat.post_message('#workflow-updates', "Filename: " + loginfo["logname"].split("-")[1])
+
 
 # old
 def logwrite(logtype, loginfo, content):
@@ -166,6 +171,7 @@ def logwrite(logtype, loginfo, content):
     except FileNotFoundError as fnf_error:
         print(fnf_error)
         pass
+
 
 # old
 def logprint(logtype, loginfo):
@@ -187,6 +193,7 @@ def logprint(logtype, loginfo):
 
 
 def adderror(errorid, errorcode):
+    """add error function"""
     e = JsonErrors.objects.get(id=errorid)
     s_list = e.errorcode
     l_list = ast.literal_eval(s_list)
@@ -194,7 +201,9 @@ def adderror(errorid, errorcode):
     e.errorcode = l_list
     e.save()
 
+
 def readerrors(eid):
+    """read errors function"""
     e = JsonErrors.objects.get(id=eid)
     ec = e.errorcode
     ecl = ast.literal_eval(ec)
@@ -203,8 +212,8 @@ def readerrors(eid):
     reports = []
     for error in ecl:
         print(error)
-        x=int(str(error)[0])
-        y=int(str(error)[1])
+        x = int(str(error)[0])
+        y = int(str(error)[1])
 
         ingesterrors = ["The first ingestion error!",
                         "The second ingestion error!"]
@@ -221,7 +230,7 @@ def readerrors(eid):
         errorcodes = [ingesterrors[y],
                       verificationerrors[y],
                       normalizationerrors[y],
-                      uploaderrors[y],]
+                      uploaderrors[y]]
 
         print(errorcodes[x])
         report = errorcodes[x]

@@ -1,0 +1,188 @@
+{
+    "@context": [
+        "https://stuchalk.github.io/scidata/contexts/scidata.jsonld",
+        "https://stuchalk.github.io/scidata/contexts/fce.jsonld",
+        {
+            "sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#",
+            "obo": "http://purl.obolibrary.org/obo/",
+            "ss": "http://semanticscience.org/resource/",
+            "atc": "http://purl.bioontology.org/ontology/ATC/",
+            "w3i": "https://w3id.org/skgo/modsci#"
+        },
+        {"@base": "https://scidata.unf.edu/substance/AOAOXSUNFXXSGI-UHFFFAOYSA-N/"}
+    ],
+    "@id": "https://scidata.unf.edu/facet/000000000002",
+    "generatedAt": "2020-08-26 15:39:52.076172",
+    "version": 1,
+    "@graph": {
+        "@id": "https://scidata.unf.edu/substance/AOAOXSUNFXXSGI-UHFFFAOYSA-N/",
+        "@type": "sdo:scidataFramework",
+        "uid": "chalklab:substance:AOAOXSUNFXXSGI-UHFFFAOYSA-N",
+        "title": "Chemical Substance SciData JSON-LD file for 2,6-bis[2-(4-methylphenyl)ethyl]pyridine",
+        "author": [
+            {
+                "@id": "author/1/",
+                "@type": "dc:author",
+                "name": "Stuart Chalk",
+                "orcid": "0000-0002-0703-7776"
+            }
+        ],
+        "description": "Metadata, identifiers, descriptors and molecular graph about a chemical substance",
+        "publisher": "Chalk Research Laboratory, University of North Florida, USA",
+        "version": "1.0",
+        "keywords": [
+            "FAIR chemical entity",
+            "chemical substance",
+            "molecular compound"
+        ],
+        "permalink": "https://scidata.unf.edu/facet/000000000002",
+        "toc": [
+            "sdo:scientificData",
+            "sdo:system",
+            "sdo:compound",
+            "dc:source",
+            "dc:rights"
+        ],
+        "ids": [
+            "obo:IAO_0000578",
+            "ss:CHEMINF_000123",
+            "ss:CHEMINF_000022",
+            "obo:NCIT_C1940",
+            "obo:CHEBI_25555",
+            "ss:SIO_011118",
+            "obo:CHEBI_27594",
+            "obo:CHEBI_49637",
+            "obo:CHEBI_33250"
+        ],
+        "scidata": {
+            "@id": "scidata",
+            "@type": "sdo:scientificData",
+            "discipline": "w3i:Chemistry",
+            "system": {
+                "@id": "system/",
+                "@type": "sdo:system",
+                "facets": [
+                    {
+                        "@id": "compound/1/",
+                        "@type": "sdo:compound",
+                        "name": "2,6-bis[2-(4-methylphenyl)ethyl]pyridine",
+                        "formula": "C23H25N",
+                        "molweight": 315.5,
+                        "monoisotopicmass": 315.199,
+                        "identifiers": {
+                            "@id": "identifier/",
+                            "@type": "obo:IAO_0000578",
+                            "inchi": "InChI=1S/C23H25N/c1-18-6-10-20(11-7-18)14-16-22-4-3-5-23(24-22)17-15-21-12-8-19(2)9-13-21/h3-13H,14-17H2,1-2H3",
+                            "inchikey": "AOAOXSUNFXXSGI-UHFFFAOYSA-N",
+                            "csmiles": "CC1=CC=C(C=C1)CCC2=NC(=CC=C2)CCC3=CC=C(C=C3)C",
+                            "ismiles": "Cc1ccc(CCc2cccc(CCc3ccc(C)cc3)n2)cc1",
+                            "casrn": null,
+                            "pubchem": "71606713",
+                            "chemspider": null,
+                            "chebi": null,
+                            "chembl": null,
+                            "reaxys": null,
+                            "dsstox": null,
+                            "gmelin": null,
+                            "wikidata": null
+                        },
+                        "descriptors": {
+                            "@id": "descriptor/",
+                            "@type": "ss:CHEMINF_000123",
+                            "heavy_atom": "24",
+                            "atom_chiral": "0",
+                            "bond_chiral": "0",
+                            "isotope_atom": "0",
+                            "h_bond_acceptor": "1",
+                            "h_bond_donor": "0",
+                            "rotatable_bond": "6",
+                            "covalent_unit": "1",
+                            "tautomers": "-1",
+                            "aromatic_rings": "3",
+                            "atccode": [],
+                            "chemont": []
+                        },
+                        "molgraph": {
+                            "@id": "molgraph/",
+                            "@type": "ss:CHEMINF_000022",
+                            "elements": [
+                                {
+                                    "@id": "element/1/",
+                                    "@type": "obo:NCIT_C1940",
+                                    "name": "nitrogen",
+                                    "element": "obo:CHEBI_25555"
+                                },
+                                {
+                                    "@id": "element/2/",
+                                    "@type": "obo:NCIT_C1940",
+                                    "name": "carbon",
+                                    "element": "obo:CHEBI_27594"
+                                },
+                                {
+                                    "@id": "element/3/",
+                                    "@type": "obo:NCIT_C1940",
+                                    "name": "hydrogen",
+                                    "element": "obo:CHEBI_49637"
+                                }
+                            ],
+                            "atoms": [
+                                {
+                                    "@id": "atom/1/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/1/",
+                                    "xcoord": "8.0622",
+                                    "ycoord": "-0.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1,
+                                    "doublebonds": 2
+                                },
+                                {
+                                    "@id": "atom/2/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/1/",
+                                    "singlebonds": 4
+                                }
+                            ],
+                            "bonds": [
+                                {
+                                    "@id": "bond/1/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/1/",
+                                        "atom/2/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/2/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/2/",
+                                        "atom/3/"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "sources": [
+            {
+                "@id": "source/1/",
+                "@type": "dc:source",
+                "title": "UNF SciFlow System",
+                "url": "https://sciflow.unf.edu"
+            }
+        ],
+        "rights": [
+            {
+                "@id": "rights/1/",
+                "@type": "dc:rights",
+                "licensor": "University of North Florida",
+                "license": "https://creativecommons.org/licenses/by/4.0/"
+            }
+        ]
+    }
+}
