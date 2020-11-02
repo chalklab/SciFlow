@@ -2,6 +2,7 @@
 from datasets.models import *
 
 
+# data tables
 class JsonLookup(models.Model):
     """ model for the json_lookup DB table """
     dataset = models.ForeignKey(Datasets, on_delete=models.PROTECT)
@@ -32,8 +33,8 @@ class JsonFiles(models.Model):
 
 class JsonErrors(models.Model):
     """ model for the json_errors DB table """
-    json_lookup = models.ForeignKey(JsonLookup, on_delete=models.PROTECT, default='')
-    json_file = models.ForeignKey(JsonFiles, on_delete=models.PROTECT, default='')
+    json_lookup = models.ForeignKey(JsonLookup, related_name='json_lookup_id', on_delete=models.PROTECT)
+    json_file = models.ForeignKey(JsonFiles, related_name='json_file_id', on_delete=models.PROTECT)
     errorcode = models.CharField(max_length=128, default='')
     comment = models.CharField(max_length=256, default='')
     updated = models.DateTimeField(auto_now=True)
@@ -45,8 +46,8 @@ class JsonErrors(models.Model):
 
 class JsonActlog(models.Model):
     """ model for the json_errors DB table """
-    json_lookup = models.ForeignKey(JsonLookup, on_delete=models.PROTECT, null=True)
-    json_file_id = models.ForeignKey(JsonFiles, on_delete=models.PROTECT, null=True)
+    json_lookup = models.ForeignKey(JsonLookup, related_name='json_lookup_id', on_delete=models.PROTECT)
+    json_file = models.ForeignKey(JsonFiles, related_name='json_file_id', on_delete=models.PROTECT)
     activitycode = models.CharField(max_length=2048, default='')
     comment = models.CharField(max_length=256, default='')
     updated = models.DateTimeField(auto_now=True)
@@ -57,7 +58,6 @@ class JsonActlog(models.Model):
 
 
 # facet tables
-
 class FacetLookup(models.Model):
     """ model for the facet_lookup DB table """
     uniqueid = models.CharField(max_length=128)
@@ -75,7 +75,7 @@ class FacetLookup(models.Model):
 
 class FacetFiles(models.Model):
     """ model for the facet_files DB table """
-    facet_lookup = models.ForeignKey(JsonLookup, related_name='facet_lookup_id', on_delete=models.PROTECT, )
+    facet_lookup = models.ForeignKey(FacetLookup, related_name='facet_lookup_id', on_delete=models.PROTECT)
     file = models.TextField()
     type = models.CharField(max_length=32)
     version = models.IntegerField()
@@ -88,8 +88,8 @@ class FacetFiles(models.Model):
 
 class FacetActlog(models.Model):
     """ model for the facet_actlog DB table """
-    facet_lookup = models.ForeignKey(JsonLookup, related_name='facet_lookup_id', on_delete=models.PROTECT, )
-    facet_file = models.ForeignKey(JsonFiles, related_name='json_lookup_id', on_delete=models.PROTECT, )
+    facet_lookup = models.ForeignKey(FacetLookup, related_name='facet_lookup_id', on_delete=models.PROTECT)
+    facet_file = models.ForeignKey(FacetFiles, related_name='facet_file_id', on_delete=models.PROTECT)
     activitycode = models.CharField(max_length=16)
     comment = models.CharField(max_length=256)
     updated = models.DateTimeField()
@@ -100,9 +100,9 @@ class FacetActlog(models.Model):
 
 
 class FacetErrors(models.Model):
-    """ model for the facet_actlog DB table """
-    facet_lookup = models.ForeignKey(JsonLookup, related_name='facet_lookup_id', on_delete=models.PROTECT, )
-    facet_file = models.ForeignKey(JsonFiles, related_name='json_lookup_id', on_delete=models.PROTECT, )
+    """ model for the facet_errors DB table """
+    facet_lookup = models.ForeignKey(FacetLookup, related_name='facet_lookup_id', on_delete=models.PROTECT)
+    facet_file = models.ForeignKey(FacetFiles, related_name='facet_file_id', on_delete=models.PROTECT)
     errorcode = models.CharField(max_length=16)
     comment = models.CharField(max_length=256)
     updated = models.DateTimeField()
@@ -111,13 +111,67 @@ class FacetErrors(models.Model):
         managed = False
         db_table = 'facet_errors'
 
+
+# aspect files
+class AspectLookup(models.Model):
+    """ model for the aspect_lookup DB table """
+    uniqueid = models.CharField(max_length=128)
+    title = models.CharField(max_length=256)
+    type = models.CharField(max_length=16)
+    graphname = models.CharField(max_length=256)
+    currentversion = models.IntegerField()
+    auth_user_id = models.PositiveIntegerField()
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'aspect_lookup'
+
+
+class AspectFiles(models.Model):
+    """ model for the aspect_files DB table """
+    aspect_lookup = models.ForeignKey(AspectLookup, related_name='aspect_lookup_id', on_delete=models.PROTECT)
+    file = models.TextField()
+    type = models.CharField(max_length=32)
+    version = models.IntegerField()
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'aspect_files'
+
+
+class AspectActlog(models.Model):
+    """ model for the aspect_actlog DB table """
+    aspect_lookup = models.ForeignKey(AspectLookup, related_name='aspect_lookup_id', on_delete=models.PROTECT)
+    aspect_file = models.ForeignKey(AspectFiles, related_name='aspect_file_id', on_delete=models.PROTECT)
+    activitycode = models.CharField(max_length=16)
+    comment = models.CharField(max_length=256)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'aspect_actlog'
+
+
+class AspectErrors(models.Model):
+    """ model for the aspect_errors DB table """
+    aspect_lookup = models.ForeignKey(AspectLookup, related_name='aspect_lookup_id', on_delete=models.PROTECT)
+    aspect_file = models.ForeignKey(AspectFiles, related_name='aspect_file_id', on_delete=models.PROTECT)
+    errorcode = models.CharField(max_length=16)
+    comment = models.CharField(max_length=256)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'aspect_errors'
+
+
 # join tables
-
-
 class JsonAspects(models.Model):
     """model for the json_aspects join table"""
-    json_lookup = models.ForeignKey(JsonLookup, on_delete=models.PROTECT)
-    aspects_lookup_id = models.IntegerField()  # needs to match syntax of the above once the AspectsLookup model is created
+    json_lookup = models.ForeignKey(JsonLookup, related_name='json_lookup_id', on_delete=models.PROTECT)
+    aspect_lookup = models.ForeignKey(AspectLookup, related_name='aspect_lookup_id', on_delete=models.PROTECT)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -127,9 +181,8 @@ class JsonAspects(models.Model):
 
 class JsonFacets(models.Model):
     """model for the json_facets join table"""
-
-    json_lookup = models.ForeignKey(JsonLookup, on_delete=models.PROTECT)
-    facets_lookup_id = models.IntegerField()  # needs to match syntax of the above once the FacetsLookup model is created
+    json_lookup = models.ForeignKey(JsonLookup, related_name='json_lookup_id', on_delete=models.PROTECT)
+    facet_lookup = models.ForeignKey(FacetLookup, related_name='facet_lookup_id', on_delete=models.PROTECT)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
