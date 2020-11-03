@@ -82,6 +82,8 @@ def ingest(request):
     if request.method == "POST":
         if 'ingest' in request.POST:
             inchikey = request.POST.get('ingest')
+            # TODO iterate over list of inchikeys instead of taking one inchikey. Borrow script from substances.subfunctions def getidtype
+            # if adding one inchikey, redirect to view page. If adding list, show message for number of substances added
             return redirect("/substances/add/" + str(inchikey))
         else:
             file = request.FILES['upload']

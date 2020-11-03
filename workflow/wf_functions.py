@@ -28,7 +28,8 @@ def ingest(upload, user):
                 sections.update({systype: found[systype]})
 
         if sections:
-            print(sections)
+            pass
+            # print(sections)
             # TODO: Normalization
             # if normalize(file) is True:  # normalization.py
             # addfile(file, user)

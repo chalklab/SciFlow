@@ -1,0 +1,1 @@
+An interface for management and storage of SciData JSON-LD files in a Graph database

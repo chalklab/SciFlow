@@ -172,6 +172,8 @@ def json_validator(json_file):
     isscidata = True
     if not str(json_file).endswith('.jsonld'):
         isscidata = False
+    if not get_graphuid(json_file):
+        isscidata = False
     for k, v in json_file_content.items():
         keys_a.append(k)
         if k == '@graph':
@@ -180,8 +182,17 @@ def json_validator(json_file):
     for y in ['@context', '@id', '@graph']:
         if y not in keys_a:
             isscidata = False
-    for y in ['scidata']:
+    for y in ['scidata', 'uid', 'sourcecode', 'datasetname']:
         if y not in keys_b:
             isscidata = False
     if not isscidata:
         raise ValidationError("Not Valid SciData JSON-LD")
+
+def get_graphuid(json_file):
+    try:
+        json_file.seek(0)
+        json_file_content = json.load(json_file)
+        guid = json_file_content['@graph']['uid']
+        return guid
+    except:
+        return False
