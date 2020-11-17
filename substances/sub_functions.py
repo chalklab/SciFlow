@@ -105,7 +105,6 @@ def getsubdata(identifier):
     meta, ids, descs, srcs = {}, {}, {}, {}
     try:
         pubchem(identifier, meta, ids, descs, srcs)
-        # update sources table with 'success'
     except Exception as exception:
         srcs.update({"pubchem": {"result": 0, "notes": exception}})
     try:
