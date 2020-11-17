@@ -56,7 +56,25 @@ def pubchem(identifier, meta, ids, descs, srcs):
                 descs["pubchem"]["h_bond_donor"] = prop["value"]["ival"]
             elif prop['urn']['label'] == "Count" and prop['urn']['name'] == "Rotatable Bond":
                 descs["pubchem"]["rotatable_bond"] = prop["value"]["ival"]
+
             srcs["pubchem"].update({"result": 1})
+
+        try:
+            url = apipath + 'inchikey/' + identifier + '/json?record_type=3d'
+            response = requests.get(url)
+            if response.status_code == 200:
+                json = requests.get(url).json()
+                full = json["PC_Compounds"][0]
+                coords = full["coords"]
+                for coord in coords:
+                    for x in coord["conformers"]:
+                        for y in x["data"]:
+                            if y["urn"]["label"] == "Fingerprint" and y["urn"]["name"] == "Shape":
+                                descs["pubchem"]["fingerprint"] = y["value"]["slist"]
+                            elif y["urn"]["label"] == "Shape" and y["urn"]["name"] == "Volume":
+                                descs["pubchem"]["volume3D"] = y["value"]["fval"]
+        except:
+            pass
     else:
         srcs["pubchem"].update({"result": 0, "notes": "InChIKey not found on PubChem"})
     return
@@ -283,3 +301,5 @@ def pubchemmol(pcid):
             bonds.append(lst)
 
     return {'atoms': atoms, 'bonds': bonds}
+
+pubchem('XLYOFNOQVPJJNP-UHFFFAOYSA-N', {}, {}, {}, {})
