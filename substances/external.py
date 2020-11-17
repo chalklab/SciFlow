@@ -9,11 +9,17 @@ from chembl_webresource_client.new_client import new_client
 def pubchem(identifier, meta, ids, descs, srcs):
     """ this definition allows retrieval of data from the PugRest API at PubChem"""
     apipath = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/"
-
     # retrieve full record if available based on name
-    url = apipath + 'inchikey/' + identifier + '/json'
-    response = requests.get(url)
     srcs.update({"pubchem": {"result": None, "notes": None}})
+    try:
+        url = apipath + 'inchikey/' + identifier + '/json'
+        response = requests.get(url)
+    except:
+        genericinchi = str(re.search('^[A-Z]{14}', identifier).group(0)) + '-UHFFFAOYSA-N'
+        url = apipath + 'inchikey/' + genericinchi + '/json'
+        response = requests.get(url)
+        srcs["pubchem"].update({"notes": "InChiKey generalized by substituting second and third block with -UHFFFAOYSA-N"})
+
     if response.status_code == 200:
         json = requests.get(url).json()
         full = json["PC_Compounds"][0]
@@ -62,8 +68,12 @@ def classyfire(identifier, meta, ids, descs, srcs):
     apipath = "http://classyfire.wishartlab.com/entities/"
 
     # check identifier for inchikey pattern
-    m = re.search('[A-Z]{14}-[A-Z]{10}-[A-Z]', identifier)
-    srcs.update({"classyfire": {"result": None, "notes": None}})
+    try:
+        m = re.search('[A-Z]{14}-[A-Z]{10}-[A-Z]', identifier)
+        srcs.update({"classyfire": {"result": None, "notes": None}})
+    except:
+        m = str(re.search('^[A-Z]{14}', identifier).group(0)) + '-UHFFFAOYSA-N'
+        srcs.update({"classyfire": {"result": None, "notes": "InChiKey generalized by substituting second and third block with -UHFFFAOYSA-N"}})
 
     if m:
         response = requests.get(apipath + identifier + '.json')
@@ -97,7 +107,14 @@ def wikidata(identifier, meta, ids, descs, srcs):
     """ retreive data from wikidata using the qwikidata python package"""
     # find wikidata code for a compound based off its inchikey (wdt:P35)
     query1 = "SELECT DISTINCT ?compound "
-    query2 = "WHERE { ?compound wdt:P235 \"" + identifier + "\" ."
+    try:
+        query2 = "WHERE { ?compound wdt:P235 \"" + identifier + "\" ."
+        srcs.update({"wikidata": {"result": None, "notes": None}})
+    except:
+        genericidentifier = str(re.search('^[A-Z]{14}', identifier).group(0)) + '-UHFFFAOYSA-N'
+        query2 = "WHERE { ?compound wdt:P235 \"" + genericidentifier + "\" ."
+        srcs.update({"wikidata": {"result": None, "notes": "InChiKey generalized by substituting second and third block with -UHFFFAOYSA-N"}})
+
     query3 = "SERVICE wikibase:label { bd:serviceParam wikibase:language \"en\". } }"
     query = query1 + query2 + query3
     res = return_sparql_query_results(query)
@@ -155,8 +172,13 @@ def wikidata(identifier, meta, ids, descs, srcs):
 def chembl(identifier, meta, ids, descs, srcs):
     """ retrieve data from the ChEMBL repository"""
     molecule = new_client.molecule
-    response = molecule.search(identifier)
-    cmpd = response[0]
+    srcs.update({"chembl": {"result": None, "notes": None}})
+    try:
+        cmpd = molecule.search(identifier)[0]
+    except:
+        genericidentifier = str(re.search('^[A-Z]{14}', identifier).group(0)) + '-UHFFFAOYSA-N'
+        cmpd = molecule.search(genericidentifier)[0]
+        srcs['chembl'].update({"notes": "InChiKey generalized by substituting second and third block with -UHFFFAOYSA-N"})
 
     # general metadata
     meta['chembl'] = {}
