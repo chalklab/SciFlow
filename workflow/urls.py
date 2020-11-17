@@ -4,5 +4,5 @@ from workflow import views
 
 
 urlpatterns = [
-    path('errors/', views.errors, name='errors'),
+    path('actlog/<fid>', views.actlog, name='actlog'),
 ]

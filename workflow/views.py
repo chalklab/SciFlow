@@ -3,15 +3,12 @@ from django.shortcuts import render
 from .wf_functions import *
 
 
-def errors(response):
+def actlog(response, fid):
     """ for testing and displaying errorcodes"""
-
-    if response.method == "POST":
-        if 'errortest' in response.POST:
-            errorcode = response.POST.get('errortest')
-            adderror(2, errorcode)
-
-    errs = readerrors(1)
-
-    context = {"errors": errs}
-    return render(response, "workflow/errors.html", context)
+    if not JsonActlog.objects.filter(json_file_id=fid):
+        context = {"notfound": "This file does not have an activity log!"}
+    else:
+        log = ast.literal_eval(JsonActlog.objects.get(json_file_id=fid).activitylog)
+        print(log["UID"])
+        context = {"log":log}
+    return render(response, "workflow/actlog.html", context)
