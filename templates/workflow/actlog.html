@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %} JSON LD Activity Log {% endblock %}
+{% block header %} Activity Log: {% endblock %}
+
+{% block content %}
+
+
+{% for cat, entry in log.items %}
+<p> {{cat}}: {{entry}} </p>
+
+{% endfor %}
+
+{% endblock %}
+

@@ -41,7 +41,7 @@ def adddatafile(jsonld, uploading_user=None):
         m.save()
 
     if m.id:
-        return True
+        return m.id
     else:
         return False
 
@@ -66,8 +66,9 @@ def updatedatafile(jsonld):
     f.version = m.currentversion
     f.save()
 
+    print(m.id, f.id)
     if m.id and f.id:
-        return True
+        return m.id, f.id
     else:
         return False
 
@@ -154,7 +155,7 @@ def updatefacetfile(jsonld=None):
     f.save()
 
     if m.id and f.id:
-        return True
+        return m.id, f.id
     else:
         return False
 

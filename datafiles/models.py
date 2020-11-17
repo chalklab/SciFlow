@@ -50,10 +50,8 @@ class JsonErrors(models.Model):
 
 class JsonActlog(models.Model):
     """ model for the json_errors DB table """
-    # json_lookup = models.ForeignKey(JsonLookup, related_name='json_lookup_id', on_delete=models.PROTECT)
-    json_lookup = models.ForeignKey(JsonLookup, on_delete=models.PROTECT)
-    # json_file = models.ForeignKey(JsonFiles, related_name='json_file_id', on_delete=models.PROTECT)
-    json_file = models.ForeignKey(JsonFiles, on_delete=models.PROTECT)
+    json_lookup = models.ForeignKey(JsonLookup, on_delete=models.PROTECT, null=True)
+    json_file = models.ForeignKey(JsonFiles, on_delete=models.PROTECT, null=True)
     activitylog = models.CharField(max_length=2048, default='')
     comment = models.CharField(max_length=256, default='')
     updated = models.DateTimeField(auto_now=True)

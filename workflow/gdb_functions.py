@@ -5,6 +5,8 @@ from workflow.settings import *
 import requests
 from substances.models import Substances
 from substances.models import Identifiers
+from workflow.wf_functions import *
+
 
 
 def addgraph(file, locale):
@@ -162,7 +164,7 @@ def graphnamespacecreate(uri, prefix, repo):  # TODO: Can't see the format curre
     print(prefix)
 
 
-def graph_link_a(file):
+def graph_link_a(file, aid):
     """graph link a function"""
     jsonfile = json.load(file)
     try:
@@ -171,6 +173,7 @@ def graph_link_a(file):
                 newgroup = graph_link_b(group)
                 group.clear()
                 group.update(newgroup)
+                addentry(aid, "Graph Link Group", group)
     except:
         pass
     return jsonfile
