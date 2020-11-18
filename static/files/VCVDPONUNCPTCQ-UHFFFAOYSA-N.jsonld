@@ -9,7 +9,7 @@
             "atc": "http://purl.bioontology.org/ontology/ATC/",
             "w3i": "https://w3id.org/skgo/modsci#"
         },
-        {"@base": "https://scidata.unf.edu/chalklab/substance/VCVDPONUNCPTCQ-UHFFFAOYSA-N/"}
+        {"@base": "https://scidata.unf.edu/chalklab:substance:VCVDPONUNCPTCQ-UHFFFAOYSA-N/"}
     ],
     "@id": "https://scidata.unf.edu/facet/00000002",
     "generatedAt": "2020-10-02 19:27:42.182171",
@@ -35,7 +35,7 @@
             "chemical compound"
         ],
         "starttime": "2020-10-02 19:27:42.182171",
-        "permalink": "https://scidata.unf.edu/substance/VCVDPONUNCPTCQ-UHFFFAOYSA-N/",
+        "permalink": "https://scidata.unf.edu/chalklab:substance:VCVDPONUNCPTCQ-UHFFFAOYSA-N/",
         "toc": ["sdo:compound"],
         "scidata": {
             "@id": "scidata",

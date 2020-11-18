@@ -9,13 +9,13 @@
             "atc": "http://purl.bioontology.org/ontology/ATC/",
             "w3i": "https://w3id.org/skgo/modsci#"
         },
-        {"@base": "https://scidata.unf.edu/substance/AOAOXSUNFXXSGI-UHFFFAOYSA-N/"}
+        {"@base": "https://scidata.unf.edu/chalklab:substance:AOAOXSUNFXXSGI-UHFFFAOYSA-N/"}
     ],
     "@id": "https://scidata.unf.edu/facet/000000000002",
     "generatedAt": "2020-08-26 15:39:52.076172",
     "version": 1,
     "@graph": {
-        "@id": "https://scidata.unf.edu/substance/AOAOXSUNFXXSGI-UHFFFAOYSA-N/",
+        "@id": "https://scidata.unf.edu/chalklab:substance:AOAOXSUNFXXSGI-UHFFFAOYSA-N/",
         "@type": "sdo:scidataFramework",
         "uid": "chalklab:substance:AOAOXSUNFXXSGI-UHFFFAOYSA-N",
         "title": "Chemical Substance SciData JSON-LD file for 2,6-bis[2-(4-methylphenyl)ethyl]pyridine",
@@ -35,7 +35,7 @@
             "chemical substance",
             "molecular compound"
         ],
-        "permalink": "https://scidata.unf.edu/facet/000000000002",
+        "permalink": "https://scidata.unf.edu/chalklab:substance:AOAOXSUNFXXSGI-UHFFFAOYSA-N",
         "toc": [
             "sdo:scientificData",
             "sdo:system",

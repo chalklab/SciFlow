@@ -1,0 +1,2768 @@
+{
+    "@context": [
+        "https://stuchalk.github.io/scidata/contexts/scidata.jsonld",
+        {
+            "sdo": "http://stuchalk.github.io/scidata/ontology/scidata.owl#",
+            "meas": "https://stuchalk.github.io/scidata/ontology/scidata_measurement.owl#",
+            "qudt": "http://www.qudt.org/qudt/owl/1.0.0/unit.owl#",
+            "dc": "http://purl.org/dc/terms/",
+            "xsd": "http://www.w3.org/2001/XMLSchema#"
+        },
+        {"@base": "https://scidata.unf.edu/trc:jced:acs.jced.5b00005/"}
+    ],
+    "@id": "https://scidata.unf.edu/data/<dataid>",
+    "generatedAt": "2020-11-15 17:41:30",
+    "version": 1,
+    "@graph": {
+        "@id": "https://scidata.unf.edu/trc:jced:acs.jced.5b00005/",
+        "@type": "sdo:scidataFramework",
+        "uid": "trc:jced:acs.jced.5b00005",
+        "title": "Effects of Na, Ca, Mg, and Al Chloride Salts on Dissolution and Phase Stability of Calcium Sulfate Dihydrate in Aqueous Solutions at 278.15 K to 308.15 K",
+        "author": [
+            {
+                "@id": "author/1/",
+                "@type": "dc:creator",
+                "name": "Jian Sun"
+            },
+            {
+                "@id": "author/2/",
+                "@type": "dc:creator",
+                "name": "Lisheng Wang"
+            },
+            {
+                "@id": "author/3/",
+                "@type": "dc:creator",
+                "name": "Guomin Yu"
+            }
+        ],
+        "description": "Report of thermochemical data in ThermoML format from the NIST TRC website http://www.trc.nist.gov/ThermoML/",
+        "publisher": "American Chemical Society",
+        "startdate": "2019-06-21 11:07:06",
+        "permalink": "https://chalk.coas.unf.edu/trc/datasets/view/000105",
+        "related": ["https://chalk.coas.unf.edu/trc/datasets/view/000106"],
+        "toc": [
+            "sdo:chemical",
+            "sdo:compound",
+            "sdo:condition",
+            "sdo:datagroup",
+            "sdo:dataset",
+            "sdo:mixture",
+            "sdo:seriescondition",
+            "sdo:system"
+        ],
+        "ids": [
+            "gb:M03970",
+            "gb:P04819",
+            "gb:T06321",
+            "qudt:GM-PER-100GM",
+            "qudt:K",
+            "qudt:KiloPA",
+            "qudt:MOL-PER-KiloGM"
+        ],
+        "scidata": {
+            "@id": "scidata",
+            "@type": "sdo:scientificData",
+            "system": {
+                "@id": "system/",
+                "@type": "sdo:system",
+                "discipline": "chemistry",
+                "subdiscipline": "physical chemistry",
+                "facets": [
+                    {
+                        "@id": "compound/1/",
+                        "@type": "sdo:compound",
+                        "name": "water",
+                        "formula": "H2O",
+                        "molweight": "18.015",
+                        "iupacname": "oxidane",
+                        "inchi": "InChI=1S/H2O/h1H2",
+                        "inchikey": "XLYOFNOQVPJJNP-UHFFFAOYSA-N"
+                    },
+                    {
+                        "@id": "chemical/1/",
+                        "@type": "sdo:chemical",
+                        "source": "compound/1/",
+                        "acquired": "Commercial source",
+                        "purity": {
+                            "@id": "purity/2/",
+                            "@type": "sdo:purity",
+                            "steps": {
+                                "1": {
+                                    "@id": "step/1/",
+                                    "@type": "sdo:value",
+                                    "part": "compound",
+                                    "analysis": "Stated by supplier",
+                                    "purification": null,
+                                    "number": "99.9",
+                                    "sigfigs": "3",
+                                    "unitref": "qudt:GM-PER-100GM"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "@id": "compound/2/",
+                        "@type": "sdo:compound",
+                        "name": "calcium sulfate dihydrate",
+                        "formula": "CaH4O6S",
+                        "molweight": "172.164",
+                        "iupacname": "calcium;sulfate;dihydrate",
+                        "inchi": "InChI=1S/Ca.H2O4S.2H2O/c;1-5(2,3)4;;/h;(H2,1,2,3,4);2*1H2/q+2;;;/p-2",
+                        "inchikey": "PASHVRUKOFIRIK-UHFFFAOYSA-L"
+                    },
+                    {
+                        "@id": "chemical/2/",
+                        "@type": "sdo:chemical",
+                        "source": "compound/2/",
+                        "acquired": "Commercial source",
+                        "purity": {
+                            "@id": "purity/3/",
+                            "@type": "sdo:purity",
+                            "steps": {
+                                "1": {
+                                    "@id": "step/1/",
+                                    "@type": "sdo:value",
+                                    "part": "compound",
+                                    "analysis": "Stated by supplier",
+                                    "purification": null,
+                                    "number": "99",
+                                    "sigfigs": "2",
+                                    "unitref": "qudt:GM-PER-100GM"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "@id": "compound/3/",
+                        "@type": "sdo:compound",
+                        "name": "sodium chloride",
+                        "formula": "ClNa",
+                        "molweight": "58.44",
+                        "iupacname": "sodium;chloride",
+                        "inchi": "InChI=1S/ClH.Na/h1H;/q;+1/p-1",
+                        "inchikey": "FAPWRFPIFSIZLT-UHFFFAOYSA-M"
+                    },
+                    {
+                        "@id": "chemical/3/",
+                        "@type": "sdo:chemical",
+                        "source": "compound/3/",
+                        "acquired": "Commercial source",
+                        "purity": {
+                            "@id": "purity/4/",
+                            "@type": "sdo:purity",
+                            "steps": {
+                                "1": {
+                                    "@id": "step/1/",
+                                    "@type": "sdo:value",
+                                    "part": "compound",
+                                    "analysis": "Stated by supplier",
+                                    "purification": null,
+                                    "number": "99.5",
+                                    "sigfigs": "3",
+                                    "unitref": "qudt:GM-PER-100GM"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "@id": "substance/1/",
+                        "@type": "sdo:mixture",
+                        "composition": "ternary mixture",
+                        "phase": "solution",
+                        "name": "sodium chloride-water-calcium sulfate dihydrate",
+                        "constituents": [
+                            {
+                                "@id": "substance/1/constituent/1/",
+                                "@type": "sdo:chemical",
+                                "source": "chemical/2/"
+                            },
+                            {
+                                "@id": "substance/1/constituent/2/",
+                                "@type": "sdo:chemical",
+                                "source": "chemical/3/"
+                            },
+                            {
+                                "@id": "substance/1/constituent/3/",
+                                "@type": "sdo:chemical",
+                                "source": "chemical/4/"
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "condition/1/",
+                        "@type": "sdo:condition",
+                        "quantity": "molality",
+                        "property": "Molality of component 2 (liquid)",
+                        "propertyref": "gb:M03970",
+                        "unitref": "qudt:MOL-PER-KiloGM",
+                        "valuearray": [
+                            {
+                                "@id": "condition/1/value/1/",
+                                "@type": "sdo:value",
+                                "number": ".1"
+                            },
+                            {
+                                "@id": "condition/1/value/2/",
+                                "@type": "sdo:value",
+                                "number": ".101"
+                            },
+                            {
+                                "@id": "condition/1/value/3/",
+                                "@type": "sdo:value",
+                                "number": ".251"
+                            },
+                            {
+                                "@id": "condition/1/value/4/",
+                                "@type": "sdo:value",
+                                "number": ".252"
+                            },
+                            {
+                                "@id": "condition/1/value/5/",
+                                "@type": "sdo:value",
+                                "number": ".503"
+                            },
+                            {
+                                "@id": "condition/1/value/6/",
+                                "@type": "sdo:value",
+                                "number": ".504"
+                            },
+                            {
+                                "@id": "condition/1/value/7/",
+                                "@type": "sdo:value",
+                                "number": ".505"
+                            },
+                            {
+                                "@id": "condition/1/value/8/",
+                                "@type": "sdo:value",
+                                "number": ".506"
+                            },
+                            {
+                                "@id": "condition/1/value/9/",
+                                "@type": "sdo:value",
+                                "number": ".507"
+                            },
+                            {
+                                "@id": "condition/1/value/10/",
+                                "@type": "sdo:value",
+                                "number": "1.016"
+                            },
+                            {
+                                "@id": "condition/1/value/11/",
+                                "@type": "sdo:value",
+                                "number": "1.018"
+                            },
+                            {
+                                "@id": "condition/1/value/11/",
+                                "@type": "sdo:value",
+                                "number": "1.021"
+                            },
+                            {
+                                "@id": "condition/1/value/12/",
+                                "@type": "sdo:value",
+                                "number": "1.026"
+                            },
+                            {
+                                "@id": "condition/1/value/13/",
+                                "@type": "sdo:value",
+                                "number": "1.028"
+                            },
+                            {
+                                "@id": "condition/1/value/14/",
+                                "@type": "sdo:value",
+                                "number": "1.029"
+                            },
+                            {
+                                "@id": "condition/1/value/15/",
+                                "@type": "sdo:value",
+                                "number": "1.033"
+                            },
+                            {
+                                "@id": "condition/1/value/16/",
+                                "@type": "sdo:value",
+                                "number": "1.548"
+                            },
+                            {
+                                "@id": "condition/1/value/17/",
+                                "@type": "sdo:value",
+                                "number": "1.554"
+                            },
+                            {
+                                "@id": "condition/1/value/18/",
+                                "@type": "sdo:value",
+                                "number": "1.558"
+                            },
+                            {
+                                "@id": "condition/1/value/19/",
+                                "@type": "sdo:value",
+                                "number": "1.561"
+                            },
+                            {
+                                "@id": "condition/1/value/20/",
+                                "@type": "sdo:value",
+                                "number": "1.565"
+                            },
+                            {
+                                "@id": "condition/1/value/21/",
+                                "@type": "sdo:value",
+                                "number": "1.57"
+                            },
+                            {
+                                "@id": "condition/1/value/22/",
+                                "@type": "sdo:value",
+                                "number": "1.575"
+                            },
+                            {
+                                "@id": "condition/1/value/23/",
+                                "@type": "sdo:value",
+                                "number": "2.085"
+                            },
+                            {
+                                "@id": "condition/1/value/24/",
+                                "@type": "sdo:value",
+                                "number": "2.094"
+                            },
+                            {
+                                "@id": "condition/1/value/25/",
+                                "@type": "sdo:value",
+                                "number": "2.099"
+                            },
+                            {
+                                "@id": "condition/1/value/26/",
+                                "@type": "sdo:value",
+                                "number": "2.116"
+                            },
+                            {
+                                "@id": "condition/1/value/27/",
+                                "@type": "sdo:value",
+                                "number": "2.124"
+                            },
+                            {
+                                "@id": "condition/1/value/28/",
+                                "@type": "sdo:value",
+                                "number": "2.133"
+                            },
+                            {
+                                "@id": "condition/1/value/29/",
+                                "@type": "sdo:value",
+                                "number": "2.14"
+                            },
+                            {
+                                "@id": "condition/1/value/30/",
+                                "@type": "sdo:value",
+                                "number": "2.643"
+                            },
+                            {
+                                "@id": "condition/1/value/31/",
+                                "@type": "sdo:value",
+                                "number": "2.654"
+                            },
+                            {
+                                "@id": "condition/1/value/32/",
+                                "@type": "sdo:value",
+                                "number": "2.66"
+                            },
+                            {
+                                "@id": "condition/1/value/33/",
+                                "@type": "sdo:value",
+                                "number": "2.666"
+                            },
+                            {
+                                "@id": "condition/1/value/34/",
+                                "@type": "sdo:value",
+                                "number": "2.678"
+                            },
+                            {
+                                "@id": "condition/1/value/35/",
+                                "@type": "sdo:value",
+                                "number": "2.693"
+                            },
+                            {
+                                "@id": "condition/1/value/36/",
+                                "@type": "sdo:value",
+                                "number": "2.709"
+                            },
+                            {
+                                "@id": "condition/1/value/37/",
+                                "@type": "sdo:value",
+                                "number": "3.181"
+                            },
+                            {
+                                "@id": "condition/1/value/38/",
+                                "@type": "sdo:value",
+                                "number": "3.195"
+                            },
+                            {
+                                "@id": "condition/1/value/39/",
+                                "@type": "sdo:value",
+                                "number": "3.199"
+                            },
+                            {
+                                "@id": "condition/1/value/40/",
+                                "@type": "sdo:value",
+                                "number": "3.216"
+                            },
+                            {
+                                "@id": "condition/1/value/41/",
+                                "@type": "sdo:value",
+                                "number": "3.231"
+                            },
+                            {
+                                "@id": "condition/1/value/42/",
+                                "@type": "sdo:value",
+                                "number": "3.249"
+                            },
+                            {
+                                "@id": "condition/1/value/43/",
+                                "@type": "sdo:value",
+                                "number": "3.278"
+                            },
+                            {
+                                "@id": "condition/1/value/44/",
+                                "@type": "sdo:value",
+                                "number": "3.77"
+                            },
+                            {
+                                "@id": "condition/1/value/45/",
+                                "@type": "sdo:value",
+                                "number": "3.791"
+                            },
+                            {
+                                "@id": "condition/1/value/46/",
+                                "@type": "sdo:value",
+                                "number": "3.799"
+                            },
+                            {
+                                "@id": "condition/1/value/47/",
+                                "@type": "sdo:value",
+                                "number": "3.804"
+                            },
+                            {
+                                "@id": "condition/1/value/48/",
+                                "@type": "sdo:value",
+                                "number": "3.825"
+                            },
+                            {
+                                "@id": "condition/1/value/49/",
+                                "@type": "sdo:value",
+                                "number": "3.847"
+                            },
+                            {
+                                "@id": "condition/1/value/50/",
+                                "@type": "sdo:value",
+                                "number": "3.873"
+                            },
+                            {
+                                "@id": "condition/1/value/51/",
+                                "@type": "sdo:value",
+                                "number": "4.355"
+                            },
+                            {
+                                "@id": "condition/1/value/52/",
+                                "@type": "sdo:value",
+                                "number": "4.379"
+                            },
+                            {
+                                "@id": "condition/1/value/53/",
+                                "@type": "sdo:value",
+                                "number": "4.384"
+                            },
+                            {
+                                "@id": "condition/1/value/54/",
+                                "@type": "sdo:value",
+                                "number": "4.389"
+                            },
+                            {
+                                "@id": "condition/1/value/55/",
+                                "@type": "sdo:value",
+                                "number": "4.414"
+                            },
+                            {
+                                "@id": "condition/1/value/56/",
+                                "@type": "sdo:value",
+                                "number": "4.439"
+                            },
+                            {
+                                "@id": "condition/1/value/57/",
+                                "@type": "sdo:value",
+                                "number": "4.47"
+                            },
+                            {
+                                "@id": "condition/1/value/58/",
+                                "@type": "sdo:value",
+                                "number": "4.937"
+                            },
+                            {
+                                "@id": "condition/1/value/59/",
+                                "@type": "sdo:value",
+                                "number": "4.959"
+                            },
+                            {
+                                "@id": "condition/1/value/60/",
+                                "@type": "sdo:value",
+                                "number": "4.976"
+                            },
+                            {
+                                "@id": "condition/1/value/61/",
+                                "@type": "sdo:value",
+                                "number": "4.999"
+                            },
+                            {
+                                "@id": "condition/1/value/62/",
+                                "@type": "sdo:value",
+                                "number": "5.032"
+                            },
+                            {
+                                "@id": "condition/1/value/63/",
+                                "@type": "sdo:value",
+                                "number": "5.061"
+                            },
+                            {
+                                "@id": "condition/1/value/64/",
+                                "@type": "sdo:value",
+                                "number": "5.096"
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "condition/2/",
+                        "@type": "sdo:seriescondition",
+                        "quantity": "pressure",
+                        "property": "System pressure",
+                        "propertyref": "gb:P04819",
+                        "unitref": "qudt:KiloPA",
+                        "valuearray": [
+                            {
+                                "@id": "condition/2/value/1/",
+                                "@type": "sdo:value",
+                                "number": "101"
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "condition/3/",
+                        "@type": "sdo:seriescondition",
+                        "quantity": "temperature",
+                        "property": "System temperature",
+                        "propertyref": "gb:T06321",
+                        "unitref": "qudt:K",
+                        "valuearray": [
+                            {
+                                "@id": "condition/3/value/1/",
+                                "@type": "sdo:value",
+                                "number": "278.15"
+                            },
+                            {
+                                "@id": "condition/3/value/2/",
+                                "@type": "sdo:value",
+                                "number": "283.15"
+                            },
+                            {
+                                "@id": "condition/3/value/3/",
+                                "@type": "sdo:value",
+                                "number": "288.15"
+                            },
+                            {
+                                "@id": "condition/3/value/4/",
+                                "@type": "sdo:value",
+                                "number": "293.15"
+                            },
+                            {
+                                "@id": "condition/3/value/5/",
+                                "@type": "sdo:value",
+                                "number": "298.15"
+                            },
+                            {
+                                "@id": "condition/3/value/6/",
+                                "@type": "sdo:value",
+                                "number": "303.15"
+                            },
+                            {
+                                "@id": "condition/3/value/7/",
+                                "@type": "sdo:value",
+                                "number": "308.15"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "dataset": {
+                "@id": "dataset/",
+                "@type": "sdo:dataset",
+                "scope": "mixture/1/",
+                "datagroup": [
+                    {
+                        "@id": "datagroup/1/",
+                        "@type": "sdo:datagroup",
+                        "conditions": [
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "datapoint": [
+                            "datapoint/1/",
+                            "datapoint/2/",
+                            "datapoint/3/",
+                            "datapoint/4/",
+                            "datapoint/5/",
+                            "datapoint/6/",
+                            "datapoint/7/",
+                            "datapoint/8/",
+                            "datapoint/9/",
+                            "datapoint/10/",
+                            "datapoint/11/"
+                        ]
+                    },
+                    {
+                        "@id": "datagroup/2/",
+                        "@type": "sdo:datagroup",
+                        "conditions": [
+                            "condition/2/value/1/",
+                            "condition/3/value/2/"
+                        ],
+                        "datapoint": [
+                            "datapoint/12/",
+                            "datapoint/13/",
+                            "datapoint/14/",
+                            "datapoint/15/",
+                            "datapoint/16/",
+                            "datapoint/17/",
+                            "datapoint/18/",
+                            "datapoint/19/",
+                            "datapoint/20/",
+                            "datapoint/21/",
+                            "datapoint/22/"
+                        ]
+                    },
+                    {
+                        "@id": "datagroup/3/",
+                        "@type": "sdo:datagroup",
+                        "conditions": [
+                            "condition/2/value/1/",
+                            "condition/3/value/3/"
+                        ],
+                        "datapoint": [
+                            "datapoint/23/",
+                            "datapoint/24/",
+                            "datapoint/25/",
+                            "datapoint/26/",
+                            "datapoint/27/",
+                            "datapoint/28/",
+                            "datapoint/29/",
+                            "datapoint/30/",
+                            "datapoint/31/",
+                            "datapoint/32/",
+                            "datapoint/33/"
+                        ]
+                    },
+                    {
+                        "@id": "datagroup/4/",
+                        "@type": "sdo:datagroup",
+                        "conditions": [
+                            "condition/2/value/1/",
+                            "condition/3/value/4/"
+                        ],
+                        "datapoint": [
+                            "datapoint/34/",
+                            "datapoint/35/",
+                            "datapoint/36/",
+                            "datapoint/37/",
+                            "datapoint/38/",
+                            "datapoint/39/",
+                            "datapoint/40/",
+                            "datapoint/41/",
+                            "datapoint/42/",
+                            "datapoint/43/",
+                            "datapoint/44/"
+                        ]
+                    },
+                    {
+                        "@id": "datagroup/5/",
+                        "@type": "sdo:datagroup",
+                        "conditions": [
+                            "condition/2/value/1/",
+                            "condition/3/value/5/"
+                        ],
+                        "datapoint": [
+                            "datapoint/45/",
+                            "datapoint/46/",
+                            "datapoint/47/",
+                            "datapoint/48/",
+                            "datapoint/49/",
+                            "datapoint/50/",
+                            "datapoint/51/",
+                            "datapoint/52/",
+                            "datapoint/53/",
+                            "datapoint/54/",
+                            "datapoint/55/"
+                        ]
+                    },
+                    {
+                        "@id": "datagroup/6/",
+                        "@type": "sdo:datagroup",
+                        "conditions": [
+                            "condition/2/value/1/",
+                            "condition/3/value/6/"
+                        ],
+                        "datapoint": [
+                            "datapoint/56/",
+                            "datapoint/57/",
+                            "datapoint/58/",
+                            "datapoint/59/",
+                            "datapoint/60/",
+                            "datapoint/61/",
+                            "datapoint/62/",
+                            "datapoint/63/",
+                            "datapoint/64/",
+                            "datapoint/65/",
+                            "datapoint/66/"
+                        ]
+                    },
+                    {
+                        "@id": "datagroup/7/",
+                        "@type": "sdo:datagroup",
+                        "conditions": [
+                            "condition/2/value/1/",
+                            "condition/3/value/7/"
+                        ],
+                        "datapoint": [
+                            "datapoint/67/",
+                            "datapoint/68/",
+                            "datapoint/69/",
+                            "datapoint/70/",
+                            "datapoint/71/",
+                            "datapoint/72/",
+                            "datapoint/73/",
+                            "datapoint/74/",
+                            "datapoint/75/",
+                            "datapoint/76/",
+                            "datapoint/77/"
+                        ]
+                    }
+                ],
+                "datapoint": [
+                    {
+                        "@id": "datapoint/1/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/1/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/1/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/1/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".02",
+                                    "error": ".0006",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/2/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/3/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/2/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/2/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0253",
+                                    "error": ".000759",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/3/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/5/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/3/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/3/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0331",
+                                    "error": ".000993",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/4/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/10/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/4/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/4/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0413",
+                                    "error": ".001239",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/5/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/17/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/5/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/5/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0462",
+                                    "error": ".001386",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/6/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/24/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/6/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/6/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0518",
+                                    "error": ".001554",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/7/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/31/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/7/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/7/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0523",
+                                    "error": ".001569",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/8/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/38/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/8/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/8/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0496",
+                                    "error": ".001488",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/9/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/45/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/9/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/9/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0464",
+                                    "error": ".001392",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/10/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/52/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/10/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/10/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".044",
+                                    "error": ".00132",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/11/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/59/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/11/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/11/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0419",
+                                    "error": ".001257",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/12/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/1/",
+                            "condition/2/value/1/",
+                            "condition/3/value/2/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/12/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/12/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0213",
+                                    "error": ".000639",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/13/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/3/",
+                            "condition/2/value/1/",
+                            "condition/3/value/2/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/13/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/13/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".027",
+                                    "error": ".00081",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/14/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/6/",
+                            "condition/2/value/1/",
+                            "condition/3/value/2/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/14/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/14/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0335",
+                                    "error": ".001005",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/15/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/11/",
+                            "condition/2/value/1/",
+                            "condition/3/value/2/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/15/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/15/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0423",
+                                    "error": ".001269",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/16/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/18/",
+                            "condition/2/value/1/",
+                            "condition/3/value/2/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/16/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/16/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0478",
+                                    "error": ".001434",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/17/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/25/",
+                            "condition/2/value/1/",
+                            "condition/3/value/2/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/17/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/17/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0526",
+                                    "error": ".001578",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/18/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/32/",
+                            "condition/2/value/1/",
+                            "condition/3/value/2/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/18/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/18/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0536",
+                                    "error": ".001608",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/19/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/39/",
+                            "condition/2/value/1/",
+                            "condition/3/value/2/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/19/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/19/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0518",
+                                    "error": ".001554",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/20/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/46/",
+                            "condition/2/value/1/",
+                            "condition/3/value/2/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/20/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/20/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0474",
+                                    "error": ".001422",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/21/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/53/",
+                            "condition/2/value/1/",
+                            "condition/3/value/2/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/21/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/21/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0446",
+                                    "error": ".001338",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/22/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/60/",
+                            "condition/2/value/1/",
+                            "condition/3/value/2/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/22/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/22/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0432",
+                                    "error": ".001296",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/23/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/1/",
+                            "condition/2/value/1/",
+                            "condition/3/value/3/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/23/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/23/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".022",
+                                    "error": ".00066",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/24/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/4/",
+                            "condition/2/value/1/",
+                            "condition/3/value/3/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/24/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/24/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0277",
+                                    "error": ".000831",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/25/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/7/",
+                            "condition/2/value/1/",
+                            "condition/3/value/3/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/25/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/25/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0339",
+                                    "error": ".001017",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/26/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/12/",
+                            "condition/2/value/1/",
+                            "condition/3/value/3/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/26/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/26/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0425",
+                                    "error": ".001275",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/27/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/19/",
+                            "condition/2/value/1/",
+                            "condition/3/value/3/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/27/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/27/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0484",
+                                    "error": ".001452",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/28/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/26/",
+                            "condition/2/value/1/",
+                            "condition/3/value/3/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/28/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/28/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0535",
+                                    "error": ".001605",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/29/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/33/",
+                            "condition/2/value/1/",
+                            "condition/3/value/3/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/29/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/29/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0546",
+                                    "error": ".001638",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/30/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/40/",
+                            "condition/2/value/1/",
+                            "condition/3/value/3/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/30/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/30/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0522",
+                                    "error": ".001566",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/31/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/47/",
+                            "condition/2/value/1/",
+                            "condition/3/value/3/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/31/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/31/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0481",
+                                    "error": ".001443",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/32/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/54/",
+                            "condition/2/value/1/",
+                            "condition/3/value/3/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/32/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/32/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0448",
+                                    "error": ".001344",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/33/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/61/",
+                            "condition/2/value/1/",
+                            "condition/3/value/3/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/33/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/33/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0438",
+                                    "error": ".001314",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/34/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/2/",
+                            "condition/2/value/1/",
+                            "condition/3/value/4/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/34/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/34/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0222",
+                                    "error": ".000666",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/35/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/60/",
+                            "condition/2/value/1/",
+                            "condition/3/value/4/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/35/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/35/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0287",
+                                    "error": ".000861",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/36/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/9/",
+                            "condition/2/value/1/",
+                            "condition/3/value/4/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/36/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/36/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0349",
+                                    "error": ".001047",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/37/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/13/",
+                            "condition/2/value/1/",
+                            "condition/3/value/4/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/37/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/37/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0435",
+                                    "error": ".001305",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/38/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/20/",
+                            "condition/2/value/1/",
+                            "condition/3/value/4/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/38/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/38/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0498",
+                                    "error": ".001494",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/39/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/27/",
+                            "condition/2/value/1/",
+                            "condition/3/value/4/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/39/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/39/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0545",
+                                    "error": ".001635",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/40/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/34/",
+                            "condition/2/value/1/",
+                            "condition/3/value/4/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/40/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/40/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0556",
+                                    "error": ".001668",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/41/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/41/",
+                            "condition/2/value/1/",
+                            "condition/3/value/4/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/41/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/41/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0531",
+                                    "error": ".001593",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/42/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/48/",
+                            "condition/2/value/1/",
+                            "condition/3/value/4/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/42/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/42/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0489",
+                                    "error": ".001467",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/43/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/55/",
+                            "condition/2/value/1/",
+                            "condition/3/value/4/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/43/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/43/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0462",
+                                    "error": ".001386",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/44/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/62/",
+                            "condition/2/value/1/",
+                            "condition/3/value/4/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/44/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/44/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0448",
+                                    "error": ".001344",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/45/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/61/",
+                            "condition/2/value/1/",
+                            "condition/3/value/5/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/45/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/45/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0227",
+                                    "error": ".000681",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/46/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/60/",
+                            "condition/2/value/1/",
+                            "condition/3/value/5/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/46/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/46/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0295",
+                                    "error": ".000885",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/47/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/2/",
+                            "condition/2/value/1/",
+                            "condition/3/value/5/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/47/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/47/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0355",
+                                    "error": ".001065",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/48/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/14/",
+                            "condition/2/value/1/",
+                            "condition/3/value/5/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/48/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/48/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0442",
+                                    "error": ".001326",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/49/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/21/",
+                            "condition/2/value/1/",
+                            "condition/3/value/5/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/49/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/49/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0507",
+                                    "error": ".001521",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/50/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/28/",
+                            "condition/2/value/1/",
+                            "condition/3/value/5/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/50/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/50/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".056",
+                                    "error": ".00168",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/51/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/35/",
+                            "condition/2/value/1/",
+                            "condition/3/value/5/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/51/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/51/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0573",
+                                    "error": ".001719",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/52/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/42/",
+                            "condition/2/value/1/",
+                            "condition/3/value/5/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/52/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/52/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0543",
+                                    "error": ".001629",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/53/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/49/",
+                            "condition/2/value/1/",
+                            "condition/3/value/5/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/53/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/53/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0503",
+                                    "error": ".001509",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/54/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/56/",
+                            "condition/2/value/1/",
+                            "condition/3/value/5/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/54/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/54/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0476",
+                                    "error": ".001428",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/55/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/63/",
+                            "condition/2/value/1/",
+                            "condition/3/value/5/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/55/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/55/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0456",
+                                    "error": ".001368",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/56/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/61/",
+                            "condition/2/value/1/",
+                            "condition/3/value/6/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/56/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/56/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0236",
+                                    "error": ".000708",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/57/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/60/",
+                            "condition/2/value/1/",
+                            "condition/3/value/6/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/57/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/57/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0295",
+                                    "error": ".000885",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/58/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/8/",
+                            "condition/2/value/1/",
+                            "condition/3/value/6/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/58/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/58/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0365",
+                                    "error": ".001095",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/59/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/15/",
+                            "condition/2/value/1/",
+                            "condition/3/value/6/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/59/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/59/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0445",
+                                    "error": ".001335",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/60/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/22/",
+                            "condition/2/value/1/",
+                            "condition/3/value/6/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/60/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/60/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0517",
+                                    "error": ".001551",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/61/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/29/",
+                            "condition/2/value/1/",
+                            "condition/3/value/6/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/61/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/61/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0566",
+                                    "error": ".001698",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/62/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/36/",
+                            "condition/2/value/1/",
+                            "condition/3/value/6/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/62/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/62/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0589",
+                                    "error": ".001767",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/63/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/43/",
+                            "condition/2/value/1/",
+                            "condition/3/value/6/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/63/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/63/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0562",
+                                    "error": ".001686",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/64/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/50/",
+                            "condition/2/value/1/",
+                            "condition/3/value/6/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/64/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/64/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0523",
+                                    "error": ".001569",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/65/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/57/",
+                            "condition/2/value/1/",
+                            "condition/3/value/6/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/65/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/65/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0486",
+                                    "error": ".001458",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/66/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/64/",
+                            "condition/2/value/1/",
+                            "condition/3/value/6/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/66/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/66/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0465",
+                                    "error": ".001395",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/67/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/61/",
+                            "condition/2/value/1/",
+                            "condition/3/value/7/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/67/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/67/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0232",
+                                    "error": ".000696",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/68/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/60/",
+                            "condition/2/value/1/",
+                            "condition/3/value/7/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/68/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/68/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0292",
+                                    "error": ".000876",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/69/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/2/",
+                            "condition/2/value/1/",
+                            "condition/3/value/7/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/69/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/69/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0375",
+                                    "error": ".001125",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/70/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/16/",
+                            "condition/2/value/1/",
+                            "condition/3/value/7/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/70/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/70/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0464",
+                                    "error": ".001392",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/71/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/23/",
+                            "condition/2/value/1/",
+                            "condition/3/value/7/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/71/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/71/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0532",
+                                    "error": ".001596",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/72/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/30/",
+                            "condition/2/value/1/",
+                            "condition/3/value/7/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/72/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/72/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0582",
+                                    "error": ".001746",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/73/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/37/",
+                            "condition/2/value/1/",
+                            "condition/3/value/7/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/73/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/73/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0615",
+                                    "error": ".001845",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/74/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/44/",
+                            "condition/2/value/1/",
+                            "condition/3/value/7/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/74/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/74/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0583",
+                                    "error": ".001749",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/75/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/51/",
+                            "condition/2/value/1/",
+                            "condition/3/value/7/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/75/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/75/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0542",
+                                    "error": ".001626",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/76/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/58/",
+                            "condition/2/value/1/",
+                            "condition/3/value/7/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/76/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/76/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0506",
+                                    "error": ".001518",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/77/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/65/",
+                            "condition/2/value/1/",
+                            "condition/3/value/7/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/77/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Molality of component 1",
+                                "property": "Molality of component 1 (Liquid)",
+                                "propertyref": "gb:M03970",
+                                "value": {
+                                    "@id": "/datapoint/77/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0481",
+                                    "error": ".001443",
+                                    "unit": "mol/kg",
+                                    "unitref": "qudt:MOL-PER-KiloGM"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "references": [
+            {
+                "@id": "reference/1/",
+                "@type": "dc:source",
+                "citation": "'Effects of Na, Ca, Mg, and Al Chloride Salts on Dissolution and Phase Stability of Calcium Sulfate Dihydrate in Aqueous Solutions at 278.15 K to 308.15 K' Sun, J.; Wang, L.; Yu, G., J. Chem. Eng. Data 2015 60(9) 2559-2566",
+                "url": "https://doi.org/10.1021/acs.jced.5b00005"
+            },
+            {
+                "@id": "reference/2/",
+                "@type": "dc:source",
+                "citation": "Original data file from NIST TRC Archive at http://www.trc.nist.gov/ThermoML/",
+                "url": "http://www.trc.nist.gov/ThermoML/10.1021/acs.jced.5b00005"
+            }
+        ],
+        "rights": {
+            "@id": "rights/1/",
+            "@type": "dc:rights",
+            "holder": "NIST Thermodynamics Research Center (Boulder, CO)",
+            "license": "https://creativecommons.org/licenses/by-nc/4.0/"
+        }
+    }
+}

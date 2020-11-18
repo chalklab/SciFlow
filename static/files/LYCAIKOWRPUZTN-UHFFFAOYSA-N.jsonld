@@ -35,7 +35,7 @@
             "chemical compound"
         ],
         "starttime": "2020-06-23 10:09:12.128587",
-        "permalink": "https://scidata.unf.edu/substance/LYCAIKOWRPUZTN-UHFFFAOYSA-N/",
+        "permalink": "https://scidata.unf.edu/chalklab:substance:LYCAIKOWRPUZTN-UHFFFAOYSA-N/",
         "toc": ["sdo:compound"],
         "scidata": {
             "@id": "scidata",
