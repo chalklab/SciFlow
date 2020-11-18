@@ -290,16 +290,26 @@ def pubchemmol(pcid):
 
     atoms = []
     bonds = []
+    chrgs = []
     for line in sdf.splitlines():
-        a = re.search(r"([0-9\-\.]+)\s+([0-9\-\.]+)\s+([0-9\-\.]+)\s([A-Za-z]{1,2})\s+0\s+0\s+0\s+0", line)
+        a = re.search(r"([0-9\-\.]+)\s+([0-9\-\.]+)\s+([0-9\-\.]+)\s([A-Za-z]{1,2})\s+0\s+(\d)\s+0\s+0", line)
         if a:
-            lst = [a[1], a[2], a[3], a[4]]
-            atoms.append(lst)
+            atoms.append([a[1], a[2], a[3], a[4], a[5]])
+            continue
         b = re.search(r"^\s+(\d{1,2})\s+(\d{1,2})\s+(\d)\s+0\s+0\s+0\s+0$", line)
         if b:
-            lst = [b[1], b[2], b[3]]
-            bonds.append(lst)
+            bonds.append([b[1], b[2], b[3]])
+            continue
+        c = re.search(r"^M\s+CHG\s+(\d)", line)
+        if c:
+            num = int(c[1])
+            rest = line.replace('M  CHG  ' + str(num), '')
+            parts = re.split(r"\s{2,3}", rest.strip())
+            for idx, val in enumerate(parts):
+                if (idx % 2) != 0:
+                    continue
+                chrgs.append([val, parts[(idx+1)]])
 
-    return {'atoms': atoms, 'bonds': bonds}
+    return {'atoms': atoms, 'bonds': bonds, 'chrgs': chrgs}
 
 pubchem('XLYOFNOQVPJJNP-UHFFFAOYSA-N', {}, {}, {}, {})

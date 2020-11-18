@@ -1,58 +1,56 @@
 """ wrapper definitions to the GraphDB API """
 import json
+import requests
 from urllib.parse import quote
 from workflow.settings import *
-import requests
-from substances.models import Substances
-from substances.models import Identifiers
+from substances.models import *
+from django.db import *
 from workflow.wf_functions import *
 
 
-
-def addgraph(file, locale):
+def addgraph(ftype, fileid, locale='local'):
     """ add a file to GraphDB """
-    data = '{"fileNames": ["' + file + '"]}'
+    data = '{\n "data": "https://sds.coas.unf.edu/sciflow/files/' + ftype + '/' + str(fileid) + '" \n }'
     if locale == "local":
-        r = requests.post(graphuploadlocalurl, data=data, headers=jsonhrs)
+        r = requests.post(graphlocalurl, data=data, headers=jsonhrs)
     elif locale == 'remote':
-        r = requests.post(graphuploadremoteurl, data=data, headers=jsonhrs)
+        r = requests.post(graphsdsurl, data=data, headers=jsonhrs)
     else:
-        return False
+        raise DatabaseError('Locale not one of local or remote')
+
+    # return outcome of addition
     return r.ok
 
 
-def isgraph(name):
+def isgraph(name, locale='local'):
     """ check to see if a named graph is present in GraphDB """
     headers = {'Accept': 'application/sparql-results+json'}
     params = {'query': 'ASK WHERE { GRAPH <' + name + '> { ?s ?p ?o } }'}
 
     # response format { "head" : { }, "boolean" : true }
-    temp = graphsparqlurl
-    response = requests.get(temp, headers=headers, params=params).json()
+    url = ""
+    if locale == 'local':
+        url = graphsparqllocalurl
+    elif locale == 'remote':
+        url = graphsparqlsdsurl
+    response = requests.get(url, headers=headers, params=params).json()
     if response['boolean']:
         return True
     else:
         return False
 
 
-def getgraphname(identifier):
+def getgraphname(identifier, locale='local'):
     """ get the name of a named graph using substring """
     headers = {'Accept': 'application/sparql-results+json'}
     params = {'query': 'SELECT DISTINCT ?g WHERE { GRAPH ?g { ?s ?p ?o. } FILTER(contains(str(?g),"'+identifier+'"))}'}
     # response format {'head': {'vars': ['g']}, 'results': {'bindings': [{'g': {'type': 'uri', 'value': <graphname>}}]}}
-    temp = graphsparqlurl
-    response = requests.get(temp, headers=headers, params=params).json()
+    if locale == 'local':
+        url = graphsparqllocalurl
+    elif locale == 'remote':
+        url = graphsparqlsdsurl
+    response = requests.get(url, headers=headers, params=params).json()
     return response['results']['bindings'][0]['g']['value']
-
-
-def graphadd(file, repo):
-    """ post /rest/data/import/upload/{repositoryID}/url
-        add a file to GraphDB """
-    headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
-    x = '"{}"'.format(file)
-    data = '{\n "data": ' + x + ' \n }'
-    r = requests.post("http://localhost:7200/rest/data/import/upload/"+repo+"/url", data=data, headers=headers)
-    print(r.text)
 
 
 # misc
@@ -173,7 +171,7 @@ def graph_link_a(file, aid):
                 newgroup = graph_link_b(group)
                 group.clear()
                 group.update(newgroup)
-                addentry(aid, "Graph Link Group", group)
+                # TODO add back...  addentry(aid, "Graph Link Group", group)
     except:
         pass
     return jsonfile

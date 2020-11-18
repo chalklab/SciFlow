@@ -10,10 +10,13 @@ searchterms = {
 }
 
 # graphdb paths
-graphserverurl = 'http://localhost:7201/'
 graphreponame = 'scidata'
-graphuploadlocalurl = graphserverurl + 'rest/data/import/server/' + graphreponame
-graphuploadremoteurl = graphserverurl + 'rest/data/upload/server/' + graphreponame + '/url/'
-graphsparqlurl = graphserverurl + 'repositories/' + graphreponame
+graphsdspath = 'http://localhost:7201/'
+graphsdsurl = graphsdspath + 'rest/data/import/upload/' + graphreponame + '/url'
+graphsparqlsdsurl = graphsdspath + 'repositories/' + graphreponame
+
+graphlocalpath = 'http://localhost:7200/'
+graphlocalurl = graphlocalpath + 'rest/data/import/upload/' + graphreponame + '/url'
+graphsparqllocalurl = graphlocalpath + 'repositories/' + graphreponame
 
 sdsnewpath = "/Users/Shared/sciflow"

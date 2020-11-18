@@ -11,6 +11,7 @@ class Substances(models.Model):
     molweight = models.FloatField(default=0.00)
     casrn = models.CharField(max_length=16, default='')
     graphdb = models.CharField(max_length=256, null=True)
+    facet_lookup_id = models.IntegerField(blank=True, null=True)
     comments = models.CharField(max_length=256, null=True)
     updated = models.DateTimeField(auto_now=True)
 

@@ -71,7 +71,6 @@ if "x" == "y":
     addgraph
     isgraph
     getgraphname
-    graphadd
     graphsize
     graphdownload
     graphrepos
@@ -89,20 +88,11 @@ if "x" == "y":
     from workflow.wf_functions import *
     #ingestion
     ingest
-    finalize
-
-    #logwriter
-    errloginit
-    actloginit
-    logwrite
-    logprint
 
     #normalization
     normalize
-    findsub
     getfacet
 
     from datafiles.validation import *
     validate
-    check_scidata
     check_type

@@ -1,97 +1,26 @@
 """ functions file for the datafiles app"""
 from datafiles.models import *
 from django.core.exceptions import ValidationError
+from pyld import jsonld
 import json
 import re
 
 
 # Variant that only adds the lookup info so errors can be stored. Upon validation addfile is run and the file is actually added.
-def adddatafile(jsonld, uploading_user=None):
+def adddatafile(dfile, uploading_user=None):
     """
     Add data jsonld metadata to the database
-    :param jsonld: data jsonld file
+    :param dfile: data jsonld file
     :param uploading_user: user id
     :return: boolean
     """
 
     # save metadata
-    if JsonLookup.objects.filter(uniqueid=jsonld['@graph']['uid']):
-        m = JsonLookup.objects.get(uniqueid=jsonld['@graph']['uid'])
+    if JsonLookup.objects.filter(uniqueid=dfile['@graph']['uid']):
+        m = JsonLookup.objects.get(uniqueid=dfile['@graph']['uid'])
     else:
         m = JsonLookup()
-        uid = jsonld['@graph']['uid']
-        parts = uid.split(":")
-
-        # get dataset_id
-        dset = Datasets.objects.get(source__exact=parts[0], datasetname=parts[1])
-
-        if dset.id:
-            m.dataset_id = dset.id
-        else:
-            m.dataset_id = 0
-        m.uniqueid = uid
-        m.title = jsonld['@graph']['title']
-        m.graphname = jsonld['@id']
-        m.type = parts[1]
-        m.currentversion = 1
-        if uploading_user is None:
-            m.auth_user_id = 1
-        else:
-            m.auth_user_id = uploading_user.id
-        m.save()
-
-    if m.id:
-        return m.id
-    else:
-        return False
-
-
-def updatedatafile(jsonld):
-    """
-    Add a data jsonld file to the database
-    :param jsonld: data jsonld file information
-    :return: boolean
-    """
-
-    # get metadata
-    m = JsonLookup.objects.get(uniqueid=jsonld['@graph']['uid'])
-    m.currentversion += 1
-    m.save()
-
-    # save json file
-    f = JsonFiles()
-    f.json_lookup_id = m.id
-    f.file = json.dumps(jsonld, separators=(',', ':'))
-    f.type = "raw"
-    f.version = m.currentversion
-    f.save()
-
-    print(m.id, f.id)
-    if m.id and f.id:
-        return m.id, f.id
-    else:
-        return False
-
-
-def addfacetfile(jsonld=None, uploading_user=None):
-    """
-    Add a facet jsonld file to the database
-    :param jsonld: data jsonld file information
-    :param uploading_user: user id
-    :return: boolean
-    """
-
-    # check for valid file
-    if jsonld is None or jsonld == "":
-        return False
-
-    # save metadata
-    if FacetLookup.objects.filter(uniqueid=jsonld['@graph']['uid']):
-        m = FacetLookup.objects.get(uniqueid=jsonld['@graph']['uid'])
-    else:
-        m = FacetLookup()
-
-        uid = jsonld['@graph']['uid']
+        uid = dfile['@graph']['uid']
         parts = uid.split(":")
 
         # get dataset_id
@@ -102,9 +31,105 @@ def addfacetfile(jsonld=None, uploading_user=None):
         else:
             m.dataset_id = 0
         m.uniqueid = uid
-        m.title = jsonld['@graph']['title']
+        m.title = dfile['@graph']['title']
         m.type = parts[1]
-        m.graphname = jsonld['@id']
+        m.currentversion = 0
+        if uploading_user is None:
+            m.auth_user_id = 1
+        else:
+            m.auth_user_id = uploading_user.id
+        m.save()
+
+    if m.id:
+        # update the graphname in the file and DB
+        gname = str(dfile['@id'])
+        dataid = str(m.id).rjust(8, '0')  # creates id with the right length
+        dfile['@id'] = gname.replace("<dataid>", dataid)
+        m.graphname = dfile['@id']
+        m.save()
+        return m.id
+    else:
+        return False
+
+
+def updatedatafile(dfile=None, form='raw'):
+    """
+    Add a data jsonld file to the database
+    :param dfile: data jsonld file information
+    :param form: what type of file format this is (raw/normalized)
+    :return: boolean
+    """
+
+    # check for valid file
+    if dfile is None or dfile == "":
+        raise ValidationError("No jsonld data file provided")
+
+    # get metadata
+    m = JsonLookup.objects.get(uniqueid=dfile['@graph']['uid'])
+    if not m:
+        raise ValidationError("The jsonld file has not yet been added")
+
+    # get latest version of file (if it exists) and check that is different
+    dstr = json.dumps(dfile, separators=(',', ':'))
+    f = JsonFiles.objects.filter(json_lookup=m.id)
+    if f:  # if there is a version in json_files then check against current
+        latest = f.latest('updated')
+        tmp1 = re.sub(r'"generatedAt":"[0-9:\s\-]*"', '"generatedAt": ""', dstr)
+        tmp2 = re.sub(r'"generatedAt":"[0-9:\s\-]*"', '"generatedAt": ""', latest.file)
+        if tmp1 == tmp2:  # checking the files are the same except for creation date
+            return True
+
+    # update file version
+    m.currentversion += 1
+    m.save()
+
+    # save json file
+    f = JsonFiles()
+    f.json_lookup_id = m.id
+    f.file = dstr
+    f.type = form
+    f.version = m.currentversion
+    f.save()
+
+    # return
+    if m.id and f.id:
+        return m.id, f.id
+    else:
+        return False
+
+
+def addfacetfile(ffile=None, uploading_user=None):
+    """
+    Add a facet jsonld file to the database
+    :param ffile: data jsonld file information
+    :param uploading_user: user id
+    :return: boolean
+    """
+
+    # check for valid file
+    if ffile is None or ffile == "":
+        return False
+
+    # save metadata
+    if FacetLookup.objects.filter(uniqueid=ffile['@graph']['uid']):
+        m = FacetLookup.objects.get(uniqueid=ffile['@graph']['uid'])
+    else:
+        m = FacetLookup()
+
+        uid = ffile['@graph']['uid']
+        parts = uid.split(":")
+
+        # get dataset_id
+        dset = Datasets.objects.get(sourcecode__exact=parts[0], datasetname=parts[1])
+
+        if dset.id:
+            m.dataset_id = dset.id
+        else:
+            m.dataset_id = 0
+        m.uniqueid = uid
+        m.title = ffile['@graph']['title']
+        m.type = parts[1]
+        m.graphname = ffile['@id']
         m.currentversion = 0  # because adding the file to facet_files will increment
         if uploading_user is None:
             m.auth_user_id = 1
@@ -113,49 +138,66 @@ def addfacetfile(jsonld=None, uploading_user=None):
         m.save()
 
     if m.id:
+        # update the graphname in the file and DB
+        gname = str(ffile['@id'])
+        facetid = str(m.id).rjust(8, '0')  # creates id with the right length
+        ffile['@id'] = gname.replace("<facetid>", facetid)
+        m.graphname = ffile['@id']
         return m.id
     else:
         return False
 
 
-def updatefacetfile(jsonld=None):
+def updatefacetfile(ffile=None):
     """
     Add a facet jsonld file to the database
-    :param jsonld: data jsonld file information
+    :param ffile: data jsonld file information
     :return: boolean
     """
 
     # check for valid file
-    if jsonld is None or jsonld == "":
-        raise ValidationError("no jsonld file provided")
+    if ffile is None or ffile == "":
+        raise ValidationError("No facet file provided")
 
     # get metadata
-    m = FacetLookup.objects.get(uniqueid=jsonld['@graph']['uid'])
+    m = FacetLookup.objects.get(uniqueid=ffile['@graph']['uid'])
+    if not m:
+        raise ValidationError("The facet file has not yet been added")
 
-    if m:
-        m.currentversion += 1
-        m.save()
-    else:
-        raise ValidationError("the jsonld file has not been added yet")
+    # get latest version of file (if it exists) and check that is different
+    ffile = json.dumps(ffile, separators=(',', ':'))
+    j = FacetFiles.objects.filter(facet_lookup_id=m.id)
+    if j:  # if there is a version in facet_files then check against current
+        latest = j.latest('updated')
+        tmp1 = re.sub(r'"generatedAt":".*?"', '"generatedAt": ""', ffile)
+        tmp2 = re.sub(r'"generatedAt":".*?"', '"generatedAt": ""', latest.file)
+        if tmp1 == tmp2:  # checking the files are the same except for creation date
+            return True
 
-    # get latest version of file and check that is different
-    j = FacetFiles.objects.filter(facet_lookup_id=m.id).latest('updated')
-    jsonld = json.dumps(jsonld, separators=(',', ':'))
-    tmp1 = re.sub(r'"generatedAt":".*?"', '"generatedAt": ""', jsonld)
-    tmp2 = re.sub(r'"generatedAt":".*?"', '"generatedAt": ""', j.file)
-    if tmp1 == tmp2:
-        return False
+    # update file version
+    m.currentversion += 1
+    m.save()
 
     # save json file
     f = FacetFiles()
     f.facet_lookup_id = m.id
-    f.file = jsonld
+    f.file = ffile
     f.type = "raw"
     f.version = m.currentversion
     f.save()
 
+    # return
     if m.id and f.id:
         return m.id, f.id
+    else:
+        return False
+
+
+def infacetfiles(facetid):
+    """find out if a facet with this id has been saved to the facet_files table"""
+    found = FacetLookup.objects.all().values_list('graphdb', flat=True).get(id=facetid)
+    if found:
+        return True
     else:
         return False
 
@@ -171,6 +213,10 @@ def json_validator(json_file):
     keys_a = []
     keys_b = []
     isscidata = True
+    try:
+        jsonld.to_rdf(json_file_content, {"processingMode": "json-ld-1.0"})
+    except ValidationError:
+        isscidata = False
     if not str(json_file).endswith('.jsonld'):
         isscidata = False
     if not get_graphuid(json_file):
@@ -180,20 +226,23 @@ def json_validator(json_file):
         if k == '@graph':
             for y, z in v.items():
                 keys_b.append(y)
-    for y in ['@context', '@id', '@graph']:
+    for y in ['@context', '@id', 'generatedAt', '@graph']:
         if y not in keys_a:
             isscidata = False
-    for y in ['scidata', 'uid', 'sourcecode', 'datasetname']:
+    for y in ['scidata', 'uid']:
         if y not in keys_b:
             isscidata = False
     if not isscidata:
-        raise ValidationError("Not Valid SciData JSON-LD")
+        raise ValidationError("Not a valid SciData JSON-LD")
+
 
 def get_graphuid(json_file):
+    """ get uid from json file"""
     try:
         json_file.seek(0)
         json_file_content = json.load(json_file)
         guid = json_file_content['@graph']['uid']
         return guid
-    except:
+    except LookupError:
         return False
+

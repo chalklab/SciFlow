@@ -46,11 +46,11 @@ def addsubstance(identifier, output='meta'):
     fm = meta['pubchem']['formula']
     mw = meta['pubchem']['mw']
     mm = meta['pubchem']['mim']
-    try:
-        cn = ids['wikidata']['casrn']
-    except Exception as exception:  # TODO add to error log
-        cn = None
-    sub = Substances(name=nm, formula=fm, molweight=mw, monomass=mm, casrn=cn)
+    if ids['wikidata']['casrn']:
+        casrn = ids['wikidata']['casrn']
+    else:
+        casrn = None
+    sub = Substances(name=nm, formula=fm, molweight=mw, monomass=mm, casrn=casrn)
     sub.save()
     subid = sub.id
 
@@ -65,8 +65,17 @@ def addsubstance(identifier, output='meta'):
 
     if output == 'all':
         return meta, ids, descs, srcs
+    elif output == 'sub':
+        return sub
     else:
         return meta
+
+
+def updatesubstance(subid, field, value):
+    """update a field in the entr in the substances table"""
+    sub = Substances.objects.get(id=subid)
+    setattr(sub, field, value)
+    sub.save()
 
 
 def getidtype(identifier):
@@ -158,11 +167,12 @@ def createsubjld(identifier):
             # if identifier is inchikey then populate other locations in json file
             value = get_item(ids, label)
             if label == 'inchikey':
-                base = sd['@context'][3]['@base'].replace('<inchikey>', value)
+                last = len(sd['@context']) - 1
+                base = sd['@context'][last]['@base'].replace("<inchikey>", value)
+                sd['@context'][last]['@base'] = base
                 sd['@graph']['@id'] = base
-                sd['@context'][3]['@base'] = base
                 sd['@graph']['permalink'] = base
-                sd['@graph']['uid'] = sd['@graph']['uid'].replace('<inchikey>', value)
+                sd['@graph']['uid'] = sd['@graph']['uid'].replace("<inchikey>", value)
         elif section == 'descriptors':
             if field.group is None:
                 # expecting only one value in list
@@ -193,6 +203,7 @@ def createsubjld(identifier):
     mol = pubchemmol(pcid)
     atoms = mol['atoms']
     bonds = mol['bonds']
+    chrgs = mol['chrgs']
 
     # get list of elements in the compound
     elements = []
@@ -249,12 +260,16 @@ def createsubjld(identifier):
         atm.update({"xcoord": atom[0]})
         atm.update({"ycoord": atom[1]})
         atm.update({"zcoord": atom[2]})
-        if '1' in bstats[idx].keys():
-            atm.update({"singlebonds": bstats[idx]['1']})
-        if '2' in bstats[idx].keys():
-            atm.update({"doublebonds": bstats[idx]['2']})
-        if '3' in bstats[idx].keys():
-            atm.update({"triplebonds": bstats[idx]['3']})
+        if idx in bstats.keys():
+            if '1' in bstats[idx].keys():
+                atm.update({"singlebonds": bstats[idx]['1']})
+            if '2' in bstats[idx].keys():
+                atm.update({"doublebonds": bstats[idx]['2']})
+            if '3' in bstats[idx].keys():
+                atm.update({"triplebonds": bstats[idx]['3']})
+        for chrg in chrgs:
+            if chrg[0] == idx:
+                atm.update({"charge": chrg[1]})
         atms.append(atm)
 
     # add atoms to the cmpd
@@ -382,18 +397,28 @@ def getsubid(identifier):
         return False
 
 
-def ingraph(subid):
+def subingraph(subid):
     """ whatever is in the graphdb field for a substance"""
-    temp = Substances.objects.all().values_list('graphdb', flat=True).get(id=subid)
-    print(temp)
-    return temp
+    found = Substances.objects.all().values_list('graphdb', flat=True).get(id=subid)
+    if found:
+        return found
+    return False
+
+
+def subinfiles(subid):
+    """ whatever is in the graphdb field for a substance"""
+    found = Substances.objects.all().values_list('facet_lookup_id', flat=True).get(id=subid)
+    if found:
+        return found
+    return False
 
 
 def getinchikey(subid):
     """ get the InChIKey of compound from its substance_id """
-    temp = Identifiers.objects.all().values_list('value', flat=True).get(substance_id=subid, type='inchikey')
-    print(temp)
-    return temp
+    found = Identifiers.objects.all().values_list('value', flat=True).get(substance_id=subid, type='inchikey', source='pubchem')
+    if found:
+        return found
+    return False
 
 
 def subsearch(query):
@@ -427,3 +452,44 @@ def elementdata(strng, field1, field2):
             answer = row['Cell'][didx]
             break
     return answer
+
+
+searchterms = {'compound': ['^[A-Z]{14}-[A-Z]{10}-[A-Z]$', '^InChI=', '^[0-9]{2,7}-[0-9]{2}-[0-9]$']}
+
+
+def getaddsub(section, meta):
+    """ take an array of metadata from a compounds section and find out if it is the database """
+    regexs = searchterms[section]
+    subid = False
+    identifier = False
+    for key, value in meta[section].items():
+        if subid:
+            break
+        else:
+            if key[0] == '@':  # ignore jsonld special names
+                continue
+            if isinstance(value, dict):
+                for k, v in value.items():
+                    if subid:
+                        break
+                    else:
+                        if k[0] == '@':  # ignore jsonld special names
+                            continue
+                        else:
+                            for regex in regexs:
+                                if re.search(regex, v):
+                                    identifier = v
+                                    subid = getsubid(v)
+                                    break
+            else:
+                for regex in regexs:
+                    if re.search(regex, value):
+                        identifier = value
+                        subid = getsubid(value)
+                        break
+
+    if not subid:
+        sub = addsubstance(identifier, 'sub')
+        subid = sub.id
+
+    return subid
