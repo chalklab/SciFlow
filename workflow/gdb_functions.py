@@ -162,7 +162,7 @@ def graphnamespacecreate(uri, prefix, repo):  # TODO: Can't see the format curre
     print(prefix)
 
 
-def graph_link_a(file, aid):
+def graph_link_a(file, jl, jf):
     """graph link a function"""
     jsonfile = json.load(file)
     try:
@@ -171,7 +171,7 @@ def graph_link_a(file, aid):
                 newgroup = graph_link_b(group)
                 group.clear()
                 group.update(newgroup)
-                # TODO add back...  addentry(aid, "Graph Link Group", group)
+                actlog(jl, jf, "Graph Link Group: "+group)
     except:
         pass
     return jsonfile
