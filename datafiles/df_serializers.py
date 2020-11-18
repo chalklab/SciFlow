@@ -83,8 +83,8 @@ class JsonFilesSerializer(serializers.ModelSerializer):
         depth = 2
 
 
-x = JsonFilesSerializer()
-print(repr(x))
+# x = JsonFilesSerializer()
+# print(repr(x))
 
-test = JsonFilesSerializer(JsonFiles.objects.last())
-print(json.dumps(test.data, indent=4))
+# test = JsonFilesSerializer(JsonFiles.objects.last())
+# print(json.dumps(test.data, indent=4))

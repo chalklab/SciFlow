@@ -28,5 +28,5 @@ class SubstancesSerializer(serializers.ModelSerializer):
 # x = SubstancesSerializer()
 # print(repr(x))
 
-test = SubstancesSerializer(Substances.objects.last())
-print(json.dumps(test.data, indent=4))
+# test = SubstancesSerializer(Substances.objects.get(id=63))
+# print(json.dumps(test.data, indent=4))

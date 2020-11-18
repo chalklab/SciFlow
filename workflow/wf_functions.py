@@ -17,9 +17,14 @@ def ingest(upload, user):
         upload.seek(0)
         text = upload.read()
         file = json.loads(text)
-        adddatafile(file, user)
+
         # TODO: Extra validation steps here
-        updatedatafile(file)
+        adddatafile(file, user)
+        jl, jf = updatedatafile(file)
+        aid = loginit(jl, jf)
+        addentry(aid, "UID", JsonLookup.objects.get(id=jl).uniqueid)
+
+
         sections = {}
         types = ['compound']  # this would be expanded as we get me code written for other unique types...
         for systype in types:
@@ -27,52 +32,23 @@ def ingest(upload, user):
             if found:
                 sections.update({systype: found[systype]})
 
+
         if sections:
-            pass
-            # print(sections)
+            addentry(aid, "SECTIONS", sections)
             # TODO: Normalization
             # if normalize(file) is True:  # normalization.py
-            # addfile(file, user)
-            #     print("finished!")
-            #     #finalize(path, outputdir, errordir, loginfo)
-            # else:
-            #     print("file could not be normalized")  # convert to act/err log entries
         else:
-            print("no system sections found!")  # convert to act/err log entries
+            addentry(aid, "ERROR", "No sections found!")
 
         # TODO confirm normalization
-
-
-# old
-def finalize(path, outputdir, errordir, loginfo):
-    """ finalizes the ingestion, determining whether it was successful, and moving the file """
-    # Detemines whether the ingestion was successful or not
-    logname = loginfo["errlogdir"]+'/'+loginfo["logname"]+'.txt'
-    i = 0
-    try:
-        # if the file is found then it has not been successfully ingested
-        file = open(logname)
-        file.close()
-        logwrite("act", loginfo, "Status: Failed!")
-        i += 1
-    except FileNotFoundError:
-        # if the file is not present then it has been successfully ingested
-        logwrite("act", loginfo, "Status: Success!")
-    logprint("act", loginfo)
-
-    # move the file
-    # if i == 0:
-    #     shutil.move(path, outputdir)
-    # else:
-    #     shutil.move(path, errordir)
 
 
 # ----- Normalization -----
 
 normcheck = {}
 
-
-def normalize(path, sections, loginfo):
+# previously used the variables path and loginfo. File has replaced path, and aid is the new loginfo
+def normalize(file, sections, aid):
     """ normalize a file by replacing out unique things (e.g. compounds, organisms, targets, etc.) """
 
     # use the metadata from a section to find the compound in the database
@@ -140,100 +116,24 @@ def getfacet(file, systype):
 
 with Session() as session:
     slack = Slacker('xoxb-4596507645-1171034330099-eP4swGipytYQHLnomPvBoOPO', session=session)
-
-
-# old
-def errloginit(loginfo):
-    """ creates an error log, triggered by the detection of an error """
-    errlog = open(loginfo["errlogdir"]+'/'+loginfo["logname"]+'.txt', "w+")
-    errlog.write("The following error(s) were encountered while ingesting this file: \n\n")
-    errlog.close()
-
-
-# old
-def actloginit(loginfo):
-    """ creates an activity log, triggered by the detection of an activity """
-    actlog = open(loginfo["actlogdir"]+'/'+loginfo["logname"]+'.txt', "w+")
-    actlog.write("-----------Activity Log-----------\n")
-    actlog.write("Filename: " + loginfo["logname"].split("-")[1] + "\n")
-    actlog.close()
     # slack.chat.post_message('#workflow-updates', "Filename: " + loginfo["logname"].split("-")[1])
 
 
-# old
-def logwrite(logtype, loginfo, content):
-    """ writes to a log depending on the type. Whatever is placed into the input arguement will be added to the log. """
-    # if a log file does not exist, it will be created
-    # To print to a file, change the printtype arg in actloginit to "f" (located in ingestion.py)
-    try:
-        logname = open(loginfo[logtype+"logdir"]+'/'+loginfo["logname"]+'.txt', "a+")
-        logname.write(content + '\n')
-        logname.close()
-    except FileNotFoundError as fnf_error:
-        print(fnf_error)
-        pass
+def loginit(json_lookup_id, json_file_id):
+    a = JsonActlog.objects.create(json_lookup_id=json_lookup_id, json_file_id=json_file_id, activitylog='{"ERROR":"[]"}')
+    a.save()
+    return a.id
 
 
-# old
-def logprint(logtype, loginfo):
-    """ prints a log file to the screen """
-    try:
-        with open(loginfo[logtype+"logdir"]+'/'+loginfo["logname"]+'.txt') as file:
-            log = file.read()
-            print(log)
-            # actcontent = log  # needed?
-            file.close()
-    except FileNotFoundError as fnf_error:
-        print(fnf_error)
-        pass
-        # actcontent = "No " + logtype + " log was found for this file!"  # needed?
+def addentry(actlogid, ekey, evalue):
+    a = JsonActlog.objects.get(id=actlogid)
+    s_dict = a.activitylog
+    d_dict = ast.literal_eval(s_dict)
+    if ekey is not "ERROR":
+        d_dict.update({ekey:evalue})
+    else:
+        elist = d_dict["ERROR"]
+        elist.append(evalue)
 
-    # slack.chat.post_message('#workflow-updates', actcontent)
-    # slack.chat.post_message('#workflow-updates', errcontent)
-    # slack.chat.post_message('#workflow-updates', "-------------End Log-------------")
-
-
-def adderror(errorid, errorcode):
-    """add error function"""
-    e = JsonErrors.objects.get(id=errorid)
-    s_list = e.errorcode
-    l_list = ast.literal_eval(s_list)
-    l_list.append(str(errorcode))
-    e.errorcode = l_list
-    e.save()
-
-
-def readerrors(eid):
-    """read errors function"""
-    e = JsonErrors.objects.get(id=eid)
-    ec = e.errorcode
-    ecl = ast.literal_eval(ec)
-    print(type(ecl))
-    print(ecl)
-    reports = []
-    for error in ecl:
-        print(error)
-        x = int(str(error)[0])
-        y = int(str(error)[1])
-
-        ingesterrors = ["The first ingestion error!",
-                        "The second ingestion error!"]
-
-        verificationerrors = ["The first verification error!",
-                              "The second verification error!"]
-
-        normalizationerrors = ["The first normalization error!",
-                               "The second normalization error!"]
-
-        uploaderrors = ["The first upload error!",
-                        "The second upload error!"]
-
-        errorcodes = [ingesterrors[y],
-                      verificationerrors[y],
-                      normalizationerrors[y],
-                      uploaderrors[y]]
-
-        print(errorcodes[x])
-        report = errorcodes[x]
-        reports.append(report)
-    return reports
+    a.activitylog = d_dict
+    a.save()
