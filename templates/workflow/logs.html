@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %} JSON LD Activity Log {% endblock %}
+{% block header %} Activity Log: {% endblock %}
+
+{% block content %}
+
+
+{% for entry in lookups %}
+<li><a href="/workflow/actlog/{{ entry.id }}">{{entry.uniqueid}}</a></li>
+{% endfor %}
+
+{% endblock %}
+

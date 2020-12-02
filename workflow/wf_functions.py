@@ -18,14 +18,15 @@ def ingest(upload, user):
         text = upload.read()
         file = json.loads(text)
         adddatafile(file, user)
-
+        """
         if adddatafile(file, user):
             if not updatedatafile(file):
                 raise DatabaseError("Could not save data file to JsonFiles")
         else:
             raise DatabaseError("Could not save data file metadata to JsonLookup")
-
+        """
         jl, jf = updatedatafile(file)
+        print(jl,jf)
         actlog(jl, jf, "UID: "+JsonLookup.objects.get(id=jl).uniqueid)
 
 
@@ -47,6 +48,7 @@ def ingest(upload, user):
         if sections:
             actlog(jl, jf, "SECTIONS: "+ sections)
             if normalize(file, sections, user) is True:  # normalization.py
+                errorlog(jl, jf, "ERROR: This is just a test.")
                 return True
             else:
                 errorlog(jl, jf, "ERROR: File could not be normalized!")

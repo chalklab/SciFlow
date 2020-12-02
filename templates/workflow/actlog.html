@@ -1,14 +1,24 @@
 {% extends 'base.html' %}
 
 {% block title %} JSON LD Activity Log {% endblock %}
-{% block header %} Activity Log: {% endblock %}
+{% block header %} Log for {{uid}}: {% endblock %}
 
 {% block content %}
 
 
-{% for cat, entry in log.items %}
-<p> {{cat}}: {{entry}} </p>
+{% for key,value in entries.items %}
+    <h3>{{key}}</h3>
+    <h5>Activity Log:</h5>
+    {% for entry in value %}
+        <li>{{entry}}</li>
+    {% endfor %}
+{% endfor %}
 
+{% for key,value in errors.items %}
+    <h5>Error Log:</h5>
+    {% for entry in value %}
+        <li>{{entry}}</li>
+    {% endfor %}
 {% endfor %}
 
 {% endblock %}
