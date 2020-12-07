@@ -42,14 +42,27 @@ def addsubstance(identifier, output='meta'):
     meta, ids, descs, srcs = getsubdata(key)
 
     # save metadata to the substances table
-    nm = ids['pubchem']['iupacname']
-    fm = meta['pubchem']['formula']
-    mw = meta['pubchem']['mw']
-    mm = meta['pubchem']['mim']
-    if ids['wikidata']['casrn']:
-        casrn = ids['wikidata']['casrn']
-    else:
-        casrn = None
+    fm = 'unknown'
+    nm = 'unknown'
+    mw = 0
+    mm = 0
+    casrn = None
+    if "pubchem" in ids:
+        nm = ids['pubchem']['iupacname']
+    elif "chembl" in meta:
+        if meta['chembl']['prefname'] is not None:
+            nm = meta['chembl']['prefname']
+    if "pubchem" in meta:
+        fm = meta['pubchem']['formula']
+        mw = meta['pubchem']['mw']
+        mm = meta['pubchem']['mim']
+    elif "chembl" in meta:
+        fm = meta['chembl']['full_molformula']
+        mw = meta['chembl']['full_mwt']
+        mm = meta['chembl']['mw_monoisotopic']
+    if "wikidata" in ids:
+        if "casrn" in ids['wikidata']:
+            casrn = ids['wikidata']['casrn']
     sub = Substances(name=nm, formula=fm, molweight=mw, monomass=mm, casrn=casrn)
     sub.save()
     subid = sub.id

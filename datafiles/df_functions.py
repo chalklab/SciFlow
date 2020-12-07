@@ -77,7 +77,7 @@ def updatedatafile(dfile=None, form='raw'):
         tmp1 = re.sub(r'"generatedAt":"[0-9:\s\-]*"', '"generatedAt": ""', dstr)
         tmp2 = re.sub(r'"generatedAt":"[0-9:\s\-]*"', '"generatedAt": ""', latest.file)
         if tmp1 == tmp2:  # checking the files are the same except for creation date
-            return True
+            return {"mid": m.id, "fid": latest.id}
 
     # update file version
     m.currentversion += 1
@@ -93,7 +93,7 @@ def updatedatafile(dfile=None, form='raw'):
 
     # return
     if m.id and f.id:
-        return m.id, f.id
+        return {"mid": m.id, "fid": f.id}
     else:
         return False
 

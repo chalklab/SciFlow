@@ -10,6 +10,7 @@ urlpatterns = [
     path("view/<subid>", views.subview, name='subview'),
     path("view/<subid>/subids", views.subids, name='subids'),
     path("view/<subid>/subdescs", views.subdescs, name='subdescs'),
+    path("add/<identifier>", views.add, name='add'),
     path("ingest/<identifier>", views.add, name='add'),
     path("ingest/", views.ingest, name='ingest'),
     path("ingestlist/", views.ingestlist, name='ingestlist'),

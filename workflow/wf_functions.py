@@ -1,13 +1,11 @@
 """workflow functions"""
-import ast
 from slacker import Slacker
 from requests.sessions import Session
 from .gdb_functions import *
 from datafiles.df_functions import *
 from substances.sub_functions import *
-import json
-import time
 from datafiles.models import *
+import json
 
 
 # ----- Ingestion -----
@@ -18,17 +16,15 @@ def ingest(upload, user):
         text = upload.read()
         file = json.loads(text)
         adddatafile(file, user)
-        """
+
         if adddatafile(file, user):
             if not updatedatafile(file):
                 raise DatabaseError("Could not save data file to JsonFiles")
         else:
             raise DatabaseError("Could not save data file metadata to JsonLookup")
-        """
-        jl, jf = updatedatafile(file)
-        print(jl,jf)
-        actlog(jl, jf, "UID: "+JsonLookup.objects.get(id=jl).uniqueid)
 
+        ids = updatedatafile(file)
+        actlog(ids['mid'], ids['fid'], "UID: "+JsonLookup.objects.get(id=ids['mid']).uniqueid)
 
         sections = {}
         mettypes = ['procedure']  # this would be expanded as we get me code written for other unique types...
@@ -44,16 +40,15 @@ def ingest(upload, user):
             if found:
                 sections.update({systype: found})
 
-
         if sections:
-            actlog(jl, jf, "SECTIONS: "+ sections)
-            if normalize(file, sections, user, jl, jf) is True:  # normalization.py
-                errorlog(jl, jf, "WF_51: This is just a test.")
+            actlog(ids['mid'], ids['fid'], "SECTIONS: " + str(sections))
+            if normalize(file, sections, user, ids['mid'], ids['fid']) is True:  # normalization.py
+                errorlog(ids['mid'], ids['fid'], "WF_51: This is just a test.")
                 return True
             else:
-                errorlog(jl, jf, "WF_54: File could not be normalized!")
+                errorlog(ids['mid'], ids['fid'], "WF_54: File could not be normalized!")
         else:
-            errorlog(jl, jf, "WF_56: No sections found!")
+            errorlog(ids['mid'], ids['fid'], "WF_56: No sections found!")
             return True
 
 
@@ -64,6 +59,8 @@ def normalize(dfile, sections, user, jl, jf):
     :param dfile - datafile to be normalized (as dict)
     :param sections - sections of the file that need to be normalized
     :param user - user that submitted the file via the form
+    :param jl - json_lookup table id
+    :param jf - fson_file table id
     """
 
     # use the metadata from a section to find the compound in the database
@@ -96,7 +93,7 @@ def normalize(dfile, sections, user, jl, jf):
                             sub.graphdb = 'https://scidata.unf.edu/facet/' + str(ffileid)
                             sub.save()
                         else:
-                            errorlog(jl, jf, "WF_99: Compound not added to GraphDB")
+                            raise DatabaseError("Compound not added to GraphDB")
 
                     # load facet file to extract @id for compound
                     fobjt = FacetFiles.objects.get(facet_lookup_id=ffileid)
@@ -113,7 +110,7 @@ def normalize(dfile, sections, user, jl, jf):
                             dfile['@graph']['scidata']['system']['facets'][fidx] = finfo
                             break
                 else:
-                    errorlog(jl, jf, "WF_116: Compound not found in or added to DB")
+                    raise DatabaseError("Compound not found in or added to DB")
 
     # update file in DB
     updated = updatedatafile(dfile, 'normalized')
@@ -123,7 +120,7 @@ def normalize(dfile, sections, user, jl, jf):
         if addgraph('data', parts[4]):
             return True
         else:
-            errorlog(jl, jf, "WF_126: Could not save normlized version of data file")
+            raise DatabaseError("Could not save normlized version of data file")
     return True
 
 
@@ -167,10 +164,12 @@ with Session() as session:
 
 
 def actlog(json_lookup_id, json_file_id, content):
+    """add entry to activity log"""
     a = JsonActlog.objects.create(json_lookup_id=json_lookup_id, json_file_id=json_file_id, activitylog=content)
     a.save()
 
+
 def errorlog(json_lookup_id, json_file_id, content):
+    """add entry to error log"""
     e = JsonErrors.objects.create(json_lookup_id=json_lookup_id, json_file_id=json_file_id, errorcode=content)
     e.save()
-
