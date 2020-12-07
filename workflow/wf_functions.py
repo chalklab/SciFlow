@@ -47,18 +47,18 @@ def ingest(upload, user):
 
         if sections:
             actlog(jl, jf, "SECTIONS: "+ sections)
-            if normalize(file, sections, user) is True:  # normalization.py
-                errorlog(jl, jf, "ERROR: This is just a test.")
+            if normalize(file, sections, user, jl, jf) is True:  # normalization.py
+                errorlog(jl, jf, "WF_51: This is just a test.")
                 return True
             else:
-                errorlog(jl, jf, "ERROR: File could not be normalized!")
+                errorlog(jl, jf, "WF_54: File could not be normalized!")
         else:
-            errorlog(jl, jf, "ERROR: No sections found!")
+            errorlog(jl, jf, "WF_56: No sections found!")
             return True
 
 
 # ----- Normalization -----
-def normalize(dfile, sections, user):
+def normalize(dfile, sections, user, jl, jf):
     """
     normalize a file by replacing out unique things (e.g. compounds, organisms, targets, etc.)
     :param dfile - datafile to be normalized (as dict)
@@ -83,9 +83,9 @@ def normalize(dfile, sections, user):
                         # add facet file to DB
                         ffileid = addfacetfile(ffile, user)
                         if not ffileid:
-                            raise ValidationError("Compound file metadata not added to facet_lookup")
+                            errorlog(jl, jf, "WF_86: Compound file metadata not added to facet_lookup")
                         if not updatefacetfile(ffile):
-                            raise ValidationError("Compound file not added to facet_files")
+                            errorlog(jl, jf, "WF_88: Compound file not added to facet_files")
                         # now that facet file has be added link to DB table
                         updatesubstance(subid, 'facet_lookup_id', ffileid)
                     if not graphid:
@@ -96,7 +96,7 @@ def normalize(dfile, sections, user):
                             sub.graphdb = 'https://scidata.unf.edu/facet/' + str(ffileid)
                             sub.save()
                         else:
-                            raise DatabaseError("Compound not added to GraphDB")
+                            errorlog(jl, jf, "WF_99: Compound not added to GraphDB")
 
                     # load facet file to extract @id for compound
                     fobjt = FacetFiles.objects.get(facet_lookup_id=ffileid)
@@ -113,7 +113,7 @@ def normalize(dfile, sections, user):
                             dfile['@graph']['scidata']['system']['facets'][fidx] = finfo
                             break
                 else:
-                    raise DatabaseError("Compound not found in or added to DB")
+                    errorlog(jl, jf, "WF_116: Compound not found in or added to DB")
 
     # update file in DB
     updated = updatedatafile(dfile, 'normalized')
@@ -123,7 +123,7 @@ def normalize(dfile, sections, user):
         if addgraph('data', parts[4]):
             return True
         else:
-            raise DatabaseError("Could not save normlized version of data file")
+            errorlog(jl, jf, "WF_126: Could not save normlized version of data file")
     return True
 
 

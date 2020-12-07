@@ -5,5 +5,5 @@ from workflow import views
 
 urlpatterns = [
     path('logs', views.logs, name='logs'),
-    path('actlog/<lid>', views.actlog, name='actlog'),
+    path('logs/<lid>', views.viewlog, name='viewlog'),
 ]
