@@ -1,14 +1,18 @@
 """ django views file for the datafiles app """
 from django.shortcuts import render
 from datasets.serializer import *
-from .forms import UploadFileForm
+from datafiles.forms import UploadFileForm
 from workflow.wf_functions import ingest
+from datetime import datetime
+from sciflow import gvars
 
 
 def ingestion(request):
     """ ingestion SciData JSON-LD file """
     user = request.user
     if request.method == "POST":
+        now = datetime.now()
+        gvars.ingest_session = datetime.timestamp(now)
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             files = request.FILES.getlist('file')
@@ -24,19 +28,3 @@ def viewfile(request, fileid):
     """view to generate list of substances on homepage"""
     file = JsonLookupSerializer(JsonLookup.objects.get(id=fileid))
     return render(request, "datafiles/viewfile.html", {'file': file.data})
-
-
-
-
-# ###
-# def upload_pdf(request):
-#     if request.method == “POST”:
-#          form = ResumeUpload(request.POST, request.FILES)
-#          files = request.FILES.getlist(‘resumes’)
-#          if form.is_valid():
-#              for f in files:
-#                  file_instance = UploadPdf(resumes=f)
-#                  file_instance.save()
-#      else:
-#          form = ResumeUpload()
-#  return render(request, ‘web_app/upload_pdf.html’, {‘form’: form})

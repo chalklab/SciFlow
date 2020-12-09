@@ -33,10 +33,11 @@ class JsonFiles(models.Model):
 
 class JsonErrors(models.Model):
     """ model for the json_errors DB table """
+    session = models.CharField(max_length=24, default=None)
     json_lookup = models.ForeignKey(JsonLookup, on_delete=models.PROTECT)
     json_file = models.ForeignKey(JsonFiles, on_delete=models.PROTECT)
     errorcode = models.CharField(max_length=128, default='')
-    comment = models.CharField(max_length=256, default='')
+    comment = models.CharField(max_length=256, default=None)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -46,10 +47,11 @@ class JsonErrors(models.Model):
 
 class JsonActlog(models.Model):
     """ model for the json_errors DB table """
+    session = models.CharField(max_length=24, default=None)
     json_lookup = models.ForeignKey(JsonLookup, on_delete=models.PROTECT)
     json_file = models.ForeignKey(JsonFiles, on_delete=models.PROTECT)
     activitylog = models.CharField(max_length=2048, default='')
-    comment = models.CharField(max_length=256, default='')
+    comment = models.CharField(max_length=256, default=None)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:

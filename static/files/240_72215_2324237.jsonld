@@ -280,7 +280,7 @@
             {
                 "@id": "source/1/",
                 "@type": "dc:source",
-                "type": "journalArticle",
+                "type": "journal article",
                 "title": "Strategies to reduce HERG K+ channel blockade. Exploring heteroaromaticity and rigidity in novel pyridine analogues of dofetilide.",
                 "doi": "10.1021/jm301564f",
                 "journal": "J. Med. Chem.",

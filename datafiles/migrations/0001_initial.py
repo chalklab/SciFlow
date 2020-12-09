@@ -139,6 +139,7 @@ class Migration(migrations.Migration):
             name='JsonActlog',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('session', models.CharField(max_length=24)),
                 ('json_lookup_id', models.IntegerField()),
                 ('json_file_id', models.IntegerField()),
                 ('activitycode', models.CharField(max_length=16)),
@@ -154,6 +155,7 @@ class Migration(migrations.Migration):
             name='JsonErrors',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('session', models.CharField(max_length=24)),
                 ('json_lookup_id', models.IntegerField()),
                 ('json_file_id', models.IntegerField()),
                 ('errorcode', models.CharField(max_length=16)),

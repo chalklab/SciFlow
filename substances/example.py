@@ -34,7 +34,7 @@ if add:
         print("Error: something happened on the way to the DB!")
 
 # check output of pubchem request
-runpc = True
+runpc = None
 if runpc:
     key = 'VWNMWKSURFWKAL-HXOBKFHXSA-N'
     meta, ids, descs, srcs = {}, {}, {}, {}
@@ -68,3 +68,10 @@ if runwd:
     wikidata(key, meta, ids, descs, srcs)
     print(meta, ids, descs)
     print(json.dumps(srcs, indent=4))
+
+# check output of getinchikey function
+rungi = True
+if rungi:
+    subid = 1
+    out = getinchikey(subid)
+    print(out)

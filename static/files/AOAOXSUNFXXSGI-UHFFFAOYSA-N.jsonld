@@ -1064,7 +1064,7 @@
             {
                 "@id": "rights/1/",
                 "@type": "dc:rights",
-                "licensor": "University of North Florida",
+                "holder": "University of North Florida",
                 "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
             }
         ]

@@ -1,22 +1,26 @@
 """ wrapper definitions to the GraphDB API """
-import json
-import requests
 from urllib.parse import quote
 from workflow.settings import *
 from substances.models import *
 from django.db import *
-from workflow.wf_functions import *
+from workflow.log_functions import *
+import json
+import requests
 
 
 def addgraph(ftype, fileid, locale='local'):
+
     """ add a file to GraphDB """
     data = '{\n "data": "https://sds.coas.unf.edu/sciflow/files/' + ftype + '/' + str(fileid) + '" \n }'
+    r = None
     if locale == "local":
         r = requests.post(graphlocalurl, data=data, headers=jsonhrs)
+        actlog("GDB_01: Added local graph (" + str(r) + ")")
     elif locale == 'remote':
         r = requests.post(graphsdsurl, data=data, headers=jsonhrs)
+        actlog("GDB_02: Added remote graph (" + str(r) + ")")
     else:
-        raise DatabaseError('Locale not one of local or remote')
+        actlog("GDB_03: Locale not one of 'local' or 'remote'")
 
     # return outcome of addition
     return r.ok
@@ -45,10 +49,9 @@ def getgraphname(identifier, locale='local'):
     headers = {'Accept': 'application/sparql-results+json'}
     params = {'query': 'SELECT DISTINCT ?g WHERE { GRAPH ?g { ?s ?p ?o. } FILTER(contains(str(?g),"'+identifier+'"))}'}
     # response format {'head': {'vars': ['g']}, 'results': {'bindings': [{'g': {'type': 'uri', 'value': <graphname>}}]}}
+    url = graphsparqlsdsurl  # default to Graph DB on SDS
     if locale == 'local':
         url = graphsparqllocalurl
-    elif locale == 'remote':
-        url = graphsparqlsdsurl
     response = requests.get(url, headers=headers, params=params).json()
     return response['results']['bindings'][0]['g']['value']
 
@@ -159,10 +162,10 @@ def graphnamespaceget(prefix, repo):
 def graphnamespacecreate(uri, prefix, repo):  # TODO: Can't see the format currently
     """ put /repositories/{repositoryID}/namespaces/{namespacesPrefix}
         creates a namespace prefix """
-    print(prefix)
+    print(uri, prefix, repo)
 
 
-def graph_link_a(file, jl, jf):
+def graph_link_a(file):
     """graph link a function"""
     jsonfile = json.load(file)
     try:
@@ -171,9 +174,9 @@ def graph_link_a(file, jl, jf):
                 newgroup = graph_link_b(group)
                 group.clear()
                 group.update(newgroup)
-                actlog(jl, jf, "Graph Link Group: "+group)
-    except:
-        pass
+                actlog("GDB_05: Graph Link Group: "+group)
+    except DataError:
+        errorlog("GDB_06: Problem finding facets in file")
     return jsonfile
 
 
@@ -194,6 +197,6 @@ def graph_link_b(group):
                 # compound/crystal/etc not found in database. Needs to be added first in order to link
                 # then GraphLinkB(group)
                 pass
-        except:
-            print('exception')
+        except ValueError:
+            errorlog("GDB_04: Problem with matching data in group.values()")
     return group

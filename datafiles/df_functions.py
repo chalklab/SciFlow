@@ -1,6 +1,7 @@
 """ functions file for the datafiles app"""
 from datafiles.models import *
 from django.core.exceptions import ValidationError
+from workflow.log_functions import *
 from pyld import jsonld
 import json
 import re
@@ -42,9 +43,8 @@ def adddatafile(dfile, uploading_user=None):
 
     if m.id:
         # update the graphname in the file and DB
-        gname = str(dfile['@id'])
         dataid = str(m.id).rjust(8, '0')  # creates id with the right length
-        dfile['@id'] = gname.replace("<dataid>", dataid)
+        dfile['@id'] = "https://scidata.unf.edu/data/" + dataid
         m.graphname = dfile['@id']
         m.save()
         return m.id
@@ -62,22 +62,28 @@ def updatedatafile(dfile=None, form='raw'):
 
     # check for valid file
     if dfile is None or dfile == "":
-        raise ValidationError("No jsonld data file provided")
+        errorlog("DF_01: No data file to work with")
 
     # get metadata
     m = JsonLookup.objects.get(uniqueid=dfile['@graph']['uid'])
     if not m:
-        raise ValidationError("The jsonld file has not yet been added")
+        errorlog("DF_03: The jsonld data file has not yet been added")
+    else:
+        actlog("DF_02: Found file in json_lookup")
 
     # get latest version of file (if it exists) and check that is different
     dstr = json.dumps(dfile, separators=(',', ':'))
     f = JsonFiles.objects.filter(json_lookup=m.id)
     if f:  # if there is a version in json_files then check against current
+        actlog("DF_04: Found data file in json_files")
         latest = f.latest('updated')
         tmp1 = re.sub(r'"generatedAt":"[0-9:\s\-]*"', '"generatedAt": ""', dstr)
         tmp2 = re.sub(r'"generatedAt":"[0-9:\s\-]*"', '"generatedAt": ""', latest.file)
         if tmp1 == tmp2:  # checking the files are the same except for creation date
+            actlog("DF_05: Data file is the same as last version - not adding")
             return {"mid": m.id, "fid": latest.id}
+
+    actlog("DF_06: Data file is different than last version - adding...")
 
     # update file version
     m.currentversion += 1

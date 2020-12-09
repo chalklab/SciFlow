@@ -1,14 +1,14 @@
 asgiref @ file:///tmp/build/80754af9/asgiref_1602513567813/work
 blinker==1.4
 brotlipy==0.7.0
-certifi==2020.6.20
+certifi==2020.12.5
 cffi @ file:///opt/concourse/worker/volumes/live/b9607b09-b777-4ff7-53dc-287727eb8574/volume/cffi_1600699191154/work
 chardet==3.0.4
-chembl-webresource-client==0.10.1
+chembl-webresource-client==0.10.2
 cryptography @ file:///opt/concourse/worker/volumes/live/aeb63a26-659e-4edb-5405-74ba8e0c76f2/volume/cryptography_1601046839724/work
 defusedxml==0.6.0
 Django @ file:///tmp/build/80754af9/django_1601563330930/work
-django-crispy-forms==1.8.1
+django-crispy-forms==1.10.0
 djangorestframework @ file:///home/conda/feedstock_root/build_artifacts/djangorestframework_1601312268278/work
 easydict==1.9
 ecdsa @ file:///tmp/build/80754af9/ecdsa_1600355686526/work
@@ -30,16 +30,16 @@ PyLD==2.0.3
 pyOpenSSL @ file:///tmp/build/80754af9/pyopenssl_1594392929924/work
 PySocks @ file:///opt/concourse/worker/volumes/live/85a5b906-0e08-41d9-6f59-084cee4e9492/volume/pysocks_1594394636991/work
 python-jose @ file:///tmp/build/80754af9/python-jose_1600459783989/work
-python3-openid==3.1.0
-pytz==2020.1
+python3-openid==3.2.0
+pytz==2020.4
 qwikidata==0.4.0
 requests @ file:///tmp/build/80754af9/requests_1592841827918/work
-requests-cache==0.4.13
+requests-cache==0.5.2
 requests-oauthlib==1.3.0
 six==1.15.0
 slacker==0.14.0
 social-auth-app-django @ file:///home/conda/feedstock_root/build_artifacts/social-auth-app-django_1592840016510/work
-social-auth-core==3.3.0
+social-auth-core==3.3.3
 sqlparse @ file:///tmp/build/80754af9/sqlparse_1602184451250/work
 Unidecode==1.1.1
 urllib3 @ file:///tmp/build/80754af9/urllib3_1603305693037/work

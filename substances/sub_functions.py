@@ -3,7 +3,9 @@ from django.db.models import Q
 from substances.external import *
 from substances.models import *
 from crosswalks.models import *
+from sciflow import gvars
 from datetime import datetime
+from workflow.log_functions import *
 import json
 import os
 
@@ -211,97 +213,98 @@ def createsubjld(identifier):
             cmpd[section][label] = value
 
     # add molecular graph
-    # get molfile from pubchem
-    pcid = ids["pubchem"]
-    mol = pubchemmol(pcid)
-    atoms = mol['atoms']
-    bonds = mol['bonds']
-    chrgs = mol['chrgs']
+    # get molfile from pubchem (if available)
+    if "pubchem" in ids.keys():
+        pcid = ids["pubchem"]
+        mol = pubchemmol(pcid)
+        atoms = mol['atoms']
+        bonds = mol['bonds']
+        chrgs = mol['chrgs']
 
-    # get list of elements in the compound
-    elements = []
-    for atom in atoms:
-        if atom[3] not in elements:
-            elements.append(atom[3])
+        # get list of elements in the compound
+        elements = []
+        for atom in atoms:
+            if atom[3] not in elements:
+                elements.append(atom[3])
 
-    # create element section for file
-    els = []
-    ids = list(sd['@graph']['ids'])
-    for i, symbol in enumerate(elements):
-        idx = str(i+1)
-        name = elementdata(symbol, 'Symbol', 'Name')
-        chebi = elementdata(symbol, 'Symbol', 'ChEBI')
-        ids.append(chebi)
-        el = {}
-        el.update({"@id": "element/"+idx+"/"})
-        el.update({"@type": "obo:NCIT_C1940"})
-        el.update({"name": name})
-        el.update({"element": chebi})
-        els.append(el)
-    sd['@graph']['ids'] = ids
+        # create element section for file
+        els = []
+        ids = list(sd['@graph']['ids'])
+        for i, symbol in enumerate(elements):
+            idx = str(i+1)
+            name = elementdata(symbol, 'Symbol', 'Name')
+            chebi = elementdata(symbol, 'Symbol', 'ChEBI')
+            ids.append(chebi)
+            el = {}
+            el.update({"@id": "element/"+idx+"/"})
+            el.update({"@type": "obo:NCIT_C1940"})
+            el.update({"name": name})
+            el.update({"element": chebi})
+            els.append(el)
+        sd['@graph']['ids'] = ids
 
-    # add elements to the cmpd
-    cmpd['molgraph']['elements'] = els
+        # add elements to the cmpd
+        cmpd['molgraph']['elements'] = els
 
-    # create stats on bonds - # of each bond order per atom (number)
-    bstats = {}
-    for idx, bond in enumerate(bonds):
-        if bond[0] not in bstats:
-            bstats.update({str(bond[0]): {}})
-        if bond[1] not in bstats:
-            bstats.update({str(bond[1]): {}})
-        if bond[2] not in bstats[bond[0]]:
-            bstats[bond[0]].update({str(bond[2]): 0})
-        if bond[2] not in bstats[bond[1]]:
-            bstats[bond[1]].update({str(bond[2]): 0})
-        bstats[bond[0]][bond[2]] += 1
-        bstats[bond[1]][bond[2]] += 1
+        # create stats on bonds - # of each bond order per atom (number)
+        bstats = {}
+        for idx, bond in enumerate(bonds):
+            if bond[0] not in bstats:
+                bstats.update({str(bond[0]): {}})
+            if bond[1] not in bstats:
+                bstats.update({str(bond[1]): {}})
+            if bond[2] not in bstats[bond[0]]:
+                bstats[bond[0]].update({str(bond[2]): 0})
+            if bond[2] not in bstats[bond[1]]:
+                bstats[bond[1]].update({str(bond[2]): 0})
+            bstats[bond[0]][bond[2]] += 1
+            bstats[bond[1]][bond[2]] += 1
 
-    # create atom section for file
-    atms = []
-    for i, atom in enumerate(atoms):
-        idx = str(i+1)
-        atm = {}
-        atm.update({"@id": "atom/"+idx+"/"})
-        atm.update({"@type": "obo:CHEBI_33250"})
-        eidx = None
-        for key, value in enumerate(elements):
-            if value == atom[3]:
-                eidx = str(key+1)
-                break
-        atm.update({"element": "element/"+eidx+"/"})
-        atm.update({"xcoord": atom[0]})
-        atm.update({"ycoord": atom[1]})
-        atm.update({"zcoord": atom[2]})
-        if idx in bstats.keys():
-            if '1' in bstats[idx].keys():
-                atm.update({"singlebonds": bstats[idx]['1']})
-            if '2' in bstats[idx].keys():
-                atm.update({"doublebonds": bstats[idx]['2']})
-            if '3' in bstats[idx].keys():
-                atm.update({"triplebonds": bstats[idx]['3']})
-        for chrg in chrgs:
-            if chrg[0] == idx:
-                atm.update({"charge": chrg[1]})
-        atms.append(atm)
+        # create atom section for file
+        atms = []
+        for i, atom in enumerate(atoms):
+            idx = str(i+1)
+            atm = {}
+            atm.update({"@id": "atom/"+idx+"/"})
+            atm.update({"@type": "obo:CHEBI_33250"})
+            eidx = None
+            for key, value in enumerate(elements):
+                if value == atom[3]:
+                    eidx = str(key+1)
+                    break
+            atm.update({"element": "element/"+eidx+"/"})
+            atm.update({"xcoord": atom[0]})
+            atm.update({"ycoord": atom[1]})
+            atm.update({"zcoord": atom[2]})
+            if idx in bstats.keys():
+                if '1' in bstats[idx].keys():
+                    atm.update({"singlebonds": bstats[idx]['1']})
+                if '2' in bstats[idx].keys():
+                    atm.update({"doublebonds": bstats[idx]['2']})
+                if '3' in bstats[idx].keys():
+                    atm.update({"triplebonds": bstats[idx]['3']})
+            for chrg in chrgs:
+                if chrg[0] == idx:
+                    atm.update({"charge": chrg[1]})
+            atms.append(atm)
 
-    # add atoms to the cmpd
-    cmpd['molgraph']['atoms'] = atms
+        # add atoms to the cmpd
+        cmpd['molgraph']['atoms'] = atms
 
-    # create bond seection for file
-    bnds = []
-    for i, bond in enumerate(bonds):
-        idx = str(i+1)
-        bnd = {}
-        bnd.update({"@id": "bond/"+idx+"/"})
-        bnd.update({"@type": "ss:SIO_011118"})
-        bnd.update({"order": bond[2]})
-        atms = ["atom/"+str(bond[0])+"/", "atom/"+str(bond[1])+"/"]
-        bnd.update({"atoms": atms})
-        bnds.append(bnd)
+        # create bond seection for file
+        bnds = []
+        for i, bond in enumerate(bonds):
+            idx = str(i+1)
+            bnd = {}
+            bnd.update({"@id": "bond/"+idx+"/"})
+            bnd.update({"@type": "ss:SIO_011118"})
+            bnd.update({"order": bond[2]})
+            atms = ["atom/"+str(bond[0])+"/", "atom/"+str(bond[1])+"/"]
+            bnd.update({"atoms": atms})
+            bnds.append(bnd)
 
-    # add bonds to the cmpd
-    cmpd['molgraph']['bonds'] = bnds
+        # add bonds to the cmpd
+        cmpd['molgraph']['bonds'] = bnds
 
     # add compound data into sd file
     sd['@graph']['scidata']['system']['facets'][0] = cmpd
@@ -428,9 +431,16 @@ def subinfiles(subid):
 
 def getinchikey(subid):
     """ get the InChIKey of compound from its substance_id """
-    found = Identifiers.objects.all().values_list('value', flat=True).get(substance_id=subid, type='inchikey', source='pubchem')
-    if found:
-        return found
+    # try pubchem
+    found = Identifiers.objects.all().values_list('value', flat=True).filter(substance_id=subid, type='inchikey')
+    keys = list(set(found))
+    if len(keys) == 0:
+        errorlog("SUB_01: Could not find inchikey for substance " + str(subid))
+    elif len(keys) == 1:
+        actlog("SUB_01: Found inchikey '" + str(keys) + "' for substance " + str(subid))
+        return keys[0]
+    elif len(keys) > 1:
+        errorlog("SUB_02: Multiple inchikeys (" + str(keys) + ") substance " + str(subid))
     return False
 
 
