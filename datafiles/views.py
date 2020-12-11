@@ -11,6 +11,7 @@ def ingestion(request):
     """ ingestion SciData JSON-LD file """
     user = request.user
     if request.method == "POST":
+        gvars.init()
         now = datetime.now()
         gvars.ingest_session = datetime.timestamp(now)
         form = UploadFileForm(request.POST, request.FILES)

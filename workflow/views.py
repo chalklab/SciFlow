@@ -3,6 +3,7 @@ from django.shortcuts import render
 from .wf_functions import *
 from datetime import time
 
+
 def viewlog(response, lid):
     """ for testing and displaying errorcodes"""
     if not JsonActlog.objects.filter(json_lookup_id=lid):
