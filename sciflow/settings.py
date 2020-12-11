@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'users',
     'workflow',
     'datafiles',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -180,3 +182,9 @@ AUTHENTICATION_BACKENDS = {
     'users.auth0backend.Auth0',
     'django.contrib.auth.backends.ModelBackend'
 }
+
+# Debug toolbar settings
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
