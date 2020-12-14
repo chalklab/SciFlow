@@ -51,6 +51,7 @@ class Identifiers(models.Model):
     substance = models.ForeignKey(Substances, on_delete=models.CASCADE)
     type = models.CharField(max_length=10, choices=TYPE_CHOICES, default=CASRN)
     value = models.CharField(max_length=768, default='')
+    iso = models.CharField(max_length=5, default=None)
     source = models.CharField(max_length=64, default='')
     updated = models.DateTimeField(auto_now=True)
 

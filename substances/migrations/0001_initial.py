@@ -32,6 +32,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('type', models.CharField(choices=[('casrn', 'CAS Registry Number'), ('inchi', 'IUPAC InChI String'), ('inchikey', 'IUPAC InChI Key'), ('csmiles', 'Canonical SMILES'), ('ismiles', 'Isomeric SMILES'), ('chemspider', 'Chemspider ID'), ('pubchem', 'PubChem Compound ID'), ('iupacname', 'IUPAC Name'), ('springer', 'Springer ID'), ('othername', 'Other Name'), ('atc', 'ATC Code'), ('reaxys', 'Reaxys ID'), ('gmelin', 'Gmelin ID'), ('chebi', 'ChEBI ID'), ('chembl', 'ChEMBL ID'), ('rtecs', 'RTECS ID'), ('dsstox', 'DSSTOX ID')], default='casrn', max_length=10)),
                 ('value', models.CharField(default='', max_length=768)),
+                ('iso', models.CharField(max_length=5, null=True)),
                 ('source', models.CharField(default='', max_length=64)),
                 ('updated', models.DateTimeField(auto_now=True)),
             ],

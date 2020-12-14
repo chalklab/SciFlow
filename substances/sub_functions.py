@@ -8,6 +8,8 @@ from datetime import datetime
 from workflow.log_functions import *
 import json
 import os
+import random
+import string
 
 
 def addsubstance(identifier, output='meta'):
@@ -342,7 +344,12 @@ def saveids(subid, ids):
                     ident = Identifiers(substance_id=subid, type=k, value=x, source=source)
                     ident.save()
             else:
-                ident = Identifiers(substance_id=subid, type=k, value=v, source=source)
+                if k == 'csmiles':
+                    chars = string.ascii_uppercase + string.digits
+                    rstr = ''.join(random.choice(chars) for _ in range(5))
+                    ident = Identifiers(substance_id=subid, type=k, value=v, iso=rstr, source=source)
+                else:
+                    ident = Identifiers(substance_id=subid, type=k, value=v, source=source)
                 ident.save()
 
 
