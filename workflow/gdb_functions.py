@@ -15,12 +15,12 @@ def addgraph(ftype, fileid, locale='local'):
     r = None
     if locale == "local":
         r = requests.post(graphlocalurl, data=data, headers=jsonhrs)
-        actlog("GDB_01: Added local graph (" + str(r) + ")")
+        actlog("GDB_A01: Added local graph (" + str(r) + ")")
     elif locale == 'remote':
         r = requests.post(graphsdsurl, data=data, headers=jsonhrs)
-        actlog("GDB_02: Added remote graph (" + str(r) + ")")
+        actlog("GDB_A02: Added remote graph (" + str(r) + ")")
     else:
-        actlog("GDB_03: Locale not one of 'local' or 'remote'")
+        actlog("GDB_A03: Locale not one of 'local' or 'remote'")
 
     # return outcome of addition
     return r.ok
