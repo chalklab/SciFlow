@@ -146,6 +146,12 @@ def getsubdata(identifier):
     return meta, ids, descs, srcs
 
 
+def getmeta(subid):
+    """get the basic metadata for a substance"""
+    meta = Substances.objects.values().get(id=subid)
+    return meta
+
+
 def createsubjld(identifier):
     """ create a SciData JSON-LD file for a compound, ingest in the graph and update DB with graph location """
 

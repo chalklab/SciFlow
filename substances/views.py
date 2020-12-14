@@ -69,7 +69,7 @@ def add(request, identifier):
     # id the compound in the database?
     hits = Substances.objects.all().filter(identifiers__value__exact=identifier).count()
     if hits == 0:
-        meta, ids, descs, srcs = addsubstance(identifier,'all')
+        meta, ids, descs, srcs = addsubstance(identifier, 'all')
     else:
         subid = getsubid(identifier)
         return redirect("/substances/view/" + str(subid))
@@ -85,21 +85,38 @@ def ingest(request):
             # TODO iterate over list of inchikeys instead of taking one inchikey. Borrow script from substances.subfunctions def getidtype
             # if adding one inchikey, redirect to view page. If adding list, show message for number of substances added
             return redirect("/substances/add/" + str(inchikey))
-        else:
+        elif 'upload' in request.FILES.keys():
             file = request.FILES['upload']
-            with ZipFile(file) as zfile:
-                filenames = []
-                for info in zfile.infolist():
-                    name = info.filename
-                    filenames.append(name)
-                for file in filenames:
-                    data = zfile.read(file)
-                    m = re.search('^[A-Z]{14}-[A-Z]{10}-[A-Z]$', str(data))
-                    if m:
-                        print(m)
+            fname = file.name
+            subs = []
+            if fname.endswith('.json'):
+                jdict = json.loads(file.read())
+                for key in jdict['keys']:
+                    subid = getsubid(key)
+                    status = None
+                    if not subid:
+                        status = 'new'
+                        addsubstance(key)
+                        subid = getsubid(key)
                     else:
-                        print(':(')
-
+                        status = 'present'
+                    meta = getmeta(subid)
+                    subs.append({'id': meta['id'], 'name': meta['name'], 'status': status})
+                    request.session['subs'] = subs
+                return redirect("/substances/list/")
+            elif fname.endswith('.zip'):
+                with ZipFile(file) as zfile:
+                    filenames = []
+                    for info in zfile.infolist():
+                        name = info.filename
+                        filenames.append(name)
+                    for file in filenames:
+                        data = zfile.read(file)
+                        m = re.search('^[A-Z]{14}-[A-Z]{10}-[A-Z]$', str(data))
+                        if m:
+                            print(m)
+                        else:
+                            print(':(')
     return render(request, "substances/ingest.html",)
 
 
@@ -128,6 +145,11 @@ def normalize(request, identifier):
     """ create a SciData JSON-LD file for a compound, ingest in the graph and update data file with graph location """
     success = createsubjld(identifier)
     return render(request, "substances/normalize.html", {"success": success})
+
+
+def list(request):
+    """emtpy view to be accessed via redirect from ingest above"""
+    return render(request, "substances/list.html", {"substances": request.session['subs']})
 
 
 def search(request, query):

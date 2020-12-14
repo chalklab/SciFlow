@@ -4,27 +4,35 @@
 {% block header %} Substance {% endblock %}
 
 {% block content %}
-
-<form action="" method="post">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="ingest">Ingest Substance</label>
-    <input name="ingest" type="text" class="form-control" id="ingest" aria-describedby="ingesthelp">
-    <small id="ingesthelp" class="form-text text-muted">Input an Inchikey to add a substance.</small>
-  </div>
-  <button type="submit" class="btn btn-success">Submit</button>
-</form>
-
-<form action="" method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <div class="form-group">
-    <div class="custom-file">
-      <input name="upload" type="file" class="custom-file-input" id="fileingest">
-      <label class="custom-file-label" for="fileingest">Choose file...</label>
+<div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="ingest">Add a Substance</label>
+                <div class="input-group mb-4">
+                    <input id="ingest" name="ingest" type="text" placeholder="Input an Inchikey to add a substance" class="form-control" aria-describedby="group1upload" aria-label="Submit">
+                    <button class="btn btn-success" type="submit" id="group1upload">Submit</button>
+                </div>
+            </div>
+        </form>
     </div>
-    <button type="submit" class="btn btn-success">Submit</button>
-  </div>
-</form>
+</div>
+    <p><b>- OR -</b></p>
+<div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="ingest">Add a List of Substances (JSON file)</label>
+                <div class="input-group mb-4">
+                    <input id="fileingest" name="upload" type="file" class="form-control" aria-describedby="group2upload" aria-label="Submit">
+                    <button class="btn btn-primary" type="submit" id="group2upload">Upload</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
 
 {% endblock %}

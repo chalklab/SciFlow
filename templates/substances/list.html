@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %} FAIR Molecules {% endblock %}
-{% block header %} All Compounds {% endblock %}
+{% block header %} Uploaded Compounds {% endblock %}
 {% block content %}
     <h4>Search:</h4>
     <form action="" method="post">
@@ -14,7 +14,7 @@
     <h4>Compound List:</h4>
     <ul>
     {% for substance in substances %}
-        <li><a href="/substances/view/{{ substance.id }}">{{ substance.name }}</a></li>
+        <li><a href="/substances/view/{{ substance.id }}">{{ substance.name }}</a> ({{ substance.status }})</li>
     {% endfor %}
     </ul>
 
