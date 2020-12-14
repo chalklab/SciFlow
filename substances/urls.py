@@ -5,7 +5,7 @@ from substances import views
 
 urlpatterns = [
     path("", views.home, name='home'),
-    path("list", views.sublist, name='list'),
+    path("list/", views.list, name='list'),
     re_path(r'^search/(?:(?P<query>.+)/)?$', views.search, name='search'),
     path("view/<subid>", views.subview, name='subview'),
     path("view/<subid>/subids", views.subids, name='subids'),
