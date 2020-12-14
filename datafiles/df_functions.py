@@ -62,20 +62,20 @@ def updatedatafile(dfile=None, form='raw'):
 
     # check for valid file
     if dfile is None or dfile == "":
-        errorlog("DF_01: No data file to work with")
+        errorlog("DF_E01: No data file to work with!")
 
     # get metadata
     m = JsonLookup.objects.get(uniqueid=dfile['@graph']['uid'])
     if not m:
-        errorlog("DF_03: The jsonld data file has not yet been added")
+        errorlog("DF_E02: The jsonld data file has not yet been added")
     else:
-        actlog("DF_02: Found file in json_lookup")
+        actlog("DF_A01: Found file in json_lookup (id: "+str(m.id)+")")
 
     # get latest version of file (if it exists) and check that is different
     dstr = json.dumps(dfile, separators=(',', ':'))
     f = JsonFiles.objects.filter(json_lookup=m.id)
     if f:  # if there is a version in json_files then check against current
-        actlog("DF_04: Found data file in json_files")
+        actlog("DF_A04: Found data file in json_files")
         latest = f.latest('updated')
         tmp1 = re.sub(r'"generatedAt":"[0-9:\s\-]*"', '"generatedAt": ""', dstr)
         tmp2 = re.sub(r'"generatedAt":"[0-9:\s\-]*"', '"generatedAt": ""', latest.file)
@@ -83,7 +83,7 @@ def updatedatafile(dfile=None, form='raw'):
             actlog("DF_05: Data file is the same as last version - not adding")
             return {"mid": m.id, "fid": latest.id}
 
-    actlog("DF_06: Data file is different than last version - adding...")
+    actlog("DF_A02: Data file is different than last version - adding version "+str(m.currentversion+1)+"...")
 
     # update file version
     m.currentversion += 1
@@ -219,10 +219,12 @@ def json_validator(json_file):
     keys_a = []
     keys_b = []
     isscidata = True
+
     try:
         jsonld.to_rdf(json_file_content, {"processingMode": "json-ld-1.0"})
     except ValidationError:
         isscidata = False
+
     if not str(json_file).endswith('.jsonld'):
         isscidata = False
     if not get_graphuid(json_file):

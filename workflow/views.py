@@ -16,22 +16,25 @@ def viewlog(response, lid):
             if id not in fileids:
                 fileids.append(id)
         print(fileids)
+        finfo = {}
         entries = {}
         errors = {}
         for fid in fileids:
             uid = JsonLookup.objects.get(id=lid).uniqueid
-            finfo = "Version: "+str(JsonFiles.objects.get(id=fid).version)+", Upload Time: "+str(JsonFiles.objects.get(id=fid).updated)
-            entries.update({finfo:[]})
-            errors.update({finfo:[]})
+            version = JsonFiles.objects.get(id=fid).version
+            info = "Version: "+str(version)+", Upload Time: "+str(JsonFiles.objects.get(id=fid).updated)
+            finfo.update({version:info})
+            entries.update({version:[]})
+            errors.update({version:[]})
             act = JsonActlog.objects.filter(json_file_id=fid)
             err = JsonErrors.objects.filter(json_file_id=fid)
             for entry in act:
-                entries[finfo].append(entry.activitylog)
+                entries[version].append(entry.activitylog)
             for entry in err:
-                errors[finfo].append(entry.errorcode)
+                errors[version].append(entry.errorcode)
         print(entries)
         print(errors)
-        context = {"uid":uid,"lookup":lookup,"entries":entries,"errors":errors}
+        context = {"uid":uid,"lookup":lookup,"entries":entries,"errors":errors,"finfo":finfo}
     return render(response, "workflow/viewlog.html", context)
 
 

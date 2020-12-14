@@ -10,7 +10,7 @@ import json
 # ----- Ingestion -----
 def ingest(upload, user):
     """ ingest SciData JSON-LD file """
-    actlog("WF_14: Ingest initiated")
+    actlog("WF_A01: Ingest initiated")
 
     if str(upload).endswith('.jsonld'):
         upload.seek(0)
@@ -19,14 +19,14 @@ def ingest(upload, user):
         mid = adddatafile(file, user)
         if mid:
             if not updatedatafile(file):
-                errorlog("WF_01: File was not updated (added to json_files)")
+                errorlog("WF_E01: File was not updated (added to json_files)")
         else:
-            errorlog("WF_02: File was not added to json_lookup")
+            errorlog("WF_E02: File was not added to json_lookup")
 
         ids = updatedatafile(file)
         gvars.ingest_data_lookup_id = ids['mid']
         gvars.ingest_data_file_id = ids['fid']
-        actlog("UID: "+JsonLookup.objects.get(id=ids['mid']).uniqueid)
+        actlog("WF_A02: UID is "+JsonLookup.objects.get(id=ids['mid']).uniqueid)
 
         sections = {}
         mettypes = ['procedure']  # this would be expanded as we get me code written for other unique types...
@@ -43,16 +43,16 @@ def ingest(upload, user):
                 sections.update({systype: found})
 
         if sections:
-            actlog("SECTIONS: " + str(sections.keys()))
+            actlog("WF_A03: Sections:" + str(sections.keys()))
             if normalize(file, sections, user, ids['mid']) is True:  # normalization.py
-                actlog("WF_51: File normalized")
+                actlog("WF_A04: File normalized!")
                 return True
             else:
-                errorlog("WF_54: File was not normalized!")
+                errorlog("WF_E03: File was not normalized!")
         else:
-            errorlog("WF_56: No sections found to normalize!")
+            errorlog("WF_E04: No sections found to normalize!")
             return True
-    actlog("WF_54: Ingest completed")
+    actlog("WF_A05: Ingest completed!")
 
 
 # ----- Normalization -----
@@ -82,22 +82,22 @@ def normalize(dfile, sections, user, jl):
                         # add facet file to DB
                         ffileid = addfacetfile(ffile, user)
                         if not ffileid:
-                            errorlog("WF_86: Compound file metadata not added to facet_lookup")
+                            errorlog("WF_E05: Compound file metadata for substance id "+subid+" not added to facet_lookup")
                         if not updatefacetfile(ffile):
-                            errorlog("WF_88: Compound file not added to facet_files")
+                            errorlog("WF_E06: Compound file id "+ffileid+" was not added to facet_files")
                         # now that facet file has be added link to DB table
                         updatesubstance(subid, 'facet_lookup_id', ffileid)
-                        actlog("WF_07: Created compound facet file and added to DB")
+                        actlog("WF_A06: Created compound facet file id "+ffileid+" and added to DB")
                     if not graphid:
-                        # has the jsonld file been save in the DB but not added to the graph?
+                        # has the jsonld file been saved in the DB but not added to the graph?
                         if addgraph('facet', ffileid):
-                            actlog("WF_88: Compound file added to GraphDB")
                             # update ftype table with id
                             sub = Substances.objects.get(id=subid)
                             sub.graphdb = 'https://scidata.unf.edu/facet/' + str(ffileid)
                             sub.save()
+                            actlog("WF_A07:Compound file id "+ffileid+" added to GraphDB")
                         else:
-                            errorlog("WF_96: Compound file not added to GraphDB")
+                            errorlog("WF_E07: Compound file id "+ffileid+" was not added to GraphDB")
 
                     # load facet file to extract @id for compound
                     fobjt = FacetFiles.objects.get(facet_lookup_id=ffileid)
@@ -119,9 +119,9 @@ def normalize(dfile, sections, user, jl):
                     link.json_lookup_id = jl
                     link.facets_lookup_id = ffileid
                     link.save()
-                    actlog("WF_114: Compound found in DB")
+                    actlog("WF_A08: Compound found in DB: ( "+section+", "+entry+", "+ffileid+" )")
                 else:
-                    errorlog("WF_116: Compound not found in or added to DB")
+                    errorlog("WF_E08: Compound not found in or added to DB ( "+section+", "+entry+" )")
 
     # update file in DB
     updated = updatedatafile(dfile, 'normalized')
@@ -129,10 +129,10 @@ def normalize(dfile, sections, user, jl):
         atid = dfile['@id']
         parts = atid.split('/')
         if addgraph('data', parts[4]):
-            actlog("WF_128: Normalized version of data file added to Graph DB")
+            actlog("WF_A09: Normalized version of data file added to Graph DB: "+parts[4])
             return True
         else:
-            errorlog("WF_130: Could not save normalized version of data file to Graph DB")
+            errorlog("WFE09: Could not save normalized version of data file to Graph DB")
         return True
 
 

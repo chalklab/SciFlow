@@ -4,22 +4,44 @@
 {% block header %} Log for {{uid}}: {% endblock %}
 
 {% block content %}
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+        {% for key,value in entries.items %}
+          <li class="nav-item">
+            <a class="nav-link" href="#key{{key}}" data-toggle="collapse" data-target="#key{{key}}" aria-expanded="false" aria-controls="key{{key}}">v{{key}}</a>
+          </li>
+        {% endfor %}
+        </ul>
+    </div>
 
+<div class="accordion" id="info">
 
-{% for key,value in entries.items %}
-    <h3>{{key}}</h3>
-    <h5>Activity Log:</h5>
-    {% for entry in value %}
-        <li>{{entry}}</li>
+    {% for key,value in finfo.items %}
+        <div id="key{{key}}" class="collapse" aria-labelledby="key{{key}}" data-parent="#info">
+            <h3>{{value}}</h3>
+        </div>
     {% endfor %}
-{% endfor %}
 
-{% for key,value in errors.items %}
-    <h5>Error Log:</h5>
-    {% for entry in value %}
-        <li>{{entry}}</li>
+<div class="accordion" id="entries">
+    {% for key,value in entries.items %}
+        <div id="key{{key}}" class="collapse" aria-labelledby="key{{key}}" data-parent="#entries">
+            <h5>Activity Log:</h5>
+            {% for entry in value %}
+                <li>{{entry}}</li>
+            {% endfor %}
+        </div>
     {% endfor %}
-{% endfor %}
+</div>
+
+<div class="accordion" id="errors">
+    {% for key,value in errors.items %}
+        <div id="key{{key}}" class="collapse" aria-labelledby="key{{key}}" data-parent="#errors">
+            <h5>Error Log:</h5>
+            {% for entry in value %}
+                <li>{{entry}}</li>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
 
 {% endblock %}
-
