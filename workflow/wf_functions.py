@@ -43,7 +43,7 @@ def ingest(upload, user):
                 sections.update({systype: found})
 
         if sections:
-            actlog("WF_A03: Sections:" + str(sections.keys()))
+            actlog("WF_A03: Sections: " + str(sections.keys()))
             if normalize(file, sections, user, ids['mid']) is True:  # normalization.py
                 actlog("WF_A04: File normalized!")
                 return True
@@ -90,12 +90,12 @@ def normalize(dfile, sections, user, jl):
                         actlog("WF_A06: Created compound facet file id "+str(ffileid)+" and added to DB")
                     if not graphid:
                         # has the jsonld file been saved in the DB but not added to the graph?
-                        if addgraph('facet', ffileid):
+                        if addgraph('facet', ffileid, 'remote'):
                             # update ftype table with id
                             sub = Substances.objects.get(id=subid)
                             sub.graphdb = 'https://scidata.unf.edu/facet/' + str(ffileid)
                             sub.save()
-                            actlog("WF_A07:Compound file id "+str(ffileid)+" added to GraphDB")
+                            actlog("WF_A07: Compound file id "+str(ffileid)+" added to GraphDB")
                         else:
                             errorlog("WF_E07: Compound file id "+str(ffileid)+" was not added to GraphDB")
 
@@ -119,7 +119,7 @@ def normalize(dfile, sections, user, jl):
                     link.json_lookup_id = jl
                     link.facets_lookup_id = ffileid
                     link.save()
-                    actlog("WF_A08: Compound found in DB: ( "+str(section)+", "+str(entry)+", "+str(ffileid)+" )")
+                    actlog("WF_A08: Compound found in DB: ( "+str(section)+", file id "+str(ffileid)+" )")
                 else:
                     errorlog("WF_E08: Compound not found in or added to DB ( "+str(section)+", "+str(entry)+" )")
 
@@ -128,7 +128,7 @@ def normalize(dfile, sections, user, jl):
     if updated:
         atid = dfile['@id']
         parts = atid.split('/')
-        if addgraph('data', parts[4]):
+        if addgraph('data', parts[4], 'remote'):
             actlog("WF_A09: Normalized version of data file added to Graph DB: "+str(parts[4]))
             return True
         else:
