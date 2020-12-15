@@ -17,8 +17,10 @@ def pubchem(identifier, meta, ids, descs, srcs):
         return
 
     # check to see if compound is in database
+    other = None
     respnse = requests.get(apipath + 'inchikey/' + identifier + '/json')
     if respnse.status_code != 200:
+        other = identifier
         identifier = str(re.search('^[A-Z]{14}', identifier).group(0)) + '-UHFFFAOYSA-N'
         respnse = requests.get(apipath + 'inchikey/' + identifier + '/json')
         if respnse.status_code == 200:
@@ -42,6 +44,8 @@ def pubchem(identifier, meta, ids, descs, srcs):
     ids["pubchem"] = {}
     meta["pubchem"] = {}
     ids["pubchem"]["pubchem"] = pcid
+    if other:
+        ids["pubchem"]["other"] = other  # original inchikey if made generic
     for prop in props:
         if prop['urn']['label'] == "IUPAC Name" and prop['urn']['name'] == "Preferred":
             ids["pubchem"]["iupacname"] = prop["value"]["sval"]
@@ -150,6 +154,7 @@ def wikidata(identifier, meta, ids, descs, srcs):
         query = query1 + query2 + query3
         res = return_sparql_query_results(query)
         if res['results']['bindings']:
+            request.session['originalkey']
             srcs["wikidata"].update({"result": 0, "notes": "InChiKey generalized by substituting second and third block with -UHFFFAOYSA-N"})
 
     # have we found the compound?
