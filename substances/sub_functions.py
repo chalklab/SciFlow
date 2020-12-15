@@ -448,12 +448,12 @@ def getinchikey(subid):
     found = Identifiers.objects.all().values_list('value', flat=True).filter(substance_id=subid, type='inchikey')
     keys = list(set(found))
     if len(keys) == 0:
-        errorlog("SUB_01: Could not find inchikey for substance " + str(subid))
+        errorlog("SUB_E01: Could not find inchikey for substance " + str(subid))
     elif len(keys) == 1:
-        actlog("SUB_01: Found inchikey '" + str(keys) + "' for substance " + str(subid))
+        actlog("SUB_A01: Found inchikey '" + str(keys) + "' for substance " + str(subid))
         return keys[0]
     elif len(keys) > 1:
-        errorlog("SUB_02: Multiple inchikeys (" + str(keys) + ") substance " + str(subid))
+        errorlog("SUB_E02: Multiple inchikeys (" + str(keys) + ") for substance " + str(subid))
     return False
 
 

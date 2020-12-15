@@ -84,10 +84,10 @@ def normalize(dfile, sections, user, jl):
                         if not ffileid:
                             errorlog("WF_E05: Compound file metadata for substance id "+subid+" not added to facet_lookup")
                         if not updatefacetfile(ffile):
-                            errorlog("WF_E06: Compound file id "+ffileid+" was not added to facet_files")
+                            errorlog("WF_E06: Compound file id "+str(ffileid)+" was not added to facet_files")
                         # now that facet file has be added link to DB table
                         updatesubstance(subid, 'facet_lookup_id', ffileid)
-                        actlog("WF_A06: Created compound facet file id "+ffileid+" and added to DB")
+                        actlog("WF_A06: Created compound facet file id "+str(ffileid)+" and added to DB")
                     if not graphid:
                         # has the jsonld file been saved in the DB but not added to the graph?
                         if addgraph('facet', ffileid):
@@ -119,7 +119,7 @@ def normalize(dfile, sections, user, jl):
                     link.json_lookup_id = jl
                     link.facets_lookup_id = ffileid
                     link.save()
-                    actlog("WF_A08: Compound found in DB: ( "+section+", "+entry+", "+ffileid+" )")
+                    actlog("WF_A08: Compound found in DB: ( "+section+", "+entry+", "+str(ffileid)+" )")
                 else:
                     errorlog("WF_E08: Compound not found in or added to DB ( "+section+", "+entry+" )")
 
@@ -129,7 +129,7 @@ def normalize(dfile, sections, user, jl):
         atid = dfile['@id']
         parts = atid.split('/')
         if addgraph('data', parts[4]):
-            actlog("WF_A09: Normalized version of data file added to Graph DB: "+parts[4])
+            actlog("WF_A09: Normalized version of data file added to Graph DB: "+str(parts[4]))
             return True
         else:
             errorlog("WFE09: Could not save normalized version of data file to Graph DB")
