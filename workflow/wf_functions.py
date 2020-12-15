@@ -82,7 +82,7 @@ def normalize(dfile, sections, user, jl):
                         # add facet file to DB
                         ffileid = addfacetfile(ffile, user)
                         if not ffileid:
-                            errorlog("WF_E05: Compound file metadata for substance id "+subid+" not added to facet_lookup")
+                            errorlog("WF_E05: Compound file metadata for substance id "+str(subid)+" not added to facet_lookup")
                         if not updatefacetfile(ffile):
                             errorlog("WF_E06: Compound file id "+str(ffileid)+" was not added to facet_files")
                         # now that facet file has be added link to DB table
@@ -119,9 +119,9 @@ def normalize(dfile, sections, user, jl):
                     link.json_lookup_id = jl
                     link.facets_lookup_id = ffileid
                     link.save()
-                    actlog("WF_A08: Compound found in DB: ( "+section+", "+entry+", "+str(ffileid)+" )")
+                    actlog("WF_A08: Compound found in DB: ( "+str(section)+", "+str(entry)+", "+str(ffileid)+" )")
                 else:
-                    errorlog("WF_E08: Compound not found in or added to DB ( "+section+", "+entry+" )")
+                    errorlog("WF_E08: Compound not found in or added to DB ( "+str(section)+", "+str(entry)+" )")
 
     # update file in DB
     updated = updatedatafile(dfile, 'normalized')
