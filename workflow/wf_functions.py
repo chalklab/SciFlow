@@ -95,9 +95,9 @@ def normalize(dfile, sections, user, jl):
                             sub = Substances.objects.get(id=subid)
                             sub.graphdb = 'https://scidata.unf.edu/facet/' + str(ffileid)
                             sub.save()
-                            actlog("WF_A07:Compound file id "+ffileid+" added to GraphDB")
+                            actlog("WF_A07:Compound file id "+str(ffileid)+" added to GraphDB")
                         else:
-                            errorlog("WF_E07: Compound file id "+ffileid+" was not added to GraphDB")
+                            errorlog("WF_E07: Compound file id "+str(ffileid)+" was not added to GraphDB")
 
                     # load facet file to extract @id for compound
                     fobjt = FacetFiles.objects.get(facet_lookup_id=ffileid)
