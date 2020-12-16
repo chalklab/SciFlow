@@ -52,10 +52,10 @@ def addsubstance(identifier, output='meta'):
     mm = 0
     casrn = None
     if "pubchem" in ids:
-        if ids['pubchem']['iupacname'] is not None:
+        if "iupacname" in ids['pubchem']:
             nm = ids['pubchem']['iupacname']
     elif "chembl" in meta:
-        if meta['chembl']['prefname'] is not None:
+        if "prefname" in meta['chembl']:
             nm = meta['chembl']['prefname']
     if "pubchem" in meta:
         fm = meta['pubchem']['formula']
