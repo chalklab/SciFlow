@@ -96,8 +96,8 @@ def ingest(request):
                     status = None
                     if not subid:
                         status = 'new'
-                        addsubstance(key)
-                        subid = getsubid(key)
+                        sub = addsubstance(key, 'sub')
+                        subid = sub.id
                     else:
                         status = 'present'
                     meta = getmeta(subid)
