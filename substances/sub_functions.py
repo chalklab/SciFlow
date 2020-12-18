@@ -58,13 +58,19 @@ def addsubstance(identifier, output='meta'):
         if meta['chembl']['prefname'] is not None:
             nm = meta['chembl']['prefname']
     if "pubchem" in meta:
-        fm = meta['pubchem']['formula']
-        mw = meta['pubchem']['mw']
-        mm = meta['pubchem']['mim']
+        if "formula" in meta['pubchem']:
+            fm = meta['pubchem']['formula']
+        if "mw" in meta['pubchem']:
+            mw = meta['pubchem']['mw']
+        if "mim" in meta['pubchem']:
+            mm = meta['pubchem']['mim']
     elif "chembl" in meta:
-        fm = meta['chembl']['full_molformula']
-        mw = meta['chembl']['full_mwt']
-        mm = meta['chembl']['mw_monoisotopic']
+        if "full_molformula" in meta['chembl']:
+            fm = meta['chembl']['full_molformula']
+        if "full_mwt" in meta['chembl']:
+            mw = meta['chembl']['full_mwt']
+        if "mw_monoisotopic" in meta['chembl']:
+            mm = meta['chembl']['mw_monoisotopic']
     if "wikidata" in ids:
         if "casrn" in ids['wikidata']:
             casrn = ids['wikidata']['casrn']
