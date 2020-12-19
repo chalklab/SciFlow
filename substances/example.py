@@ -18,7 +18,8 @@ if add:
         exit()
 
     # generate the JSON-LD file for the substance
-    jsonld = createsubjld(key)
+    subid = added.id
+    jsonld = createsubjld(subid)
 
     # store the JSON-LD in the facet_lookups/facet_files tables
     facetid = addfacetfile(jsonld)

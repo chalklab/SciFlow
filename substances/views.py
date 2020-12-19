@@ -143,7 +143,8 @@ def ingestlist(request):
 
 def normalize(request, identifier):
     """ create a SciData JSON-LD file for a compound, ingest in the graph and update data file with graph location """
-    success = createsubjld(identifier)
+    subid = getsubid(identifier)
+    success = createsubjld(subid)
     return render(request, "substances/normalize.html", {"success": success})
 
 

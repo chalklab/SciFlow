@@ -79,7 +79,7 @@ def normalize(dfile, sections, user, jl):
                     graphid = subingraph(subid)
                     if not ffileid:
                         # not in graph or in facet_lookup (but in DB) so create sd file and add to both
-                        ffile = createsubjld(key)
+                        ffile = createsubjld(subid)
                         # add facet file to DB
                         maxid = FacetLookup.objects.all().aggregate(Max('id'))['id__max']
                         nextid = maxid + 1 if maxid else 1

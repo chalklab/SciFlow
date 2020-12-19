@@ -161,7 +161,7 @@ def getmeta(subid):
     return meta
 
 
-def createsubjld(identifier):
+def createsubjld(subid):
     """ create a SciData JSON-LD file for a compound, ingest in the graph and update DB with graph location """
 
     # get the substance template file from the database
@@ -173,7 +173,6 @@ def createsubjld(identifier):
     fields = Metadata.objects.filter(sdsubsection="compound")
 
     # get the substance info (metadata, identifiers, descriptors)
-    subid = getsubid(identifier)
     substance = Substances.objects.get(id=subid)
     ids = dict(substance.identifiers_set.all().values_list('type', 'value'))
     descs = substance.descriptors_set.all().values_list('type', 'value')
