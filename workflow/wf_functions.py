@@ -80,6 +80,10 @@ def normalize(dfile, sections, user, jl):
                         # not in graph or in facet_lookup (but in DB) so create sd file and add to both
                         ffile = createsubjld(key)
                         # add facet file to DB
+                        maxid = FacetLookup.objects.all().aggregate(Max('id'))['id__max']
+                        nextid = nextid + 1 if nextid else 1
+                        fid = str(nextid).rjust(8, '0')  # creates id with the right length
+                        ffile['@id'] = "https://scidata.unf.edu/facet/" + fid
                         ffileid = addfacetfile(ffile, user)
                         if not ffileid:
                             errorlog("WF_E05: Compound file metadata for substance id "+str(subid)+" not added to facet_lookup")
