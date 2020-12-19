@@ -4,6 +4,7 @@ from datafiles.df_functions import *
 from substances.sub_functions import *
 from datafiles.models import *
 from sciflow import gvars
+from django.db.models import Max
 import json
 
 
@@ -81,7 +82,7 @@ def normalize(dfile, sections, user, jl):
                         ffile = createsubjld(key)
                         # add facet file to DB
                         maxid = FacetLookup.objects.all().aggregate(Max('id'))['id__max']
-                        nextid = nextid + 1 if nextid else 1
+                        nextid = maxid + 1 if maxid else 1
                         fid = str(nextid).rjust(8, '0')  # creates id with the right length
                         ffile['@id'] = "https://scidata.unf.edu/facet/" + fid
                         ffileid = addfacetfile(ffile, user)
