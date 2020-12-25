@@ -115,7 +115,7 @@ def normalize(dfile, sections, user, jl):
                     for fidx, facet in enumerate(facets):
                         if facet['@id'] == facetid:
                             # update datafile facet entry
-                            finfo = {"@id": normid, "@type": "sci:" + section}
+                            finfo = {"@id": normid, "@type": "sdo:" + section}
                             dfile['@graph']['scidata']['system']['facets'][fidx] = finfo
                             break
 
