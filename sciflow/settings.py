@@ -25,7 +25,7 @@ SECRET_KEY = 'xzdi*3p9062t$u9yz5jehu2xsjc=9!+75hlic=-3k^=k^!ssch7rf'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['sds.coas.unf.edu']
+ALLOWED_HOSTS = ['sds.coas.unf.edu', '127.0.0.1']
 
 
 # Application definition
