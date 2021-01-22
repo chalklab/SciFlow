@@ -71,7 +71,7 @@ if runwd:
     print(json.dumps(srcs, indent=4))
 
 # check output of getinchikey function
-rungi = True
+rungi = None
 if rungi:
     subid = 1
     out = getinchikey(subid)

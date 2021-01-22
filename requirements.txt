@@ -1,6 +1,6 @@
-social_auth_core==3.3.3
+social_auth_core==4.0.3
 python_jose==3.2.0
-Django==3.1.4
+Django==3.1.5
 django-crispy-forms==1.10.0
 chembl_webresource_client==0.10.2
 PyLD==2.0.3
