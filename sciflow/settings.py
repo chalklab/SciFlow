@@ -97,10 +97,7 @@ UNFDB = {
         'USER': 'sciflow',
         'PASSWORD': 'letthedatafl0w',
         'HOST': '127.0.0.1',
-        'PORT': '3307',
-        'TEST': {
-            'NAME': 'test_sciflow',
-        }
+        'PORT': '3307'
     }
 }
 
