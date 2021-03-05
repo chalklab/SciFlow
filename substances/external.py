@@ -1,5 +1,6 @@
-""" functions to get metadata, identifiers, and descriptors from external websites"""
+""" functions to get metadata, identifiers, and descriptors from external websites """
 import re
+import json
 from qwikidata.sparql import *
 from qwikidata.entity import *
 from qwikidata.linked_data_interface import *
@@ -24,12 +25,10 @@ def pubchem(identifier, meta, ids, descs, srcs):
         identifier = str(re.search('^[A-Z]{14}', identifier).group(0)) + '-UHFFFAOYSA-N'
         respnse = requests.get(apipath + 'inchikey/' + identifier + '/json')
         if respnse.status_code == 200:
-            srcs["pubchem"].update({"result": 0, "notes": "InChiKey generalized by substituting second and third block with -UHFFFAOYSA-N"})
-
-    # have we found the compound?
-    if respnse.status_code != 200:
-        srcs["pubchem"].update({"result": 0, "notes": "InChIKey not found, including generic"})
-        return
+            srcs["pubchem"].update({"result": 0, "notes": "InChiKey generalized with -UHFFFAOYSA-N"})
+        else:
+            srcs["pubchem"].update({"result": 0, "notes": "InChIKey not found, including generic"})
+            return
 
     # OK compound has been found go get the data
     json = requests.get(apipath + 'inchikey/' + identifier + '/json').json()
@@ -202,17 +201,29 @@ def chembl(identifier, meta, ids, descs, srcs):
     """ retrieve data from the ChEMBL repository"""
     molecule = new_client.molecule
     srcs.update({"chembl": {"result": None, "notes": None}})
-    cmpd = molecule.search(identifier)[0]
-    if not cmpd:
+    print(identifier)
+    cmpds = molecule.search(identifier)
+    found = {}
+    for cmpd in cmpds:
+        if cmpd['molecule_structures']['standard_inchi_key'] == identifier:
+            found = cmpd
+            break
+    if not found:
         genericidentifier = str(re.search('^[A-Z]{14}', identifier).group(0)) + '-UHFFFAOYSA-N'
-        cmpd = molecule.search(genericidentifier)[0]
-        if cmpd:
+        cmpds = molecule.search(genericidentifier)
+        found = {}
+        for cmpd in cmpds:
+            if cmpd['molecule_structures']['standard_inchi_key'] == identifier:
+                found = cmpd
+                break
+        if found:
             srcs['chembl'].update({"notes": "InChiKey generalized by substituting second and third block with -UHFFFAOYSA-N"})
 
-    if not cmpd:
+    if not found:
         return
 
     # general metadata
+    cmpd = found
     meta['chembl'] = {}
     mprops = ['full_molformula', 'full_mwt', 'mw_freebase', 'mw_monoisotopic']
     for k, v in cmpd['molecule_properties'].items():
@@ -270,6 +281,56 @@ def chembl(identifier, meta, ids, descs, srcs):
 
     # sources
     srcs.update({"chembl": {"result": 1, "notes": None}})
+
+
+def comchem(identifier, meta, ids, descs, srcs):
+    """ retreive data from the commonchemistry API"""
+    srcs.update({"comchem": {}})
+
+    # check identifier for inchikey pattern
+    if re.search('[A-Z]{14}-[A-Z]{10}-[A-Z]', identifier) is None:
+        srcs["comchem"].update({"result": 0, "notes": "Not a CAS-RN"})
+        return
+
+    # search for entries and retrieve casrn for compound if present
+    apipath = "https://commonchemistry.cas.org/"
+    respnse = requests.get(apipath + 'api/search?q=' + identifier).json()
+    if respnse['count'] == 0:
+        srcs["comchem"].update({"result": 0, "notes": "InChIKey not found"})
+        return False
+    else:
+        # even though there may be multiple responses the first is likely correct
+        casrn = respnse['results'][0]['rn']
+        res = requests.get(apipath + 'api/detail?cas_rn=' + casrn).json()
+
+    # check identifier for casrn pattern
+    # if re.search('[0-9]{2,7}-[0-9]{2}-[0-9]', identifier) is None:
+    #     srcs["comchem"].update({"result": 0, "notes": "Not a CAS-RN"})
+    #     return
+
+    # search for entries and retrieve casrn for compound if present
+    # apipath = "https://commonchemistry.cas.org/"
+    # respnse = requests.get(apipath + 'api/detail?cas_rn=' + identifier)
+    # if respnse.status_code != 200:
+    #     srcs["comchem"].update({"result": 0, "notes": "CAS-RN not found"})
+    #     return
+    # res = respnse.json()
+
+    # OK now we have data for the specfic compound
+    ids["comchem"] = {}
+    ids["comchem"]["casrn"] = casrn
+    ids["comchem"]["inchi"] = res["inchi"]
+    ids["comchem"]["inchikey"] = res["inchiKey"]
+    ids["comchem"]["csmiles"] = res["canonicalSmile"]
+    ids["comchem"]["othername"] = res["synonyms"]
+    ids["comchem"]["replacedcasrn"] = res["replacedRns"]
+
+    meta["comchem"] = {}
+    meta["comchem"]["formula"] = res["molecularFormula"]
+    meta["comchem"]["mw"] = res["molecularMass"]
+
+    srcs["comchem"].update({"result": 1})
+    return True
 
 
 def pubchemsyns(identifier):

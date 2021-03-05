@@ -350,7 +350,7 @@ def saveids(subid, ids):
                     ident = Identifiers(substance_id=subid, type=k, value=x, source=source)
                     ident.save()
             else:
-                if k == 'csmiles':
+                if k == 'csmiles':  # add random string in iso field to make csmiles pseudo 'unique'
                     chars = string.ascii_uppercase + string.digits
                     rstr = ''.join(random.choice(chars) for _ in range(5))
                     ident = Identifiers(substance_id=subid, type=k, value=v, iso=rstr, source=source)

@@ -46,7 +46,8 @@ if runpc:
 # check output of chembl request
 runcb = None
 if runcb:
-    key = 'VWNMWKSURFWKAL-HXOBKFHXSA-N'
+    key = 'REEUVFCVXKWOFE-UHFFFAOYSA-K'
+    # key = 'aspirin'
     meta, ids, descs, srcs = {}, {}, {}, {}
     chembl(key, meta, ids, descs, srcs)
     print(meta, ids, descs)
@@ -69,6 +70,56 @@ if runwd:
     wikidata(key, meta, ids, descs, srcs)
     print(meta, ids, descs)
     print(json.dumps(srcs, indent=4))
+
+# Get data from commonchemistry using CASRNs
+runcc1 = None
+if runcc1:
+    subs = Substances.objects.all().values_list('id', 'casrn').filter(casrn__isnull=False)  # produces tuples
+    for sub in subs:
+        found = Sources.objects.filter(substance_id__exact=sub[0], source__exact='comchem')
+        if not found:
+            meta, ids, descs, srcs = {}, {}, {}, {}
+            comchem(sub[1], meta, ids, descs, srcs)
+            saveids(sub[0], ids)
+            savesrcs(sub[0], srcs)
+            print(sub)
+            print(json.dumps(srcs, indent=4))
+
+runcc2 = None
+if runcc2:
+    # process compounds with no casrn in substances table
+    subs = Substances.objects.all().values_list('id', flat=True).filter(casrn__isnull=True)
+    for sub in subs:
+        found = Sources.objects.filter(substance_id__exact=sub, source__exact='comchem')
+        if not found:
+            key = getinchikey(sub)
+            if key:
+                meta, ids, descs, srcs = {}, {}, {}, {}
+                if comchem(key, meta, ids, descs, srcs):
+                    saveids(sub, ids)
+                    # update casrn field in substances
+                    updatesubstance(sub, 'casrn', ids['comchem']['casrn'])
+                    print('CASRN updated')
+                savesrcs(sub, srcs)
+                print(sub)
+                print(json.dumps(srcs, indent=4))
+            else:
+                print(sub)
+
+runlm = True
+if runlm:
+    apipath = "https://commonchemistry.cas.org/api/detail?cas_rn="
+    f = open("reach_ids.txt", "r")
+    for line in f:
+        parts = line.replace('\n', '').split(':')
+        print(parts)
+        res = requests.get(apipath + parts[1])
+        if res.status_code == 200:
+            with open(parts[0] + '.json', 'w') as outfile:
+                json.dump(res.json(), outfile)
+                print('Found')
+        else:
+            print('Not found')
 
 # check output of getinchikey function
 rungi = None
