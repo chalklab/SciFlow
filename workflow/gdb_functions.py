@@ -8,10 +8,15 @@ import json
 import requests
 
 
-def addgraph(ftype, fileid, locale='local'):
+def addgraph(ftype, fid, locale='local', replace=""):
 
     """ add a file to GraphDB """
-    data = '{\n "data": "https://sds.coas.unf.edu/sciflow/files/' + ftype + '/' + str(fileid) + '" \n }'
+    fileurl = "https://sds.coas.unf.edu/sciflow/files/" + ftype + '/' + str(fid)
+    if replace != "":
+        data = '{"data":"' + fileurl + '","replaceGraphs":["' + replace + '"]}'
+    else:
+        data = '{ "data": "' + fileurl + '" }'
+
     r = None
     if locale == "local":
         r = requests.post(graphlocalurl, data=data, headers=jsonhrs)
