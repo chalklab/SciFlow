@@ -1,4 +1,5 @@
 """import models"""
+from django.db import models
 from datasets.models import *
 
 
@@ -190,4 +191,3 @@ class JsonFacets(models.Model):
     class Meta:
         managed = False
         db_table = 'json_facets'
-
