@@ -152,6 +152,11 @@ def getsubdata(identifier):
         chembl(identifier, meta, ids, descs, srcs)
     except Exception as exception:
         srcs.update({"chembl": {"result": 0, "notes": exception}})
+    try:
+        comchem(identifier, meta, ids, descs, srcs)
+    except Exception as exception:
+        srcs.update({"comchem": {"result": 0, "notes": exception}})
+
     return meta, ids, descs, srcs
 
 

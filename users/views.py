@@ -1,7 +1,7 @@
 """user app views functions"""
 from django.shortcuts import render, redirect
 from social_core.exceptions import AuthFailed
-from .requests import *
+from .requests import Request, approverequest, rejectrequest
 from django.contrib.auth.decorators import login_required
 import json
 from django.contrib.auth import logout as log_out

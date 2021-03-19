@@ -5,7 +5,8 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-    """ migrations configuration class for the crosswalks DB tables (add dataset specific later) """
+    """ migrations configuration class for the crosswalks DB tables
+    (add dataset specific later) """
     initial = True
 
     dependencies = [
@@ -15,21 +16,34 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Metadata',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True, primary_key=True,
+                                        serialize=False, verbose_name='ID')),
                 ('table', models.CharField(max_length=128)),
                 ('field', models.CharField(max_length=128)),
-                ('label', models.CharField(blank=True, max_length=16, null=True)),
-                ('sdsection', models.CharField(blank=True, max_length=11, null=True)),
-                ('sdsubsection', models.CharField(blank=True, max_length=32, null=True)),
-                ('sdsubsubsection', models.CharField(blank=True, max_length=64, null=True)),
-                ('category', models.CharField(blank=True, max_length=64, null=True)),
-                ('unit', models.CharField(blank=True, max_length=32, null=True)),
-                ('datatype', models.CharField(blank=True, max_length=22, null=True)),
-                ('output', models.CharField(blank=True, max_length=10, null=True)),
-                ('group', models.CharField(blank=True, max_length=512, null=True)),
-                ('intlinks', models.CharField(blank=True, max_length=1024, null=True)),
-                ('meta', models.CharField(blank=True, max_length=64, null=True)),
-                ('ignore', models.CharField(blank=True, max_length=32, null=True)),
+                ('label', models.CharField(
+                    blank=True, max_length=16, null=True)),
+                ('sdsection', models.CharField(
+                    blank=True, max_length=11, null=True)),
+                ('sdsubsection', models.CharField(
+                    blank=True, max_length=32, null=True)),
+                ('sdsubsubsection', models.CharField(
+                    blank=True, max_length=64, null=True)),
+                ('category', models.CharField(
+                    blank=True, max_length=64, null=True)),
+                ('unit', models.CharField(
+                    blank=True, max_length=32, null=True)),
+                ('datatype', models.CharField(
+                    blank=True, max_length=22, null=True)),
+                ('output', models.CharField(
+                    blank=True, max_length=10, null=True)),
+                ('group', models.CharField(
+                    blank=True, max_length=512, null=True)),
+                ('intlinks', models.CharField(
+                    blank=True, max_length=1024, null=True)),
+                ('meta', models.CharField(
+                    blank=True, max_length=64, null=True)),
+                ('ignore', models.CharField(
+                    blank=True, max_length=32, null=True)),
                 ('updated', models.DateTimeField()),
             ],
             options={
@@ -40,7 +54,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Nspaces',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True, primary_key=True,
+                                        serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=64)),
                 ('ns', models.CharField(max_length=8)),
                 ('path', models.CharField(max_length=64, unique=True)),
@@ -55,13 +70,18 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Ontterms',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True, primary_key=True,
+                                        serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=256)),
-                ('definition', models.CharField(blank=True, max_length=2048, null=True)),
+                ('definition', models.CharField(blank=True, max_length=2048,
+                                                null=True)),
                 ('code', models.CharField(max_length=64)),
-                ('sdsection', models.CharField(blank=True, max_length=11, null=True)),
-                ('sdsubsection', models.CharField(blank=True, max_length=64, null=True)),
-                ('to_remove', models.CharField(blank=True, max_length=8, null=True)),
+                ('sdsection', models.CharField(blank=True, max_length=11,
+                                               null=True)),
+                ('sdsubsection', models.CharField(blank=True, max_length=64,
+                                                  null=True)),
+                ('to_remove', models.CharField(blank=True, max_length=8,
+                                               null=True)),
                 ('updated', models.DateTimeField()),
             ],
             options={
@@ -72,7 +92,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Templates',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True, primary_key=True,
+                                        serialize=False, verbose_name='ID')),
                 ('type', models.CharField(max_length=16)),
                 ('json', models.TextField()),
                 ('updated', models.DateTimeField()),

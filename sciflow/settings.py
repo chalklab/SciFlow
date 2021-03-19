@@ -106,20 +106,12 @@ DATABASES = UNFDB
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
-
+ua = 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'
+ml = 'django.contrib.auth.password_validation.MinimumLengthValidator'
+cp = 'django.contrib.auth.password_validation.CommonPasswordValidator'
+np = 'django.contrib.auth.password_validation.NumericPasswordValidator'
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': ua}, {'NAME': ml}, {'NAME': cp}, {'NAME': np}
 ]
 
 
@@ -167,7 +159,8 @@ SLACK_BOT_USER_TOKEN = 'xoxb-4596507645-1171034330099-eP4swGipytYQHLnomPvBoOPO'
 SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
 SOCIAL_AUTH_AUTH0_DOMAIN = 'sciflow.us.auth0.com'
 SOCIAL_AUTH_AUTH0_KEY = 'yqDlGgfUFMr9GUNW7nEFLrc92IoccnNU'
-SOCIAL_AUTH_AUTH0_SECRET = 'QWZvHaULslFysaVMaXqYPqinzKfMLo8MrgLEEMBmRKy99vb-q2LpuTCurSDWhSJR'
+secret = 'QWZvHaULslFysaVMaXqYPqinzKfMLo8MrgLEEMBmRKy99vb-q2LpuTCurSDWhSJR'
+SOCIAL_AUTH_AUTH0_SECRET = secret
 
 SOCIAL_AUTH_AUTH0_SCOPE = [
     'openid',

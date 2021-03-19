@@ -1,7 +1,6 @@
 """ view definitions for the workflow app """
 from django.shortcuts import render
 from .wf_functions import *
-from datetime import time
 
 
 def viewlog(response, lid):
@@ -12,20 +11,22 @@ def viewlog(response, lid):
         lookup = JsonActlog.objects.filter(json_lookup_id=lid).all()
         fileids = []
         for entry in lookup:
-            id = entry.json_file_id
-            if id not in fileids:
-                fileids.append(id)
+            fid = entry.json_file_id
+            if fid not in fileids:
+                fileids.append(fid)
         print(fileids)
         finfo = {}
         entries = {}
         errors = {}
+        uid = None
         for fid in fileids:
             uid = JsonLookup.objects.get(id=lid).uniqueid
             version = JsonFiles.objects.get(id=fid).version
-            info = "Version: "+str(version)+", Upload Time: "+str(JsonFiles.objects.get(id=fid).updated)
-            finfo.update({version:info})
-            entries.update({version:[]})
-            errors.update({version:[]})
+            updated = JsonFiles.objects.get(id=fid).updated
+            info = "Version: "+str(version)+", Upload Time: "+str(updated)
+            finfo.update({version: info})
+            entries.update({version: []})
+            errors.update({version: []})
             act = JsonActlog.objects.filter(json_file_id=fid)
             err = JsonErrors.objects.filter(json_file_id=fid)
             for entry in act:
@@ -34,14 +35,15 @@ def viewlog(response, lid):
                 errors[version].append(entry.errorcode)
         print(entries)
         print(errors)
-        context = {"uid":uid,"lookup":lookup,"entries":entries,"errors":errors,"finfo":finfo}
+        context = {"uid": uid, "lookup": lookup, "entries": entries,
+                   "errors": errors, "finfo": finfo}
     return render(response, "workflow/viewlog.html", context)
 
 
 def logs(response):
     """ for seeing all the logs"""
     lookups = JsonLookup.objects.all()
-    rarror =  ValidationError("This is an error!")
+    rarror = ValidationError("This is an error!")
     print(rarror.params)
-    context = {"lookups":lookups, "rarror":rarror}
+    context = {"lookups": lookups, "rarror": rarror}
     return render(response, "workflow/logs.html", context)

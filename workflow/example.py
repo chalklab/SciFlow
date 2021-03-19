@@ -1,5 +1,4 @@
 """example functionality for testing"""
-
 import os
 import django
 
@@ -9,8 +8,6 @@ django.setup()
 from datafiles.df_functions import *
 from django.conf import settings
 from substances.sub_functions import *
-# from datafiles.models import *
-# from workflow.gdb_functions import *
 
 basedir = settings.BASE_DIR
 fpath = basedir + '/static/files/240_72215_2324256.jsonld'

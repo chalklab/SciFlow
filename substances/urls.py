@@ -13,6 +13,7 @@ urlpatterns = [
     path("add/<identifier>", views.add, name='add'),
     path("ingest/<identifier>", views.add, name='add'),
     path("ingest/", views.ingest, name='ingest'),
+    path("sublist/", views.sublist, name='sublist'),
     path("ingestlist/", views.ingestlist, name='ingestlist'),
     path("normalize/<identifier>", views.normalize, name='normalize'),
 ]

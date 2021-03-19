@@ -7,10 +7,10 @@ from zipfile import ZipFile
 
 
 def sublist(request):
-    """view to generare list of substances on homepage"""
+    """view to generate list of substances on homepage"""
     if request.method == "POST":
         query = request.POST.get('q')
-        return redirect('search/'+str(query))
+        return redirect('/substances/search/'+str(query))
 
     substances = Substances.objects.all().order_by('name')
     return render(request, "substances/list.html", {'substances': substances})
@@ -150,7 +150,12 @@ def normalize(request, identifier):
 
 def list(request):
     """emtpy view to be accessed via redirect from ingest above"""
-    return render(request, "substances/list.html", {"substances": request.session['subs']})
+    if 'subs' in request.session:
+        subs = request.session['subs']
+    else:
+        subs = Substances.objects.all().order_by('name')
+
+    return render(request, "substances/list.html", {"substances": subs})
 
 
 def search(request, query):
