@@ -57,18 +57,18 @@ if runcb:
 runcf = None
 if runcf:
     key = 'VWNMWKSURFWKAL-HXOBKFZXSA-N'  # (bad inchikey)
-    meta, ids, descs, srcs = {}, {}, {}, {}
-    classyfire(key, meta, ids, descs, srcs)
-    print(meta, ids, descs)
+    descs, srcs = {}, {}
+    classyfire(key, descs, srcs)
+    print(descs)
     print(json.dumps(srcs, indent=4))
 
 # check output of wikidata request
 runwd = None
 if runwd:
     key = 'BSYNRYMUTXBXSQ-CHALKCHALK-N'  # (bad inchikey for aspirin)
-    meta, ids, descs, srcs = {}, {}, {}, {}
-    wikidata(key, meta, ids, descs, srcs)
-    print(meta, ids, descs)
+    ids, srcs = {}, {}
+    wikidata(key, ids, srcs)
+    print(ids)
     print(json.dumps(srcs, indent=4))
 
 # Get data from commonchemistry using CASRNs
@@ -78,8 +78,8 @@ if runcc1:
     for sub in subs:
         found = Sources.objects.filter(substance_id__exact=sub[0], source__exact='comchem')
         if not found:
-            meta, ids, descs, srcs = {}, {}, {}, {}
-            comchem(sub[1], meta, ids, descs, srcs)
+            meta, ids, srcs = {}, {}, {}
+            comchem(sub[1], meta, ids, srcs)
             saveids(sub[0], ids)
             savesrcs(sub[0], srcs)
             print(sub)
@@ -94,8 +94,8 @@ if runcc2:
         if not found:
             key = getinchikey(sub)
             if key:
-                meta, ids, descs, srcs = {}, {}, {}, {}
-                if comchem(key, meta, ids, descs, srcs):
+                meta, ids, srcs = {}, {}, {}
+                if comchem(key, meta, ids, srcs):
                     saveids(sub, ids)
                     # update casrn field in substances
                     updatesubstance(sub, 'casrn', ids['comchem']['casrn'])
