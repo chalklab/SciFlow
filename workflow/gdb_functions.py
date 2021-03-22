@@ -4,6 +4,7 @@ from workflow.settings import *
 from substances.models import *
 from django.db import *
 from workflow.log_functions import *
+from sciflow.settings import *
 import json
 import requests
 
@@ -16,6 +17,9 @@ def addgraph(ftype, fid, locale='local', replace=""):
         data = '{"data":"' + fileurl + '","replaceGraphs":["' + replace + '"]}'
     else:
         data = '{ "data": "' + fileurl + '" }'
+    file = open(BASE_DIR + '/static/replacelog.txt', 'a+');
+    file.write(data + '\r\n')
+    file.close()
 
     r = None
     if locale == "local":
