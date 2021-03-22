@@ -94,11 +94,12 @@ def normalize(dfile, sections, user, jl):
                         updatesubstance(subid, 'facet_lookup_id', ffileid)
                         actlog("WF_A06: Created compound facet file id "+str(ffileid)+" and added to DB")
                     if not graphid:
+                        namedgraph = 'https://scidata.unf.edu/facet/' + str(ffileid)
                         # has the jsonld file been saved in the DB but not added to the graph?
-                        if addgraph('facet', ffileid, 'remote'):
+                        if addgraph('facet', ffileid, 'remote', namedgraph):
                             # update ftype table with id
                             sub = Substances.objects.get(id=subid)
-                            sub.graphdb = 'https://scidata.unf.edu/facet/' + str(ffileid)
+                            sub.graphdb = namedgraph
                             sub.save()
                             actlog("WF_A07: Compound file id "+str(ffileid)+" added to GraphDB")
                         else:
@@ -133,7 +134,7 @@ def normalize(dfile, sections, user, jl):
     if updated:
         atid = dfile['@id']
         parts = atid.split('/')
-        if addgraph('data', parts[4], 'remote'):
+        if addgraph('data', parts[4], 'remote', dfile['@id']):
             actlog("WF_A09: Normalized version of data file added to Graph DB: "+str(parts[4]))
             return True
         else:
