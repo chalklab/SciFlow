@@ -82,43 +82,18 @@ def ingest(request):
     if request.method == "POST":
         if 'ingest' in request.POST:
             inchikey = request.POST.get('ingest')
-            # TODO iterate over list of inchikeys instead of taking one inchikey. Borrow script from substances.subfunctions def getidtype
-            # if adding one inchikey, redirect to view page. If adding list, show message for number of substances added
-            return redirect("/substances/add/" + str(inchikey))
-        elif 'upload' in request.FILES.keys():
-            file = request.FILES['upload']
-            fname = file.name
-            subs = []
-            if fname.endswith('.json'):
-                jdict = json.loads(file.read())
-                for key in jdict['keys']:
-                    subid = getsubid(key)
-                    status = None
-                    if not subid:
-                        status = 'new'
-                        addsubstance(key)
-                        subid = getsubid(key)
-                    else:
-                        status = 'present'
-                    meta = getmeta(subid)
-                    subs.append({'id': meta['id'], 'name': meta['name'], 'status': status})
-                    request.session['subs'] = subs
-                return redirect("/substances/list/")
-            elif fname.endswith('.zip'):
-                with ZipFile(file) as zfile:
-                    filenames = []
-                    for info in zfile.infolist():
-                        name = info.filename
-                        filenames.append(name)
-                    for file in filenames:
-                        data = zfile.read(file)
-                        m = re.search('^[A-Z]{14}-[A-Z]{10}-[A-Z]$', str(data))
-                        if m:
-                            print(m)
-                        else:
-                            print(':(')
-    return render(request, "substances/ingest.html",)
-
+            matchgroup = re.findall('[A-Z]{14}-[A-Z]{10}-[A-Z]', inchikey)
+            for match in matchgroup:
+                print(match)
+                hits = Substances.objects.all().filter(identifiers__value__exact=match).count()
+                if hits == 0:
+                    meta, ids, descs, srcs = addsubstance(match, 'all')
+                    print("Adding!")
+                else:
+                    subid = getsubid(match)
+                    print("Found!")
+            print("Done!")
+    return render(request, "substances/ingest.html", {})
 
 def ingestlist(request):
     """ add many compounds from a text file list of identifiers """

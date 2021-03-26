@@ -190,4 +190,3 @@ class JsonFacets(models.Model):
     class Meta:
         managed = False
         db_table = 'json_facets'
-

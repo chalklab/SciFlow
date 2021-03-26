@@ -1,8 +1,6 @@
 """ functions file for the datafiles app"""
-from datafiles.models import *
 from django.core.exceptions import ValidationError
 from workflow.log_functions import *
-from pyld import jsonld
 import json
 import re
 
@@ -219,12 +217,12 @@ def json_validator(json_file):
     keys_a = []
     keys_b = []
     isscidata = True
-
+    """
     try:
         jsonld.to_rdf(json_file_content, {"processingMode": "json-ld-1.0"})
     except ValidationError:
         isscidata = False
-
+    """
     if not str(json_file).endswith('.jsonld'):
         isscidata = False
     if not get_graphuid(json_file):
@@ -253,4 +251,3 @@ def get_graphuid(json_file):
         return guid
     except LookupError:
         return False
-
