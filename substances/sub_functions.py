@@ -13,7 +13,7 @@ import string
 
 def addsubstance(identifier, output='meta'):
     """
-    add a new substance to the database and populate identifiers and descriptors
+    add new substance to the database and populate identifiers and descriptors
     The identifier string can be any chemical metadata.  If it is not the
     inchikey for the compound then the identifier is used to find the inchikey
     The code checks for the existance of the substance in the substances
@@ -261,12 +261,12 @@ def createsubjld(subid):
         els = []
         ids = list(sd['@graph']['ids'])
         for i, symbol in enumerate(elements):
-            idx = str(i+1)
+            idx = str(i + 1)
             name = elementdata(symbol, 'Symbol', 'Name')
             chebi = elementdata(symbol, 'Symbol', 'ChEBI')
             ids.append(chebi)
             el = {}
-            el.update({"@id": "element/"+idx+"/"})
+            el.update({"@id": "element/" + idx + "/"})
             el.update({"@type": "obo:NCIT_C1940"})
             el.update({"name": name})
             el.update({"element": chebi})
@@ -293,16 +293,16 @@ def createsubjld(subid):
         # create atom section for file
         atms = []
         for i, atom in enumerate(atoms):
-            idx = str(i+1)
+            idx = str(i + 1)
             atm = {}
-            atm.update({"@id": "atom/"+idx+"/"})
+            atm.update({"@id": "atom/" + idx + "/"})
             atm.update({"@type": "obo:CHEBI_33250"})
             eidx = None
             for key, value in enumerate(elements):
                 if value == atom[3]:
-                    eidx = str(key+1)
+                    eidx = str(key + 1)
                     break
-            atm.update({"element": "element/"+eidx+"/"})
+            atm.update({"element": "element/" + eidx + "/"})
             atm.update({"xcoord": atom[0]})
             atm.update({"ycoord": atom[1]})
             atm.update({"zcoord": atom[2]})
@@ -324,12 +324,12 @@ def createsubjld(subid):
         # create bond seection for file
         bnds = []
         for i, bond in enumerate(bonds):
-            idx = str(i+1)
+            idx = str(i + 1)
             bnd = {}
-            bnd.update({"@id": "bond/"+idx+"/"})
+            bnd.update({"@id": "bond/" + idx + "/"})
             bnd.update({"@type": "ss:SIO_011118"})
             bnd.update({"order": bond[2]})
-            atms = ["atom/"+str(bond[0])+"/", "atom/"+str(bond[1])+"/"]
+            atms = ["atom/" + str(bond[0]) + "/", "atom/" + str(bond[1]) + "/"]
             bnd.update({"atoms": atms})
             bnds.append(bnd)
 
@@ -367,7 +367,7 @@ def saveids(subid, ids):
                                         source=source)
                     ident.save()
             else:
-                # add random string in iso field to make csmiles pseudo 'unique'
+                # add random str in iso field to make csmiles pseudo 'unique'
                 if k == 'csmiles':
                     chars = string.ascii_uppercase + string.digits
                     rstr = ''.join(random.choice(chars) for _ in range(5))
@@ -483,14 +483,14 @@ def getinchikey(subid):
         filter(substance_id=subid, type='inchikey')
     keys = list(set(found))
     if len(keys) == 0:
-        errorlog("SUB_E01: Could not find inchikey for substance " + str(subid))
+        errorlog("SUB_E01: Couldn't find inchikey for substance " + str(subid))
     elif len(keys) == 1:
-        actlog("SUB_A01: Found inchikey '" +
-               str(keys) + "' for substance " + str(subid))
+        actlog(
+            "SUB_A01: Got inchikey '" + str(keys) + "' for sub " + str(subid))
         return keys[0]
     elif len(keys) > 1:
-        errorlog("SUB_E02: Multiple inchikeys (" +
-                 str(keys) + ") for substance " + str(subid))
+        errorlog(
+            "SUB_E02: Many inchikeys (" + str(keys) + ") 4 sub " + str(subid))
     return False
 
 

@@ -8,7 +8,7 @@ from chembl_webresource_client.new_client import new_client
 
 
 def pubchem(identifier, meta, ids, descs, srcs):
-    """this function allows retrieval of data from the PugRest API at PubChem"""
+    """this function allows retrieval of data from the PugRest API @ PubChem"""
     apipath = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/"
     srcs.update({"pubchem": {}})
 
@@ -119,7 +119,7 @@ def classyfire(identifier, descs, srcs):
         identifier = str(re.search('^[A-Z]{14}', identifier).group(0)) + uhff
         respnse = requests.get(apipath + identifier + '.json')
         if respnse.status_code == 200:
-            notes = "InChiKey generalized by replacing with block1-UHFFFAOYSA-N"
+            notes = "InChiKey generalized by change to block1-UHFFFAOYSA-N"
             srcs["classyfire"].update({"result": 0, "notes": notes})
 
     # have we found the compound?
@@ -131,11 +131,14 @@ def classyfire(identifier, descs, srcs):
     # OK compound has been found go get the data
     descs["classyfire"] = {}
     respnse = requests.get(apipath + identifier + '.json').json()
-    descs["classyfire"]["kingdom"] = str(respnse['kingdom']["chemont_id"])
-    descs["classyfire"]["superclass"] = str(respnse['superclass']["chemont_id"])
+    descs["classyfire"]["kingdom"] = \
+        str(respnse['kingdom']["chemont_id"])
+    descs["classyfire"]["superclass"] = \
+        str(respnse['superclass']["chemont_id"])
     descs["classyfire"]["class"] = str(respnse['class']["chemont_id"])
     if respnse["subclass"] is not None:
-        descs["classyfire"]["subclass"] = str(respnse['subclass']["chemont_id"])
+        descs["classyfire"]["subclass"] = \
+            str(respnse['subclass']["chemont_id"])
     if "node" in respnse.keys():
         if respnse["node"] is not None:
             descs["classyfire"]["node"] = []
@@ -149,7 +152,7 @@ def classyfire(identifier, descs, srcs):
     srcs["classyfire"].update({"result": 1})
 
 
-wd = "https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&entity="
+w = "https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&entity="
 
 
 def wikidata(identifier, ids, srcs):
@@ -165,7 +168,7 @@ def wikidata(identifier, ids, srcs):
     # setup SPARQL query
     q1 = "SELECT DISTINCT ?compound "
     q2 = "WHERE { ?compound wdt:P235 \"" + identifier + "\" ."
-    q3 = "SERVICE wikibase:label { bd:serviceParam wikibase:language \"en\". }}"
+    q3 = 'SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }}'
     query = q1 + q2 + q3
     res = return_sparql_query_results(query)
     if not res['results']['bindings']:
@@ -176,7 +179,7 @@ def wikidata(identifier, ids, srcs):
         res = return_sparql_query_results(query)
         if res['results']['bindings']:
             # TODO: why was this here? request.session['originalkey']
-            notes = "InChiKey generalized by replacing with block1-UHFFFAOYSA-N"
+            notes = "InChiKey generalized by change to block1-UHFFFAOYSA-N"
             srcs["wikidata"].update({"result": 0, "notes": notes})
 
     # have we found the compound?
@@ -188,7 +191,7 @@ def wikidata(identifier, ids, srcs):
     # OK compound has been found go get the data
     eurl = res['results']['bindings'][0]['compound']['value']
     wdid = str(eurl).replace("http://www.wikidata.org/entity/", "")
-    mwurl = wd + wdid  # wd is defined (above) outside of this function
+    mwurl = w + wdid  # 'w' is defined (above) outside of this function
     respnse = requests.get(mwurl)
     if respnse.status_code == 200:
         # response contains many props from which we get specific chemical ones
@@ -244,7 +247,7 @@ def chembl(identifier, meta, ids, descs, srcs):
                 found = cmpd
                 break
         if found:
-            notes = "InChiKey generalized by replacing with block1-UHFFFAOYSA-N"
+            notes = "InChiKey generalized by change to block1-UHFFFAOYSA-N"
             srcs['chembl'].update({"notes": notes})
 
     if not found:
@@ -388,24 +391,24 @@ def pubchemmol(pcid):
     atoms = []
     bonds = []
     chrgs = []
-    for lne in sdf.splitlines():
+    for ln in sdf.splitlines():
         a = re.search(r"([0-9\-.]+)\s+([0-9\-.]+)\s+([0-9\-.]+)\s"
-                      r"([A-Za-z]{1,2})\s+0\s+(\d)\s+0\s+0", lne)
+                      r"([A-Za-z]{1,2})\s+0\s+(\d)\s+0\s+0", ln)
         if a:
             atoms.append([a[1], a[2], a[3], a[4], a[5]])
             continue
-        b = re.search(r"^\s+(\d{1,2})\s+(\d{1,2})\s+(\d)\s+0\s+0\s+0\s+0$", lne)
+        b = re.search(r"^\s+(\d{1,2})\s+(\d{1,2})\s+(\d)\s+0\s+0\s+0\s+0$", ln)
         if b:
             bonds.append([b[1], b[2], b[3]])
             continue
-        c = re.search(r"^M\s+CHG\s+(\d)", lne)
+        c = re.search(r"^M\s+CHG\s+(\d)", ln)
         if c:
             num = int(c[1])
-            rest = lne.replace('M  CHG  ' + str(num), '')
+            rest = ln.replace('M  CHG  ' + str(num), '')
             parts = re.split(r"\s{2,3}", rest.strip())
             for idx, val in enumerate(parts):
                 if (idx % 2) != 0:
                     continue
-                chrgs.append([val, parts[(idx+1)]])
+                chrgs.append([val, parts[(idx + 1)]])
 
     return {'atoms': atoms, 'bonds': bonds, 'chrgs': chrgs}
