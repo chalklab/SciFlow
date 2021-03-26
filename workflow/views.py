@@ -23,7 +23,8 @@ def viewlog(response, lid):
             uid = JsonLookup.objects.get(id=lid).uniqueid
             version = JsonFiles.objects.get(id=fid).version
             updated = JsonFiles.objects.get(id=fid).updated
-            info = "Version: "+str(version)+", Upload Time: "+str(updated)
+            info = "Version: " + str(version) + \
+                ", Upload Time: " + str(updated)
             finfo.update({version: info})
             entries.update({version: []})
             errors.update({version: []})

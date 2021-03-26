@@ -1,12 +1,12 @@
 """example functions for development"""
+# from substances.external import *
+from datafiles.df_functions import *
+from substances.sub_functions import *
 import os
 import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
 
-from substances.sub_functions import *
-from datafiles.df_functions import *
-from substances.external import *
 
 # add a new substance to the database
 add = None
@@ -74,9 +74,13 @@ if runwd:
 # Get data from commonchemistry using CASRNs
 runcc1 = None
 if runcc1:
-    subs = Substances.objects.all().values_list('id', 'casrn').filter(casrn__isnull=False)  # produces tuples
+    subs = Substances.objects.all().values_list(
+        'id', 'casrn').filter(
+        casrn__isnull=False)  # produces tuples
     for sub in subs:
-        found = Sources.objects.filter(substance_id__exact=sub[0], source__exact='comchem')
+        found = Sources.objects.filter(
+            substance_id__exact=sub[0],
+            source__exact='comchem')
         if not found:
             meta, ids, srcs = {}, {}, {}
             comchem(sub[1], meta, ids, srcs)
@@ -88,9 +92,13 @@ if runcc1:
 runcc2 = None
 if runcc2:
     # process compounds with no casrn in substances table
-    subs = Substances.objects.all().values_list('id', flat=True).filter(casrn__isnull=True)
+    subs = Substances.objects.all().values_list(
+        'id', flat=True).filter(
+        casrn__isnull=True)
     for sub in subs:
-        found = Sources.objects.filter(substance_id__exact=sub, source__exact='comchem')
+        found = Sources.objects.filter(
+            substance_id__exact=sub,
+            source__exact='comchem')
         if not found:
             key = getinchikey(sub)
             if key:
