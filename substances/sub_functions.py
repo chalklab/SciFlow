@@ -14,20 +14,24 @@ import string
 def addsubstance(identifier, output='meta'):
     """
     add a new substance to the database and populate identifiers and descriptors
-        The identifier string can be any chemical metadata.  If it is not the inchikey
-        for the compound then the identifier is used to find the inchikey
-        The code checks for the existance of the substance in the substances table before adding
+    The identifier string can be any chemical metadata.  If it is not the
+    inchikey for the compound then the identifier is used to find the inchikey
+    The code checks for the existance of the substance in the substances
+    table before adding
     :param identifier
     :param output determines how much data is returned from the function
     """
 
     # check for substance in the database
-    found = Identifiers.objects.values().filter(value=identifier).values_list('value', 'substance_id')
+    found = Identifiers.objects.values().filter(value=identifier).\
+        values_list('value', 'substance_id')
     found = dict(found)
     if found:
         meta = Substances.objects.get(id=found[identifier])
-        ids = Identifiers.objects.values().filter(substance_id=found[identifier])
-        descs = Descriptors.objects.values().filter(substance_id=found[identifier])
+        ids = Identifiers.objects.values().\
+            filter(substance_id=found[identifier])
+        descs = Descriptors.objects.values().\
+            filter(substance_id=found[identifier])
         srcs = Sources.objects.values().filter(substance_id=found[identifier])
         if output == 'all':
             return meta, ids, descs, srcs
@@ -37,7 +41,8 @@ def addsubstance(identifier, output='meta'):
     # check if the identifier is a inchikey and if not find one from pubchem
     idtype = getidtype(identifier)
     if idtype != "inchikey":
-        key = pubchemsyns(identifier)  # Modified to call this definition directly. Deleted pubchemkey
+        # Modified to call this definition directly. Deleted pubchemkey
+        key = pubchemsyns(identifier)
     else:
         key = identifier
 
@@ -73,7 +78,8 @@ def addsubstance(identifier, output='meta'):
     if "wikidata" in ids:
         if "casrn" in ids['wikidata']:
             casrn = ids['wikidata']['casrn']
-    sub = Substances(name=nm, formula=fm, molweight=mw, monomass=mm, casrn=casrn)
+    sub = Substances(name=nm, formula=fm, molweight=mw,
+                     monomass=mm, casrn=casrn)
     sub.save()
     subid = sub.id
 
@@ -144,7 +150,7 @@ def getsubdata(identifier):
     except Exception as exception:
         srcs.update({"classyfire": {"result": 0, "notes": exception}})
     try:
-        wikidata(identifier, meta, ids, descs, srcs)
+        wikidata(identifier, ids, srcs)
     except Exception as exception:
         srcs.update({"wikidata": {"result": 0, "notes": exception}})
     try:
@@ -152,7 +158,7 @@ def getsubdata(identifier):
     except Exception as exception:
         srcs.update({"chembl": {"result": 0, "notes": exception}})
     try:
-        comchem(identifier, meta, ids, descs, srcs)
+        comchem(identifier, meta, ids, srcs)
     except Exception as exception:
         srcs.update({"comchem": {"result": 0, "notes": exception}})
 

@@ -91,7 +91,8 @@ def pubchem(identifier, meta, ids, descs, srcs):
                     for y in x["data"]:
                         if y["urn"]["label"] == "Fingerprint" and \
                                 y["urn"]["name"] == "Shape":
-                            descs["pubchem"]["fingerprint"] = y["value"]["slist"]
+                            descs["pubchem"]["fingerprint"] = \
+                                y["value"]["slist"]
                         elif y["urn"]["label"] == "Shape" and \
                                 y["urn"]["name"] == "Volume":
                             descs["pubchem"]["volume3D"] = y["value"]["fval"]
@@ -140,11 +141,15 @@ def classyfire(identifier, descs, srcs):
             descs["classyfire"]["node"] = []
             for node in respnse['intermediate_nodes']:
                 descs["classyfire"]["node"].append(node["chemont_id"])
-    descs["classyfire"]["direct_parent"] = str(respnse['direct_parent']["chemont_id"])
+    descs["classyfire"]["direct_parent"] = \
+        str(respnse['direct_parent']["chemont_id"])
     descs["classyfire"]["alternative_parent"] = []
     for alt in respnse['alternative_parents']:
         descs["classyfire"]["alternative_parent"].append(alt["chemont_id"])
     srcs["classyfire"].update({"result": 1})
+
+
+wd = "https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&entity="
 
 
 def wikidata(identifier, ids, srcs):
@@ -183,7 +188,7 @@ def wikidata(identifier, ids, srcs):
     # OK compound has been found go get the data
     eurl = res['results']['bindings'][0]['compound']['value']
     wdid = str(eurl).replace("http://www.wikidata.org/entity/", "")
-    mwurl = "https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&entity=" + wdid
+    mwurl = wd + wdid  # wd is defined (above) outside of this function
     respnse = requests.get(mwurl)
     if respnse.status_code == 200:
         # response contains many props from which we get specific chemical ones
