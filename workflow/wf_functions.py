@@ -4,6 +4,7 @@ from datafiles.df_functions import *
 from substances.sub_functions import *
 from datafiles.models import *
 from sciflow import gvars
+from django.db.models import Max
 import json
 
 
@@ -78,8 +79,12 @@ def normalize(dfile, sections, user, jl):
                     graphid = subingraph(subid)
                     if not ffileid:
                         # not in graph or in facet_lookup (but in DB) so create sd file and add to both
-                        ffile = createsubjld(key)
+                        ffile = createsubjld(subid)
                         # add facet file to DB
+                        maxid = FacetLookup.objects.all().aggregate(Max('id'))['id__max']
+                        nextid = maxid + 1 if maxid else 1
+                        fid = str(nextid).rjust(8, '0')  # creates id with the right length
+                        ffile['@id'] = "https://scidata.unf.edu/facet/" + fid
                         ffileid = addfacetfile(ffile, user)
                         if not ffileid:
                             errorlog("WF_E05: Compound file metadata for substance id "+str(subid)+" not added to facet_lookup")
@@ -89,11 +94,12 @@ def normalize(dfile, sections, user, jl):
                         updatesubstance(subid, 'facet_lookup_id', ffileid)
                         actlog("WF_A06: Created compound facet file id "+str(ffileid)+" and added to DB")
                     if not graphid:
+                        namedgraph = 'https://scidata.unf.edu/facet/' + str(ffileid)
                         # has the jsonld file been saved in the DB but not added to the graph?
-                        if addgraph('facet', ffileid, 'remote'):
+                        if addgraph('facet', ffileid, 'remote', namedgraph):
                             # update ftype table with id
                             sub = Substances.objects.get(id=subid)
-                            sub.graphdb = 'https://scidata.unf.edu/facet/' + str(ffileid)
+                            sub.graphdb = namedgraph
                             sub.save()
                             actlog("WF_A07: Compound file id "+str(ffileid)+" added to GraphDB")
                         else:
@@ -110,7 +116,7 @@ def normalize(dfile, sections, user, jl):
                     for fidx, facet in enumerate(facets):
                         if facet['@id'] == facetid:
                             # update datafile facet entry
-                            finfo = {"@id": normid, "@type": "sci:" + section}
+                            finfo = {"@id": normid, "@type": "sdo:" + section}
                             dfile['@graph']['scidata']['system']['facets'][fidx] = finfo
                             break
 
@@ -128,7 +134,7 @@ def normalize(dfile, sections, user, jl):
     if updated:
         atid = dfile['@id']
         parts = atid.split('/')
-        if addgraph('data', parts[4], 'remote'):
+        if addgraph('data', parts[4], 'remote', dfile['@id']):
             actlog("WF_A09: Normalized version of data file added to Graph DB: "+str(parts[4]))
             return True
         else:

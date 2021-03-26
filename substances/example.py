@@ -18,7 +18,8 @@ if add:
         exit()
 
     # generate the JSON-LD file for the substance
-    jsonld = createsubjld(key)
+    subid = added.id
+    jsonld = createsubjld(subid)
 
     # store the JSON-LD in the facet_lookups/facet_files tables
     facetid = addfacetfile(jsonld)
@@ -45,7 +46,8 @@ if runpc:
 # check output of chembl request
 runcb = None
 if runcb:
-    key = 'VWNMWKSURFWKAL-HXOBKFHXSA-N'
+    key = 'REEUVFCVXKWOFE-UHFFFAOYSA-K'
+    # key = 'aspirin'
     meta, ids, descs, srcs = {}, {}, {}, {}
     chembl(key, meta, ids, descs, srcs)
     print(meta, ids, descs)
@@ -55,22 +57,72 @@ if runcb:
 runcf = None
 if runcf:
     key = 'VWNMWKSURFWKAL-HXOBKFZXSA-N'  # (bad inchikey)
-    meta, ids, descs, srcs = {}, {}, {}, {}
-    classyfire(key, meta, ids, descs, srcs)
-    print(meta, ids, descs)
+    descs, srcs = {}, {}
+    classyfire(key, descs, srcs)
+    print(descs)
     print(json.dumps(srcs, indent=4))
 
 # check output of wikidata request
 runwd = None
 if runwd:
     key = 'BSYNRYMUTXBXSQ-CHALKCHALK-N'  # (bad inchikey for aspirin)
-    meta, ids, descs, srcs = {}, {}, {}, {}
-    wikidata(key, meta, ids, descs, srcs)
-    print(meta, ids, descs)
+    ids, srcs = {}, {}
+    wikidata(key, ids, srcs)
+    print(ids)
     print(json.dumps(srcs, indent=4))
 
+# Get data from commonchemistry using CASRNs
+runcc1 = None
+if runcc1:
+    subs = Substances.objects.all().values_list('id', 'casrn').filter(casrn__isnull=False)  # produces tuples
+    for sub in subs:
+        found = Sources.objects.filter(substance_id__exact=sub[0], source__exact='comchem')
+        if not found:
+            meta, ids, srcs = {}, {}, {}
+            comchem(sub[1], meta, ids, srcs)
+            saveids(sub[0], ids)
+            savesrcs(sub[0], srcs)
+            print(sub)
+            print(json.dumps(srcs, indent=4))
+
+runcc2 = None
+if runcc2:
+    # process compounds with no casrn in substances table
+    subs = Substances.objects.all().values_list('id', flat=True).filter(casrn__isnull=True)
+    for sub in subs:
+        found = Sources.objects.filter(substance_id__exact=sub, source__exact='comchem')
+        if not found:
+            key = getinchikey(sub)
+            if key:
+                meta, ids, srcs = {}, {}, {}
+                if comchem(key, meta, ids, srcs):
+                    saveids(sub, ids)
+                    # update casrn field in substances
+                    updatesubstance(sub, 'casrn', ids['comchem']['casrn'])
+                    print('CASRN updated')
+                savesrcs(sub, srcs)
+                print(sub)
+                print(json.dumps(srcs, indent=4))
+            else:
+                print(sub)
+
+runlm = True
+if runlm:
+    apipath = "https://commonchemistry.cas.org/api/detail?cas_rn="
+    f = open("reach_ids.txt", "r")
+    for line in f:
+        parts = line.replace('\n', '').split(':')
+        print(parts)
+        res = requests.get(apipath + parts[1])
+        if res.status_code == 200:
+            with open(parts[0] + '.json', 'w') as outfile:
+                json.dump(res.json(), outfile)
+                print('Found')
+        else:
+            print('Not found')
+
 # check output of getinchikey function
-rungi = True
+rungi = None
 if rungi:
     subid = 1
     out = getinchikey(subid)

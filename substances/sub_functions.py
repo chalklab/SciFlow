@@ -3,7 +3,6 @@ from django.db.models import Q
 from substances.external import *
 from substances.models import *
 from crosswalks.models import *
-from sciflow import gvars
 from datetime import datetime
 from workflow.log_functions import *
 import json
@@ -14,21 +13,25 @@ import string
 
 def addsubstance(identifier, output='meta'):
     """
-    add a new substance to the database and populate identifiers and descriptors
-        The identifier string can be any chemical metadata.  If it is not the inchikey
-        for the compound then the identifier is used to find the inchikey
-        The code checks for the existance of the substance in the substances table before adding
+    add new substance to the database and populate identifiers and descriptors
+    The identifier string can be any chemical metadata.  If it is not the
+    inchikey for the compound then the identifier is used to find the inchikey
+    The code checks for the existance of the substance in the substances
+    table before adding
     :param identifier
     :param output determines how much data is returned from the function
     """
 
     # check for substance in the database
-    found = Identifiers.objects.values().filter(value=identifier).values_list('value', 'substance_id')
+    found = Identifiers.objects.values().filter(value=identifier).\
+        values_list('value', 'substance_id')
     found = dict(found)
     if found:
         meta = Substances.objects.get(id=found[identifier])
-        ids = Identifiers.objects.values().filter(substance_id=found[identifier])
-        descs = Descriptors.objects.values().filter(substance_id=found[identifier])
+        ids = Identifiers.objects.values().\
+            filter(substance_id=found[identifier])
+        descs = Descriptors.objects.values().\
+            filter(substance_id=found[identifier])
         srcs = Sources.objects.values().filter(substance_id=found[identifier])
         if output == 'all':
             return meta, ids, descs, srcs
@@ -38,7 +41,8 @@ def addsubstance(identifier, output='meta'):
     # check if the identifier is a inchikey and if not find one from pubchem
     idtype = getidtype(identifier)
     if idtype != "inchikey":
-        key = pubchemsyns(identifier)  # Modified to call this definition directly. Deleted pubchemkey
+        # Modified to call this definition directly. Deleted pubchemkey
+        key = pubchemsyns(identifier)
     else:
         key = identifier
 
@@ -52,22 +56,30 @@ def addsubstance(identifier, output='meta'):
     mm = 0
     casrn = None
     if "pubchem" in ids:
-        nm = ids['pubchem']['iupacname']
+        if "iupacname" in ids['pubchem']:
+            nm = ids['pubchem']['iupacname']
     elif "chembl" in meta:
         if meta['chembl']['prefname'] is not None:
             nm = meta['chembl']['prefname']
     if "pubchem" in meta:
-        fm = meta['pubchem']['formula']
-        mw = meta['pubchem']['mw']
-        mm = meta['pubchem']['mim']
+        if "formula" in meta['pubchem']:
+            fm = meta['pubchem']['formula']
+        if "mw" in meta['pubchem']:
+            mw = meta['pubchem']['mw']
+        if "mim" in meta['pubchem']:
+            mm = meta['pubchem']['mim']
     elif "chembl" in meta:
-        fm = meta['chembl']['full_molformula']
-        mw = meta['chembl']['full_mwt']
-        mm = meta['chembl']['mw_monoisotopic']
+        if "full_molformula" in meta['chembl']:
+            fm = meta['chembl']['full_molformula']
+        if "full_mwt" in meta['chembl']:
+            mw = meta['chembl']['full_mwt']
+        if "mw_monoisotopic" in meta['chembl']:
+            mm = meta['chembl']['mw_monoisotopic']
     if "wikidata" in ids:
         if "casrn" in ids['wikidata']:
             casrn = ids['wikidata']['casrn']
-    sub = Substances(name=nm, formula=fm, molweight=mw, monomass=mm, casrn=casrn)
+    sub = Substances(name=nm, formula=fm, molweight=mw,
+                     monomass=mm, casrn=casrn)
     sub.save()
     subid = sub.id
 
@@ -127,24 +139,29 @@ def getidtype(identifier):
 
 
 def getsubdata(identifier):
-    """ searches for compound in database and gets its data or adds new compound with data """
+    """searches for cmpd in DB and gets data or adds new cmpd with data"""
     meta, ids, descs, srcs = {}, {}, {}, {}
     try:
         pubchem(identifier, meta, ids, descs, srcs)
     except Exception as exception:
         srcs.update({"pubchem": {"result": 0, "notes": exception}})
     try:
-        classyfire(identifier, meta, ids, descs, srcs)
+        classyfire(identifier, descs, srcs)
     except Exception as exception:
         srcs.update({"classyfire": {"result": 0, "notes": exception}})
     try:
-        wikidata(identifier, meta, ids, descs, srcs)
+        wikidata(identifier, ids, srcs)
     except Exception as exception:
         srcs.update({"wikidata": {"result": 0, "notes": exception}})
     try:
         chembl(identifier, meta, ids, descs, srcs)
     except Exception as exception:
         srcs.update({"chembl": {"result": 0, "notes": exception}})
+    try:
+        comchem(identifier, meta, ids, srcs)
+    except Exception as exception:
+        srcs.update({"comchem": {"result": 0, "notes": exception}})
+
     return meta, ids, descs, srcs
 
 
@@ -154,26 +171,29 @@ def getmeta(subid):
     return meta
 
 
-def createsubjld(identifier):
-    """ create a SciData JSON-LD file for a compound, ingest in the graph and update DB with graph location """
+def createsubjld(subid):
+    """
+    create SciData JSON-LD file for cmpd,
+    ingest in graph and update DB with graphname
+    """
 
     # get the substance template file from the database
     tmpl = Templates.objects.get(type="compound")
     sd = json.loads(tmpl.json)
     cmpd = sd['@graph']['scidata']['system']['facets'][0]
 
-    # get the metadata fields from the database that need to be included in the file
+    # get the metadata fields from the DB that need to be included in the file
     fields = Metadata.objects.filter(sdsubsection="compound")
 
     # get the substance info (metadata, identifiers, descriptors)
-    subid = getsubid(identifier)
     substance = Substances.objects.get(id=subid)
     ids = dict(substance.identifiers_set.all().values_list('type', 'value'))
     descs = substance.descriptors_set.all().values_list('type', 'value')
 
     # add general metadata
     sd['generatedAt'] = str(datetime.now())
-    sd['@graph']['title'] = "Chemical Substance SciData JSON-LD file for " + substance.name
+    title = "Chemical Substance SciData JSON-LD file for " + substance.name
+    sd['@graph']['title'] = title
 
     # add general compound metadata
     cmpd['name'] = substance.name
@@ -187,15 +207,16 @@ def createsubjld(identifier):
         section = field.sdsubsubsection
         value = []
         if section == 'identifiers':
-            # if identifier is inchikey then populate other locations in json file
-            value = get_item(ids, label)
+            # if identifier=inchikey then populate other locations in json file
+            val = get_item(ids, label)
             if label == 'inchikey':
                 last = len(sd['@context']) - 1
-                base = sd['@context'][last]['@base'].replace("<inchikey>", value)
+                base = sd['@context'][last]['@base'].replace("<inchikey>", val)
                 sd['@context'][last]['@base'] = base
                 sd['@graph']['@id'] = base
                 sd['@graph']['permalink'] = base
-                sd['@graph']['uid'] = sd['@graph']['uid'].replace("<inchikey>", value)
+                uid = sd['@graph']['uid'].replace("<inchikey>", val)
+                sd['@graph']['uid'] = uid
         elif section == 'descriptors':
             if field.group is None:
                 # expecting only one value in list
@@ -212,7 +233,8 @@ def createsubjld(identifier):
                         for val in vlst:
                             if field.datatype == "xsd:string":
                                 value.append(val)
-                            elif field.datatype == "xsd:integer" or field.datatype == "xsd:nonNegativeInteger":
+                            elif field.datatype == "xsd:integer" or \
+                                    field.datatype == "xsd:nonNegativeInteger":
                                 value.append(int(val))
         # add field to cmpd
         if field.output == "datum":
@@ -239,12 +261,12 @@ def createsubjld(identifier):
         els = []
         ids = list(sd['@graph']['ids'])
         for i, symbol in enumerate(elements):
-            idx = str(i+1)
+            idx = str(i + 1)
             name = elementdata(symbol, 'Symbol', 'Name')
             chebi = elementdata(symbol, 'Symbol', 'ChEBI')
             ids.append(chebi)
             el = {}
-            el.update({"@id": "element/"+idx+"/"})
+            el.update({"@id": "element/" + idx + "/"})
             el.update({"@type": "obo:NCIT_C1940"})
             el.update({"name": name})
             el.update({"element": chebi})
@@ -271,16 +293,16 @@ def createsubjld(identifier):
         # create atom section for file
         atms = []
         for i, atom in enumerate(atoms):
-            idx = str(i+1)
+            idx = str(i + 1)
             atm = {}
-            atm.update({"@id": "atom/"+idx+"/"})
+            atm.update({"@id": "atom/" + idx + "/"})
             atm.update({"@type": "obo:CHEBI_33250"})
             eidx = None
             for key, value in enumerate(elements):
                 if value == atom[3]:
-                    eidx = str(key+1)
+                    eidx = str(key + 1)
                     break
-            atm.update({"element": "element/"+eidx+"/"})
+            atm.update({"element": "element/" + eidx + "/"})
             atm.update({"xcoord": atom[0]})
             atm.update({"ycoord": atom[1]})
             atm.update({"zcoord": atom[2]})
@@ -302,12 +324,12 @@ def createsubjld(identifier):
         # create bond seection for file
         bnds = []
         for i, bond in enumerate(bonds):
-            idx = str(i+1)
+            idx = str(i + 1)
             bnd = {}
-            bnd.update({"@id": "bond/"+idx+"/"})
+            bnd.update({"@id": "bond/" + idx + "/"})
             bnd.update({"@type": "ss:SIO_011118"})
             bnd.update({"order": bond[2]})
-            atms = ["atom/"+str(bond[0])+"/", "atom/"+str(bond[1])+"/"]
+            atms = ["atom/" + str(bond[0]) + "/", "atom/" + str(bond[1]) + "/"]
             bnd.update({"atoms": atms})
             bnds.append(bnd)
 
@@ -321,12 +343,12 @@ def createsubjld(identifier):
 
 
 def get_item(d, key):
-    """ extracts the value of dictionary using the key variable for the field name """
+    """extracts value of dictionary using the key variable as field name"""
     return d.get(key)
 
 
 def get_items(tpls, key):
-    """ extracts values from tuples where the first value is equal to the key """
+    """extracts values from tuples where the first value is equals the key"""
     lst = []
     for tpl in tpls:
         if tpl[0] == key:
@@ -341,15 +363,19 @@ def saveids(subid, ids):
             # check if value is list or string
             if isinstance(v, list):
                 for x in v:
-                    ident = Identifiers(substance_id=subid, type=k, value=x, source=source)
+                    ident = Identifiers(substance_id=subid, type=k, value=x,
+                                        source=source)
                     ident.save()
             else:
+                # add random str in iso field to make csmiles pseudo 'unique'
                 if k == 'csmiles':
                     chars = string.ascii_uppercase + string.digits
                     rstr = ''.join(random.choice(chars) for _ in range(5))
-                    ident = Identifiers(substance_id=subid, type=k, value=v, iso=rstr, source=source)
+                    ident = Identifiers(substance_id=subid, type=k, value=v,
+                                        iso=rstr, source=source)
                 else:
-                    ident = Identifiers(substance_id=subid, type=k, value=v, source=source)
+                    ident = Identifiers(substance_id=subid, type=k, value=v,
+                                        source=source)
                 ident.save()
 
 
@@ -363,7 +389,8 @@ def getsubids(identifier):
         # get substance table id
         subid = getsubid(identifier)
     # get all entries in the identifiers table for this substance_id
-    ids = Identifiers.objects.values().filter(substance_id__exact=subid).values_list('type', 'value')
+    ids = Identifiers.objects.values().\
+        filter(substance_id__exact=subid).values_list('type', 'value')
     return dict(ids)
 
 
@@ -377,7 +404,8 @@ def getsubdescs(identifier):
         # get substance table id
         subid = getsubid(identifier)
     # get all entries in the identifiers table for this substance_id
-    ids = Descriptors.objects.values().filter(substance_id__exact=subid).values_list('type', 'value')
+    ids = Descriptors.objects.values().\
+        filter(substance_id__exact=subid).values_list('type', 'value')
     return dict(ids)
 
 
@@ -391,7 +419,8 @@ def getsubsrcs(identifier):
         # get substance table id
         subid = getsubid(identifier)
     # get all entries in the identifiers table for this substance_id
-    ids = Sources.objects.values().filter(substance_id__exact=subid).values_list('type', 'value')
+    ids = Sources.objects.values().\
+        filter(substance_id__exact=subid).values_list('type', 'value')
     return dict(ids)
 
 
@@ -402,10 +431,12 @@ def savedescs(subid, descs):
             # check if value is list or string
             if isinstance(v, list):
                 for x in v:
-                    desc = Descriptors(substance_id=subid, type=k, value=x, source=source)
+                    desc = Descriptors(substance_id=subid, type=k, value=x,
+                                       source=source)
                     desc.save()
             else:
-                desc = Descriptors(substance_id=subid, type=k, value=v, source=source)
+                desc = Descriptors(substance_id=subid, type=k, value=v,
+                                   source=source)
                 desc.save()
 
 
@@ -413,12 +444,13 @@ def savesrcs(subid, srcs):
     """ save sources data """
     # srcs = {"pubchem": {"result":1, "notes":None}
     for x, y in srcs.items():
-        src = Sources(substance_id=subid, source=x, result=y["result"], notes=y.get("notes", "Null"))
+        src = Sources(substance_id=subid, source=x, result=y["result"],
+                      notes=y.get("notes", "Null"))
         src.save()
 
 
 def getsubid(identifier):
-    """get the substance table id for a substance identifier - or return false if not found"""
+    """get substance id for substance identifier - return false if not found"""
     sub = Substances.objects.all().filter(identifiers__value__exact=identifier)
     if sub:
         return sub[0].id
@@ -428,7 +460,8 @@ def getsubid(identifier):
 
 def subingraph(subid):
     """ whatever is in the graphdb field for a substance"""
-    found = Substances.objects.all().values_list('graphdb', flat=True).get(id=subid)
+    found = Substances.objects.all().\
+        values_list('graphdb', flat=True).get(id=subid)
     if found:
         return found
     return False
@@ -436,7 +469,8 @@ def subingraph(subid):
 
 def subinfiles(subid):
     """ whatever is in the graphdb field for a substance"""
-    found = Substances.objects.all().values_list('facet_lookup_id', flat=True).get(id=subid)
+    found = Substances.objects.all().\
+        values_list('facet_lookup_id', flat=True).get(id=subid)
     if found:
         return found
     return False
@@ -445,20 +479,23 @@ def subinfiles(subid):
 def getinchikey(subid):
     """ get the InChIKey of compound from its substance_id """
     # try pubchem
-    found = Identifiers.objects.all().values_list('value', flat=True).filter(substance_id=subid, type='inchikey')
+    found = Identifiers.objects.all().values_list('value', flat=True).\
+        filter(substance_id=subid, type='inchikey')
     keys = list(set(found))
     if len(keys) == 0:
-        errorlog("SUB_E01: Could not find inchikey for substance " + str(subid))
+        errorlog("SUB_E01: Couldn't find inchikey for substance " + str(subid))
     elif len(keys) == 1:
-        actlog("SUB_A01: Found inchikey '" + str(keys) + "' for substance " + str(subid))
+        actlog(
+            "SUB_A01: Got inchikey '" + str(keys) + "' for sub " + str(subid))
         return keys[0]
     elif len(keys) > 1:
-        errorlog("SUB_E02: Multiple inchikeys (" + str(keys) + ") for substance " + str(subid))
+        errorlog(
+            "SUB_E02: Many inchikeys (" + str(keys) + ") 4 sub " + str(subid))
     return False
 
 
 def subsearch(query):
-    """ searches based on the value field in the identifiers table and returns all substances pertaining to it"""
+    """search based on value field in identifiers and returns all substances"""
     if query is not None:
         lookups = Q(value__icontains=query)
         j = Identifiers.objects.filter(lookups).distinct()
@@ -490,11 +527,13 @@ def elementdata(strng, field1, field2):
     return answer
 
 
-searchterms = {'compound': ['^[A-Z]{14}-[A-Z]{10}-[A-Z]$', '^InChI=', '^[0-9]{2,7}-[0-9]{2}-[0-9]$']}
+searchterms = {'compound': ['^[A-Z]{14}-[A-Z]{10}-[A-Z]$',
+                            '^InChI=',
+                            '^[0-9]{2,7}-[0-9]{2}-[0-9]$']}
 
 
 def getaddsub(section, meta):
-    """ take an array of metadata from a compounds section and find out if it is the database """
+    """ take array of metadata from a cmpds section and find in DB """
     regexs = searchterms[section]
     subid = False
     identifier = False

@@ -7,10 +7,10 @@ from zipfile import ZipFile
 
 
 def sublist(request):
-    """view to generare list of substances on homepage"""
+    """view to generate list of substances on homepage"""
     if request.method == "POST":
         query = request.POST.get('q')
-        return redirect('search/'+str(query))
+        return redirect('/substances/search/' + str(query))
 
     substances = Substances.objects.all().order_by('name')
     return render(request, "substances/list.html", {'substances': substances})
@@ -21,7 +21,8 @@ def home(request):
     subcount = Substances.objects.count()
     idcount = Identifiers.objects.count()
     descount = Descriptors.objects.count()
-    return render(request, "substances/home.html", {'subcount': subcount, 'idcount': idcount, 'descount': descount})
+    return render(request, "substances/home.html",
+                  {'subcount': subcount, 'idcount': idcount, 'descount': descount})
 
 
 def subview(request, subid):
@@ -38,14 +39,17 @@ def subview(request, subid):
                 break
         m, i, descs, srcs = getsubdata(key)
         savedescs(subid, descs)
-    return render(request, "substances/subview.html", {'substance': substance, "ids": ids, "descs": descs, "srcs": srcs})
+    return render(request, "substances/subview.html",
+                  {'substance': substance, "ids": ids,
+                   "descs": descs, "srcs": srcs})
 
 
 def subids(request, subid):
     """present an overview page about the substance in sciflow"""
     substance = Substances.objects.get(id=subid)
     ids = substance.identifiers_set.all()
-    return render(request, "substances/subids.html", {'substance': substance, "ids": ids})
+    return render(request, "substances/subids.html",
+                  {'substance': substance, "ids": ids})
 
 
 def subdescs(request, subid):
@@ -61,20 +65,23 @@ def subdescs(request, subid):
                 break
         m, i, descs = getsubdata(key)
         savedescs(subid, descs)
-    return render(request, "substances/subdescs.html", {'substance': substance, "descs": descs})
+    return render(request, "substances/subdescs.html",
+                  {'substance': substance, "descs": descs})
 
 
 def add(request, identifier):
-    """ check the identifier to see if compound already in system and if not add """
+    """ check identifier to see if compound already in system and if not add """
     # id the compound in the database?
-    hits = Substances.objects.all().filter(identifiers__value__exact=identifier).count()
+    hits = Substances.objects.all().filter(
+        identifiers__value__exact=identifier).count()
     if hits == 0:
         meta, ids, descs, srcs = addsubstance(identifier, 'all')
     else:
         subid = getsubid(identifier)
         return redirect("/substances/view/" + str(subid))
 
-    return render(request, "substances/add.html", {"hits": hits, "meta": meta, "ids": ids, "descs": descs})
+    return render(request, "substances/add.html",
+                  {"hits": hits, "meta": meta, "ids": ids, "descs": descs})
 
 
 def ingest(request):
@@ -82,18 +89,47 @@ def ingest(request):
     if request.method == "POST":
         if 'ingest' in request.POST:
             inchikey = request.POST.get('ingest')
-            matchgroup = re.findall('[A-Z]{14}-[A-Z]{10}-[A-Z]', inchikey)
-            for match in matchgroup:
-                print(match)
-                hits = Substances.objects.all().filter(identifiers__value__exact=match).count()
-                if hits == 0:
-                    meta, ids, descs, srcs = addsubstance(match, 'all')
-                    print("Adding!")
-                else:
-                    subid = getsubid(match)
-                    print("Found!")
-            print("Done!")
-    return render(request, "substances/ingest.html", {})
+            # TODO iterate over list of inchikeys instead of taking one inchikey
+            #  Borrow script from substances.subfunctions def getidtype
+            # if adding one inchikey, redirect to view page. If adding list,
+            # show message for number of substances added
+            return redirect("/substances/add/" + str(inchikey))
+        elif 'upload' in request.FILES.keys():
+            file = request.FILES['upload']
+            fname = file.name
+            subs = []
+            if fname.endswith('.json'):
+                jdict = json.loads(file.read())
+                for key in jdict['keys']:
+                    subid = getsubid(key)
+                    status = None
+                    if not subid:
+                        status = 'new'
+                        sub = addsubstance(key, 'sub')
+                        subid = sub.id
+                    else:
+                        status = 'present'
+                    meta = getmeta(subid)
+                    subs.append(
+                        {'id': meta['id'], 'name': meta['name'],
+                         'status': status})
+                    request.session['subs'] = subs
+                return redirect("/substances/list/")
+            elif fname.endswith('.zip'):
+                with ZipFile(file) as zfile:
+                    filenames = []
+                    for info in zfile.infolist():
+                        name = info.filename
+                        filenames.append(name)
+                    for file in filenames:
+                        data = zfile.read(file)
+                        m = re.search('^[A-Z]{14}-[A-Z]{10}-[A-Z]$', str(data))
+                        if m:
+                            print(m)
+                        else:
+                            print(':(')
+    return render(request, "substances/ingest.html",)
+
 
 def ingestlist(request):
     """ add many compounds from a text file list of identifiers """
@@ -101,7 +137,9 @@ def ingestlist(request):
     file = open(path)
     lines = file.readlines()
     # get a list of all chemblids currently in the DB
-    qset = Identifiers.objects.all().filter(type__exact='chembl').values_list('value', flat=True)
+    qset = Identifiers.objects.all().filter(
+        type__exact='chembl').values_list(
+        'value', flat=True)
     chemblids = sublist(qset)
     count = 0
     names = []
@@ -117,14 +155,23 @@ def ingestlist(request):
 
 
 def normalize(request, identifier):
-    """ create a SciData JSON-LD file for a compound, ingest in the graph and update data file with graph location """
-    success = createsubjld(identifier)
+    """
+    create a SciData JSON-LD file for a compound, ingest in the graph
+    and update data file with graph location
+    """
+    subid = getsubid(identifier)
+    success = createsubjld(subid)
     return render(request, "substances/normalize.html", {"success": success})
 
 
 def list(request):
     """emtpy view to be accessed via redirect from ingest above"""
-    return render(request, "substances/list.html", {"substances": request.session['subs']})
+    if 'subs' in request.session:
+        subs = request.session['subs']
+    else:
+        subs = Substances.objects.all().order_by('name')
+
+    return render(request, "substances/list.html", {"substances": subs})
 
 
 def search(request, query):
@@ -133,6 +180,6 @@ def search(request, query):
 
     if request.method == "POST":
         query = request.POST.get('q')
-        return redirect('/substances/search/'+str(query))
+        return redirect('/substances/search/' + str(query))
 
     return render(request, "substances/search.html", context)
