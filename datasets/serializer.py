@@ -32,5 +32,3 @@ class DatasetSerializer(serializers.ModelSerializer):
         model = Datasets
         fields = '__all__'
         depth = 1
-
-

@@ -2,12 +2,13 @@
 import os
 import django
 import json
+from datasets.serializer import *
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
 
 
-from datasets.serializer import *
+
 
 
 set = DatasetSerializer(Datasets.objects.get(id=5))

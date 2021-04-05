@@ -1,5 +1,4 @@
 """ django views file for the datasets app """
-from django.shortcuts import redirect
 from datasets.serializer import *
 from datafiles.forms import *
 from django.shortcuts import render
@@ -21,16 +20,3 @@ def viewdataset(request, setid):
     """view a dataset list of files"""
     dataset = DatasetSerializer(Datasets.objects.get(id=setid))
     return render(request, "datasets/viewdataset.html", {'dataset': dataset.data})
-
-
-
-
-
-
-
-
-
-
-
-
-

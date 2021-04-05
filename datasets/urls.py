@@ -8,4 +8,3 @@ urlpatterns = [
     path('datasets/index/', views.index, name='index'),
     path("datasets/view/<setid>", views.viewdataset, name='view'),
 ]
-

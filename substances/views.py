@@ -89,11 +89,13 @@ def ingest(request):
     if request.method == "POST":
         if 'ingest' in request.POST:
             inchikey = request.POST.get('ingest')
-            # TODO iterate over list of inchikeys instead of taking one inchikey
-            #  Borrow script from substances.subfunctions def getidtype
-            # if adding one inchikey, redirect to view page. If adding list,
-            # show message for number of substances added
-            return redirect("/substances/add/" + str(inchikey))
+            matchgroup = re.findall('[A-Z]{14}-[A-Z]{10}-[A-Z]', inchikey)
+            for match in matchgroup:
+                hits = Substances.objects.all().filter(identifiers__value__exact=match).count()
+                if hits == 0:
+                    meta, ids, descs, srcs = addsubstance(match, 'all')
+                else:
+                    subid = getsubid(match)
         elif 'upload' in request.FILES.keys():
             file = request.FILES['upload']
             fname = file.name
