@@ -89,12 +89,12 @@ def normalize(dfile, sections, user, jl):
                     ffileid = subinfiles(subid)
                     graphid = subingraph(subid)
                     if not ffileid:
-                        # not in graph or in facet_lookup (but in DB) so create
+                        # not in graph or facet_lookup (but in DB) so create
                         # sd file and add to both
                         ffile = createsubjld(subid)
                         # add facet file to DB
-                        maxid = FacetLookup.objects.all().aggregate(Max('id'))[
-                            'id__max']
+                        maxid = FacetLookup.objects.all().aggregate(
+                            Max('id'))['id__max']
                         nextid = maxid + 1 if maxid else 1
                         fid = str(nextid).rjust(
                             8, '0')  # creates id with the right length
@@ -103,22 +103,20 @@ def normalize(dfile, sections, user, jl):
                         if not ffileid:
                             errorlog(
                                 "WF_E05: Compound file metadata for "
-                                "substance id " + str(subid) +
-                                " not added to facet_lookup")
+                                "substance id " + str(subid)
+                                + " not added to facet_lookup")
                         if not updatefacetfile(ffile):
-                            errorlog(
-                                "WF_E06: Compound file id " +
-                                str(ffileid) +
-                                " was not added to facet_files")
+                            errorlog("WF_E06: Compound file id "
+                                     + str(ffileid)
+                                     + " was not added to facet_files")
                         # now that facet file has be added link to DB table
                         updatesubstance(subid, 'facet_lookup_id', ffileid)
                         actlog(
-                            "WF_A06: Created compound facet file id " +
-                            str(ffileid) +
-                            " and added to DB")
+                            "WF_A06: Created compound facet file id "
+                            + str(ffileid) + " and added to DB")
                     if not graphid:
-                        namedgraph = 'https://scidata.unf.edu/facet/' + \
-                            str(ffileid)
+                        namedgraph = 'https://scidata.unf.edu/facet/' \
+                                     + str(ffileid)
                         # has the jsonld file been saved in the DB but not
                         # added to the graph?
                         if addgraph('facet', ffileid, 'remote', namedgraph):
@@ -127,14 +125,12 @@ def normalize(dfile, sections, user, jl):
                             sub.graphdb = namedgraph
                             sub.save()
                             actlog(
-                                "WF_A07: Compound file id " +
-                                str(ffileid) +
-                                " added to GraphDB")
+                                "WF_A07: Compound file id "
+                                + str(ffileid) + " added to GraphDB")
                         else:
                             errorlog(
-                                "WF_E07: Compound file id " +
-                                str(ffileid) +
-                                " was not added to GraphDB")
+                                "WF_E07: Compound file id " + str(ffileid)
+                                + " was not added to GraphDB")
 
                     # load facet file to extract @id for compound
                     fobjt = FacetFiles.objects.get(facet_lookup_id=ffileid)
@@ -149,7 +145,8 @@ def normalize(dfile, sections, user, jl):
                         if facet['@id'] == facetid:
                             # update datafile facet entry
                             finfo = {"@id": normid, "@type": "sdo:" + section}
-                            dfile['@graph']['scidata']['system']['facets'][fidx] = finfo
+                            # TODO: check that this works
+                            facets[fidx] = finfo  # works as passed by ref
                             # update other internal references
 
                             break
@@ -160,18 +157,12 @@ def normalize(dfile, sections, user, jl):
                     link.facets_lookup_id = ffileid
                     link.save()
                     actlog(
-                        "WF_A08: Compound found in DB: ( " +
-                        str(section) +
-                        ", file id " +
-                        str(ffileid) +
-                        " )")
+                        "WF_A08: Compound found in DB: ( "
+                        + str(section) + ", file id " + str(ffileid) + " )")
                 else:
                     errorlog(
-                        "WF_E08: Compound not found in or added to DB ( " +
-                        str(section) +
-                        ", " +
-                        str(entry) +
-                        " )")
+                        "WF_E08: Compound not found in or added to DB ( "
+                        + str(section) + ", " + str(entry) + " )")
 
     # update file in DB
     updated = updatedatafile(dfile, 'normalized')
@@ -219,12 +210,3 @@ def getaspect(file, mettype):
             return False
     else:
         return False
-
-
-# ----- Logwriter -----
-
-# with Session() as session:
-# slack = Slacker('xoxb-4596507645-1171034330099-eP4swGipytYQHLnomPvBoOPO',
-# session=session)
-# slack.chat.post_message('#workflow-updates', "Filename: " +
-# loginfo["logname"].split("-")[1])
