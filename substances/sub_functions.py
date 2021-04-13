@@ -336,7 +336,7 @@ def createsubjld(subid):
         # add bonds to the cmpd
         cmpd['molgraph']['bonds'] = bnds
 
-    # add compound data into sd file
+    # add compound data into sd template file
     sd['@graph']['scidata']['system']['facets'][0] = cmpd
 
     return sd
@@ -558,7 +558,8 @@ def getaddsub(section, meta):
                                     break
             else:
                 for regex in regexs:
-                    if re.search(regex, value):
+                    # cast all values to str (avoids error)
+                    if re.search(regex, str(value)):
                         identifier = value
                         subid = getsubid(value)
                         break

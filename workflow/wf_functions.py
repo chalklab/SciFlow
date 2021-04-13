@@ -70,7 +70,8 @@ def ingest(upload, user):
 # ----- Normalization -----
 def normalize(dfile, sections, user, jl):
     """
-    normalize a file by replacing out unique things (e.g. compounds, organisms, targets, etc.)
+    normalize a file by replacing out unique things
+    (e.g. compounds, organisms, targets, etc.)
     :param dfile - datafile to be normalized (as dict)
     :param sections - sections of the file that need to be normalized
     :param user - user that submitted the file via the form
@@ -84,7 +85,6 @@ def normalize(dfile, sections, user, jl):
                 subid = getaddsub(section, entry)
 
                 if subid:
-                    key = getinchikey(subid)
                     # substance is already in MySQL
                     ffileid = subinfiles(subid)
                     graphid = subingraph(subid)
@@ -102,8 +102,8 @@ def normalize(dfile, sections, user, jl):
                         ffileid = addfacetfile(ffile, user)
                         if not ffileid:
                             errorlog(
-                                "WF_E05: Compound file metadata for substance id " +
-                                str(subid) +
+                                "WF_E05: Compound file metadata for "
+                                "substance id " + str(subid) +
                                 " not added to facet_lookup")
                         if not updatefacetfile(ffile):
                             errorlog(
@@ -150,6 +150,8 @@ def normalize(dfile, sections, user, jl):
                             # update datafile facet entry
                             finfo = {"@id": normid, "@type": "sdo:" + section}
                             dfile['@graph']['scidata']['system']['facets'][fidx] = finfo
+                            # update other internal references
+
                             break
 
                     # add entry into json_facets
@@ -178,11 +180,12 @@ def normalize(dfile, sections, user, jl):
         parts = atid.split('/')
         if addgraph('data', parts[4], 'remote', dfile['@id']):
             actlog(
-                "WF_A09: Normalized version of data file added to Graph DB: " + str(parts[4]))
+                "WF_A09: Normalized version of datafile added to graph: "
+                + str(parts[4]))
             return True
         else:
             errorlog(
-                "WFE09: Could not save normalized version of data file to Graph DB")
+                "WF_E09: Normalized version of datafile not saved in graph")
         return True
 
 
@@ -203,7 +206,7 @@ def getfacet(file, systype):
 
 
 def getaspect(file, mettype):
-    """gets the aspect data within the scidata methodology section of a file"""
+    """gets the aspects data in the scidata methodology section of a file"""
     output = []
     sd = file['@graph']['scidata']  # can rely on this based on validation
     if 'methodology' in sd.keys():
@@ -221,6 +224,7 @@ def getaspect(file, mettype):
 # ----- Logwriter -----
 
 # with Session() as session:
-# slack = Slacker('xoxb-4596507645-1171034330099-eP4swGipytYQHLnomPvBoOPO', session=session)
+# slack = Slacker('xoxb-4596507645-1171034330099-eP4swGipytYQHLnomPvBoOPO',
+# session=session)
 # slack.chat.post_message('#workflow-updates', "Filename: " +
 # loginfo["logname"].split("-")[1])

@@ -5,7 +5,8 @@ import json
 import re
 
 
-# Variant that only adds the lookup info so errors can be stored. Upon validation addfile is run and the file is actually added.
+# Variant that only adds the lookup info so errors can be stored.
+# Upon validation addfile is run and the file is actually added.
 def adddatafile(dfile, uploading_user=None):
     """
     Add data jsonld metadata to the database
@@ -20,10 +21,15 @@ def adddatafile(dfile, uploading_user=None):
     else:
         m = JsonLookup()
         uid = dfile['@graph']['uid']
-        parts = uid.split(":")
+        parts = None
+        if ':' in uid:
+            parts = uid.split(":")
+        elif '_' in uid:
+            parts = uid.split("_")
 
         # get dataset_id
-        dset = Datasets.objects.get(sourcecode__exact=parts[0], datasetname=parts[1])
+        dset = Datasets.objects.get(
+            sourcecode__exact=parts[0], datasetname=parts[1])
 
         if dset.id:
             m.dataset_id = dset.id
@@ -75,13 +81,15 @@ def updatedatafile(dfile=None, form='raw'):
     if f:  # if there is a version in json_files then check against current
         actlog("DF_A04: Found data file in json_files")
         latest = f.latest('updated')
-        tmp1 = re.sub(r'"generatedAt":"[0-9:\s\-]*"', '"generatedAt": ""', dstr)
-        tmp2 = re.sub(r'"generatedAt":"[0-9:\s\-]*"', '"generatedAt": ""', latest.file)
-        if tmp1 == tmp2:  # checking the files are the same except for creation date
-            actlog("DF_05: Data file is the same as last version - not adding")
+        genatrpl = '"generatedAt": ""'
+        tmp1 = re.sub(r'"generatedAt":"[0-9:\s\-]*"', genatrpl, dstr)
+        tmp2 = re.sub(r'"generatedAt":"[0-9:\s\-]*"', genatrpl, latest.file)
+        if tmp1 == tmp2:  # checking files are same except for creation date
+            actlog("DF_05: Datafile is the same as last version - not adding")
             return {"mid": m.id, "fid": latest.id}
 
-    actlog("DF_A02: Data file is different than last version - adding version "+str(m.currentversion+1)+"...")
+    actlog("DF_A02: Data file is different than last version - adding "
+           + str(m.currentversion+1) + "...")
 
     # update file version
     m.currentversion += 1
@@ -124,7 +132,8 @@ def addfacetfile(ffile=None, uploading_user=None):
         parts = uid.split(":")
 
         # get dataset_id
-        dset = Datasets.objects.get(sourcecode__exact=parts[0], datasetname=parts[1])
+        dset = Datasets.objects.get(
+            sourcecode__exact=parts[0], datasetname=parts[1])
 
         if dset.id:
             m.dataset_id = dset.id
@@ -134,7 +143,7 @@ def addfacetfile(ffile=None, uploading_user=None):
         m.title = ffile['@graph']['title']
         m.type = parts[1]
         m.graphname = ffile['@id']
-        m.currentversion = 0  # because adding the file to facet_files will increment
+        m.currentversion = 0  # adding the file to facet_files will increment
         if uploading_user is None:
             m.auth_user_id = 1
         else:
@@ -173,9 +182,10 @@ def updatefacetfile(ffile=None):
     j = FacetFiles.objects.filter(facet_lookup_id=m.id)
     if j:  # if there is a version in facet_files then check against current
         latest = j.latest('updated')
-        tmp1 = re.sub(r'"generatedAt":".*?"', '"generatedAt": ""', ffile)
-        tmp2 = re.sub(r'"generatedAt":".*?"', '"generatedAt": ""', latest.file)
-        if tmp1 == tmp2:  # checking the files are the same except for creation date
+        genatrpl = '"generatedAt": ""'
+        tmp1 = re.sub(r'"generatedAt":".*?"', genatrpl, ffile)
+        tmp2 = re.sub(r'"generatedAt":".*?"', genatrpl, latest.file)
+        if tmp1 == tmp2:  # checking files are same except for creation date
             return True
 
     # update file version
@@ -198,8 +208,11 @@ def updatefacetfile(ffile=None):
 
 
 def infacetfiles(facetid):
-    """find out if a facet with this id has been saved to the facet_files table"""
-    found = FacetLookup.objects.all().values_list('graphdb', flat=True).get(id=facetid)
+    """
+    find out if a facet with this id has been saved to the facet_files table
+    """
+    found = FacetLookup.objects.all().values_list(
+        'graphdb', flat=True).get(id=facetid)
     if found:
         return True
     else:
