@@ -114,6 +114,8 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': ua}, {'NAME': ml}, {'NAME': cp}, {'NAME': np}
 ]
 
+# database autofield selection (Django 3.2)
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
