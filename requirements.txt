@@ -6,5 +6,5 @@ chembl_webresource_client==0.10.2
 PyLD==2.0.3
 django_debug_toolbar==3.2
 qwikidata==0.4.0
-djangorestframework==3.12.2
+djangorestframework>=3.12.2
 jose==1.0.0
