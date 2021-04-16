@@ -1,10 +1,13 @@
 """ django views file for the datafiles app """
+import json
+
 from django.shortcuts import render
 from datasets.serializer import *
 from datafiles.forms import UploadFileForm
 from workflow.wf_functions import ingest
 from datetime import datetime
 from sciflow import gvars
+from django.http import HttpResponse
 
 
 def ingestion(request):
@@ -29,3 +32,17 @@ def viewfile(request, fileid):
     """view to generate list of substances on homepage"""
     file = JsonLookupSerializer(JsonLookup.objects.get(id=fileid))
     return render(request, "datafiles/viewfile.html", {'file': file.data})
+
+
+def clean(request, fileid):
+    """remove (clean) a datafile and its related data from the system"""
+    # delete datafile record => json_lookup (others deleted on cascade)
+    # TODO: current default in modesl is model.PROTECT not CASCADE
+    JsonLookup.objects.filter(id=fileid).delete()
+    return render(request, "datafiles/cleaned.html", {'fileid': fileid})
+
+
+def jsonld(request, fileid):
+    """send JSON-LD file to browser"""
+    data = JsonFiles.objects.get(id=fileid)
+    return HttpResponse(data.file, content_type="application/ld+json")

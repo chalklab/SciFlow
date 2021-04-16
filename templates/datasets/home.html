@@ -4,6 +4,15 @@
 {% block header %} SciFlow Workflow System {% endblock %}
 
 {% block content %}
-    <p>This website is for adminstration of the conversion workflow for adding SciData format JSON-LD files to a graph DB</p>
-    <p>There are currently <a href="/datasets/index">{{ dscount }} datasets</a>.</p>
+    <h2>Welcome to SciFlow</h2>
+    <p>This website is for adminstration of the workflow for adding SciData
+        format JSON-LD files to a graph DB</p>
+    <p>There are currently
+    <ul>
+        {% for set in sets %}
+        <li><a href="/datasets/view/{{ set.id }}?page=1">
+            {{ set.name }}</a> ({{ set.count }})
+        </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

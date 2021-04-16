@@ -20,7 +20,7 @@ def testimport():
             elif "/facet/" in data["@id"]:
                 filetype = "facet"
 
-            if addfile({"path": filename}, filetype):
+            if adddatafile({"path": filename}, filetype):
                 print("Imported " + filename)
 
 
@@ -29,7 +29,8 @@ def testimport():
 # used in datasets/mysql.py:getcodenames
 def getdatasetnames():
     """ retrieve the shortnames of all the datasets """
-    qset = Datasets.objects.all().values_list('datasetname', flat=True).order_by('id')
+    qset = Datasets.objects.all().values_list(
+        'datasetname', flat=True).order_by('id')
     lst = list(qset)
     return lst
 
@@ -37,7 +38,8 @@ def getdatasetnames():
 # used in datasets/mysql.py:getcodenames
 def getsourcecodes():
     """ retrieve the shortnames of all the datasets """
-    qset = Datasets.objects.all().values_list('sourcecode', flat=True).order_by('id')
+    qset = Datasets.objects.all().values_list(
+        'sourcecode', flat=True).order_by('id')
     lst = list(qset)
     return lst
 
@@ -51,3 +53,26 @@ def getcodesnames():
     for i in range(len(codes)):
         output.update({names[i]: codes[i] + ":" + names[i]})
     return output
+
+
+# used to update dataset stats
+def updatestats():
+    """update the number of files for each different dataset"""
+    # data
+    sets = Datasets.objects.exclude(sourcecode='chalklab').\
+        values_list('id', flat=True)
+    for setid in sets:
+        count = JsonLookup.objects.filter(dataset_id=setid).count()
+        sett = Datasets.objects.get(id=setid)
+        sett.count = count
+        sett.save()
+
+    # facets
+    dnames = Datasets.objects.filter(sourcecode='chalklab').\
+        values_list('id', 'datasetname')
+    for setid, dname in dnames:
+        count = FacetLookup.objects.filter(type=dname).count()
+        sett = Datasets.objects.get(id=setid)
+        sett.count = count
+        sett.save()
+    return
