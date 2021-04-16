@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="SciFlow",
+    name="sciflow",
     version="0.2",
     author="Dylan Johnson, Caleb Weber, Stuart Chalk",
     author_email="n01448636@unf.edu, cweb1182@gmail.com, schalk@unf.edu",
