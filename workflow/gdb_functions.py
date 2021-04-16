@@ -11,8 +11,7 @@ import requests
 
 def addgraph(ftype, fid, locale='local', replace=""):
     """ add a file to GraphDB """
-    fileurl = "https://sds.coas.unf.edu/sciflow/files/" + \
-        ftype + '/' + str(fid)
+    fileurl = "https://sds.coas.unf.edu/sciflow/files/" + ftype + '/' + str(fid)
     if replace != "":
         data = '{"data":"' + fileurl + '","replaceGraphs":["' + replace + '"]}'
     else:
@@ -72,24 +71,18 @@ def graphsize(repo):
     """ get /rest/repositories/{repositoryID}/size
         get the size of the graph"""
     headers = {'Accept': 'application/json'}
-    r = requests.get(
-        "http://localhost:7200/rest/repositories/" +
-        repo +
-        "/size",
-        headers=headers)
+    r = requests.get("http://localhost:7200/rest/repositories/" + repo + "/size",
+                     headers=headers)
     print(r.text)
 
 
-def graphdownload(repo):  # TODO: Make it so this actually writes a file instead of printing
+def graphdownload(repo):
     """ get /rest/repositories/{repositoryID}/download
         downloads the graph """
     headers = {'Accept': 'application/json'}
-    r = requests.get(
-        "http://localhost:7200/rest/repositories/" +
-        repo +
-        "/download",
-        headers=headers)
-
+    r = requests.get("http://localhost:7200/rest/repositories/" + repo + "/download",
+                     headers=headers)
+    # TODO: Make it so this actually writes a file instead of printing
     print(r.text)
 
 
@@ -105,11 +98,8 @@ def graphcontexts(repo):
     """ get /repositories/{repositoryID}/contexts
         gets context """
     headers = {'Accept': 'application/sparql-results+json'}
-    r = requests.get(
-        "http://localhost:7200/repositories/" +
-        repo +
-        "/contexts",
-        headers=headers)
+    r = requests.get("http://localhost:7200/repositories/" + repo + "/contexts",
+                     headers=headers)
     print(r.text)
 
 
@@ -118,12 +108,8 @@ def graphstatementsget(graph, repo):  # TODO: ???
     """ get /repositories/{repositoryID}
         gets all statements of a given graph """
     headers = {'Accept': 'text/plain'}
-    r = requests.get(
-        "http://localhost:7200/repositories/" +
-        repo +
-        "/rdf-graphs/" +
-        graph,
-        headers=headers)
+    r = requests.get("http://localhost:7200/repositories/" + repo + "/rdf-graphs/" + graph,
+                     headers=headers)
     print(r.text)
 
 
@@ -131,14 +117,8 @@ def graphstatementedit(baseuri, update, repo):  # DONE??
     """ put /repositories/{repositoryID}/statements
         updates a statement in the repo """
     headers = {'Content-type': ' application/rdf+xml', 'Accept': 'text/plain'}
-    r = requests.get(
-        "http://localhost:7200/repositories/" +
-        repo +
-        "/statements?update=" +
-        update +
-        "&baseURI=" +
-        baseuri,
-        headers=headers)
+    r = requests.get("http://localhost:7200/repositories/" + repo + "/statements?update=" + update + "&baseURI=" + baseuri,
+                     headers=headers)
     print(r.text)
 
 
@@ -147,23 +127,19 @@ def graphqueryrun(query, repo):
     """ get /repositories/{repositoryID}
     runs a query """
     headers = {'Accept': 'application/sparql-results+json'}
-    r = requests.get(
-        "http://localhost:7200/repositories/" +
-        repo +
-        "?query=" +
-        quote(query),
-        headers=headers)
+    r = requests.get("http://localhost:7200/repositories/" + repo + "?query=" + quote(query),
+                     headers=headers)
     print(r.text)
     print(r)
 
 
-def graphqueryget():  # TODO: It prints but it doesn't look nice
+def graphqueryget():
     """ get /rest/sparql/saved-queries
     gets queries """
     headers = {'Accept': 'application/json'}
-    r = requests.get(
-        "http://localhost:7200/rest/sparql/saved-queries",
-        headers=headers)
+    r = requests.get("http://localhost:7200/rest/sparql/saved-queries",
+                     headers=headers)
+    # TODO: It prints but it doesn't look nice
     print(json.loads(r.text))
 
 
@@ -174,10 +150,8 @@ def graphqueryedit(query):
         'Content-type': 'application/json',
         'Accept': 'application/json'}
     data = '{\n "data": ' + query + ' \n }'
-    r = requests.put(
-        "http://localhost:7200/rest/sparql/saved-queries",
-        data=data,
-        headers=headers)
+    r = requests.put("http://localhost:7200/rest/sparql/saved-queries",
+                     data=data, headers=headers)
     print(r.text)
 
 
@@ -188,20 +162,16 @@ def graphquerycreate(newquery):
         'Content-type': 'application/json',
         'Accept': 'application/json'}
     data = '{\n "data": ' + newquery + ' \n }'
-    r = requests.post(
-        "http://localhost:7200/rest/sparql/saved-queries",
-        data=data,
-        headers=headers)
+    r = requests.post("http://localhost:7200/rest/sparql/saved-queries",
+                      data=data, headers=headers)
     print(r.text)
 
 
 def graphquerydelete(query):
     """ deletes a query preset """
     headers = {'Accept': 'application/json'}
-    r = requests.delete(
-        "http://localhost:7200/rest/sparql/saved-queries?name=" +
-        query,
-        headers=headers)
+    r = requests.delete("http://localhost:7200/rest/sparql/saved-queries?name=" + query,
+                        headers=headers)
     print(r.text)
 
 
@@ -210,12 +180,8 @@ def graphnamespaceget(prefix, repo):
     """ get /repositories/{repositoryID}/namespaces/{namespacesPrefix}
         gets a namespace prefix """
     headers = {'Accept': 'text/plain'}
-    r = requests.get(
-        "http://localhost:7200/repositories/" +
-        repo +
-        "/namespaces/" +
-        prefix,
-        headers=headers)
+    r = requests.get("http://localhost:7200/repositories/" + repo + "/namespaces/" + prefix,
+                     headers=headers)
     print(r.text)
 
 
@@ -243,16 +209,12 @@ def graph_link_a(file):
 
 def graph_link_b(group):
     """graph link b function"""
-    # group = {'@id': 'compound/1/', '@type': 'cif:compound', '_chemical_formula_moiety': 'C12 H8', '_chemical_name_systematic': 'Q194207'}
+    # group = {'@id': 'compound/1/', '@type': 'cif:compound',
+    # '_chemical_formula_moiety': 'C12 H8',
+    # '_chemical_name_systematic': 'Q194207'}
     tablematch = {
-        "compound": [
-            Identifiers,
-            Substances,
-            'substance_id'],
-        "crystal": [
-            Identifiers,
-            Substances,
-            'substance_id']}
+        "compound": [Identifiers, Substances, 'substance_id'],
+        "crystal": [Identifiers, Substances, 'substance_id']}
     identifier = {'@id': group['@id']}
     category = group['@id'].split('/')[0]
     for line in list(tablematch[category][0].objects.values()):
@@ -264,7 +226,8 @@ def graph_link_b(group):
                         'graphdb').get(id=line[tablematch[category][2]]))
                     # Post(y)
             else:
-                # compound/crystal/etc not found in database. Needs to be added first in order to link
+                # compound/crystal/etc not found in database
+                # Needs to be added first in order to link
                 # then GraphLinkB(group)
                 pass
         except ValueError:

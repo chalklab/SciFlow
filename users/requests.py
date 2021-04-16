@@ -2,6 +2,7 @@
 from .models import Request
 
 
+# TODO create tests for these functions!
 def makerequest(user, usertype, action, content, objectid):
     """make user creation request"""
     Request.objects.create(user=user, type=usertype, action=action,
@@ -19,6 +20,6 @@ def rejectrequest(request):
 def approverequest(request):
     """approve user request"""
     if request.type == "Registration":
-        # TODO is this needed?
         user = request.user
+        print(user)
     request.delete()

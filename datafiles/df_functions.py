@@ -73,7 +73,7 @@ def updatedatafile(dfile=None, form='raw'):
     if not m:
         errorlog("DF_E02: The jsonld data file has not yet been added")
     else:
-        actlog("DF_A01: Found file in json_lookup (id: "+str(m.id)+")")
+        actlog("DF_A01: Found file in json_lookup (id: " + str(m.id) + ")")
 
     # get latest version of file (if it exists) and check that is different
     dstr = json.dumps(dfile, separators=(',', ':'))
@@ -88,8 +88,7 @@ def updatedatafile(dfile=None, form='raw'):
             actlog("DF_05: Datafile is the same as last version - not adding")
             return {"mid": m.id, "fid": latest.id}
 
-    actlog("DF_A02: Data file is different than last version - adding "
-           + str(m.currentversion+1) + "...")
+    actlog("DF_A02: Data file is different than last version - adding " + str(m.currentversion+1) + "...")
 
     # update file version
     m.currentversion += 1
@@ -129,7 +128,11 @@ def addfacetfile(ffile=None, uploading_user=None):
         m = FacetLookup()
 
         uid = ffile['@graph']['uid']
-        parts = uid.split(":")
+        parts = None
+        if ':' in uid:
+            parts = uid.split(":")
+        elif '_' in uid:
+            parts = uid.split("_")
 
         # get dataset_id
         dset = Datasets.objects.get(

@@ -7,11 +7,10 @@
     5) Check if compound is already present in GraphDB and add if not
     6) Process JSON-LD to add links to GraphDB (workflow.graph_link)
     7) Add JSON-LD to GraphDB (workflow.graphdb)
-    
+
     frontend
     1) Views
     ) Manually add compounds
-    ) 
 """
 
 """crosswalks"""

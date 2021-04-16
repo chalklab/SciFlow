@@ -1,7 +1,7 @@
 """ functions to log workflow activity and errors """
 from datafiles.models import *
 from sciflow import gvars
-from inspect import currentframe, getframeinfo
+from inspect import currentframe
 
 
 def actlog(content):
