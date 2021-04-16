@@ -1,6 +1,4 @@
 """ django views file for the datafiles app """
-import json
-
 from django.shortcuts import render
 from datasets.serializer import *
 from datafiles.forms import UploadFileForm
