@@ -5,15 +5,15 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="SciFlow",  # Replace with your own username
-    version="0.1",
-    author="Chalk Research Lab (UNF)",
-    author_email="schalk@unf.edu",
-    description="An interface for management and storage of SciData JSON-LD "
-                "files in a graph database",
+    name="SciFlow",
+    version="0.2",
+    author="Dylan Johnson, Caleb Weber, Stuart Chalk",
+    author_email="n01448636@unf.edu, cweb1182@gmail.com, schalk@unf.edu",
+    description="An interface for management and storage of SciData "
+                "JSON-LD files in a graph database",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/ChalkLab/sciflow",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
