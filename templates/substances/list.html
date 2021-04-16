@@ -1,22 +1,37 @@
 {% extends 'base.html' %}
 
-{% block title %} FAIR Molecules {% endblock %}
-{% block header %} Uploaded Compounds {% endblock %}
+{% block title %} Facet List {% endblock %}
+{% block header %} {{ facet }} {% endblock %}
 {% block content %}
-    <h4>Search:</h4>
     <form action="" method="post">
         {% csrf_token %}
+        <h4 class="d-inline-block">Search:</h4>
         <input name="q" type="text" placeholder="Search for a substance">
         <button class="btn btn-success" type="submit" name="action">Search</button>
     </form>
+    <br/>
 
-
-    <h4>Compound List:</h4>
     <ul>
-    {% for substance in substances %}
-        <li><a href="/substances/view/{{ substance.id }}">{{ substance.name }}</a> ({{ substance.status }})</li>
+    {% for sub in page_obj %}
+        <li><a href="/substances/view/{{ sub.id }}">{{ sub.name }}</a></li>
     {% endfor %}
     </ul>
 
+    <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
 
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+    </div>
 {% endblock %}

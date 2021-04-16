@@ -5,35 +5,18 @@
 
 {% block content %}
 <div>
-    The Scidata Substance Database is Home to:
+    The SciFlow system currently contains:
     <ul>
-        <li> {{ subcount }} Substances!</li>
-        <li> {{ idcount }} Identifiers!</li>
-        <li> {{ descount }} Descriptors!</li>
+        <li> {{ subcount }} Substances</li>
+        <li> {{ idcount }} Identifiers</li>
+        <li> {{ descount }} Descriptors</li>
     </ul>
 
-    This is an intermediary staging point for data to be transferred to the Scidata GraphDB, which currently has 0 substances!
     <div class="d-flex flex-wrap justify-content-center">
         <br>
             <button type="button"  class="m-4 btn btn-success" style="width: 300px" onclick="document.location.href = '/substances/list'">View Substance List</button>
             <button type="button"  class="m-4 btn btn-success" style="width: 300px" onclick="document.location.href = '/substances/ingest'">Ingest New Substance</button>
         </br>
-    </div>
-
-    <div class="card">
-        <div class="w-100 m-4">
-            <div class="overflow-auto" style="height: 500px">
-            Look at all these identifier problems!
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="w-100 m-4">
-            <div class="overflow-auto" style="height: 500px">
-            Look at all these descriptor problems!
-            </div>
-        </div>
     </div>
 </div>
 {% endblock %}

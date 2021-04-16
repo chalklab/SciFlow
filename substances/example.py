@@ -5,6 +5,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
 
 from substances.sub_functions import *
+from substances.views import *
 from datafiles.df_functions import *
 from substances.external import *
 from scyjava import config, jimport
@@ -138,7 +139,7 @@ if rungi:
     print(out)
 
 # test scyjava
-runsj = True
+runsj = None
 if runsj:
     config.add_endpoints('io.github.egonw.bacting:managers-cdk:0.0.16')
     workspaceRoot = "."
@@ -146,3 +147,7 @@ if runsj:
     cdk = cdkClass(workspaceRoot)
 
     print(cdk.fromSMILES("CCC"))
+
+runls = True
+if runls:
+    subview(None, 5044)

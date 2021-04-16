@@ -2,69 +2,55 @@
 
 {% block title %} Substances Index {% endblock %}
 {% block header %} Substance {% endblock %}
-
 {% block content %}
+    <div class="row">
+     <div class="col-6">
      <ul>
         <li> Name: {{ substance.name }}</li>
         <li> Formula: {{ substance.formula }}</li>
         <li> Molecular Weight: {{ substance.molweight }} g/mol</li>
         <li> CAS Registry #: {{ substance.casrn }}</li>
     </ul>
-
     <h5>Sources</h5>
     <ul>
     {% for src in srcs %}
-
         {% if src.result == '1' %}
         <li>{{src.source}}: Success, {{src.updated}} </li>
         {% else %}
         <li>{{src.source}}: Failed, {{src.updated}} </li>
         {% endif %}
-
-
     {% endfor %}
-
-
-<div class="m-4 card-group">
-    <div class="card">
-        <div class="card-header">
-            <ul class="nav nav-tabs card-header-tabs">
-              <li class="nav-item">
-                <a class="nav-link" href="#chembl" data-toggle="collapse" data-target="#chembl" aria-expanded="true" aria-controls="chembl">Chembl</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#classyfire" data-toggle="collapse" data-target="#classyfire" aria-expanded="false" aria-controls="classyfire">Classyfire</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#pubchem" data-toggle="collapse" data-target="#pubchem" aria-expanded="false" aria-controls="pubchem">Pubchem</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#wikidata" data-toggle="collapse" data-target="#wikidata" aria-expanded="false" aria-controls="wikidata">Wikidata</a>
-              </li>
-            </ul>
-        </div>
-        <div class="overflow-auto" style="height: 700px">
-            <div class="accordion" id="data">
-                <div id="chembl" class="collapse" aria-labelledby="chembl" data-parent="#data">
-                    <div class="card card-body">
-                            chembl
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
     </ul>
+
+    <h5>Identifiers</h5>
+     <ul>
+    {% for ident, vdict in ids.items %}
+        {% for val, srcs in vdict.items %}
+            <li>{{ident}}: {{ val }} ({{ srcs|join:', ' }}) </li>
+        {% endfor %}
+    {% endfor %}
+    </ul>
+    </div>
+    <div class="col-6">
+        <h5>Descriptors</h5>
+     <ul>
+    {% for desc, vdict in descs.items %}
+        {% for val, srcs in vdict.items %}
+            <li>{{desc}}: {{ val }} ({{ srcs|join:', ' }}) </li>
+        {% endfor %}
+    {% endfor %}
+    </ul>
+    </div>
+    </div>
+
     <div class="d-flex flex-wrap justify-content-center">
         <br>
-            <button type="button"  class="m-4 btn btn-success" style="width: 300px" onclick="document.location.href = '/substances/view/{{substance.id}}/subids'">View Identifiers</button>
-            <button type="button"  class="m-4 btn btn-success" style="width: 300px" onclick="document.location.href = '/substances/view/{{substance.id}}/subdescs'">View Descriptors</button>
+            <button type="button" class="m-4 btn btn-success" style="width: 300px"
+                    onclick="document.location.href = '/substances/view/{{substance.id}}/subids'">
+                View Identifiers</button>
+            <button type="button" class="m-4 btn btn-success" style="width: 300px"
+                    onclick="document.location.href = '/substances/view/{{substance.id}}/subdescs'">
+                View Descriptors</button>
         </br>
     </div>
 {% endblock %}

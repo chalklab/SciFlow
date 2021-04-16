@@ -1,7 +1,8 @@
 """ views for substances """
 from django.shortcuts import render
 from django.shortcuts import redirect
-from .sub_functions import *
+from django.core.paginator import Paginator
+from substances.sub_functions import *
 from sciflow.settings import BASE_DIR
 from zipfile import ZipFile
 
@@ -28,8 +29,8 @@ def home(request):
 def subview(request, subid):
     """present an overview page about the substance in sciflow"""
     substance = Substances.objects.get(id=subid)
-    ids = substance.identifiers_set.all()
-    descs = substance.descriptors_set.all()
+    ids = substance.identifiers_set.values_list('type', 'value', 'source')
+    descs = substance.descriptors_set.values_list('type', 'value', 'source')
     srcs = substance.sources_set.all()
     if not descs:
         key = ""
@@ -39,9 +40,28 @@ def subview(request, subid):
                 break
         m, i, descs, srcs = getsubdata(key)
         savedescs(subid, descs)
+    idlist = {}
+    for idtype, value, src in ids:
+        if idtype not in idlist.keys():
+            idlist.update({idtype: {}})
+        if value not in idlist[idtype].keys():
+            idlist[idtype].update({value: []})
+        idlist[idtype][value].append(src)
+    dlist = {}
+    for desc, value, src in descs:
+        if desc not in dlist.keys():
+            dlist.update({desc: {}})
+        if value not in dlist[desc].keys():
+            dlist[desc].update({value: []})
+        dlist[desc][value].append(src)
+
+    # print(json.dumps(dlist, indent=4))
+    # print(descs)
+    # print(srcs)
+    # exit()
     return render(request, "substances/subview.html",
-                  {'substance': substance, "ids": ids,
-                   "descs": descs, "srcs": srcs})
+                  {'substance': substance, "ids": idlist,
+                   "descs": dlist, "srcs": srcs})
 
 
 def subids(request, subid):
@@ -173,7 +193,11 @@ def list(request):
     else:
         subs = Substances.objects.all().order_by('name')
 
-    return render(request, "substances/list.html", {"substances": subs})
+    paginator = Paginator(subs, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "substances/list.html", {"page_obj": page_obj, "facet": "Substances"})
 
 
 def search(request, query):
