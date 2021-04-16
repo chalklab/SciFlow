@@ -132,15 +132,10 @@ def normalize(dfile, sections, user, jl):
                             break
 
                     # add entry into json_facets
-                    found = JsonFacets.objects.get(
+                    JsonFacets.objects.get_or_create(
                         json_lookup_id=jl,
                         facets_lookup_id=ffileid
                     )
-                    if not found:
-                        link = JsonFacets()
-                        link.json_lookup_id = jl
-                        link.facets_lookup_id = ffileid
-                        link.save()
                     actlog("WF_A08: Compound found in DB: ( " + str(section) + ", file id " + str(ffileid) + " )")
                 else:
                     errorlog("WF_E08: Compound not found in or added to DB ( " + str(section) + ", " + str(entry) + " )")
