@@ -1,1 +1,2 @@
-from django.db import models
+"""django model file"""
+# from django.db import models

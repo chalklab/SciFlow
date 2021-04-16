@@ -88,7 +88,7 @@ def updatedatafile(dfile=None, form='raw'):
             actlog("DF_05: Datafile is the same as last version - not adding")
             return {"mid": m.id, "fid": latest.id}
 
-    actlog("DF_A02: Data file is different than last version - adding " + str(m.currentversion+1) + "...")
+    actlog("DF_A02: Data file is different than last version - adding " + str(m.currentversion + 1) + "...")
 
     # update file version
     m.currentversion += 1
