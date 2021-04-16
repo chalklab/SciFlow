@@ -5,8 +5,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="SciFlow (ChalkLab",  # Replace with your own username
-    version="0.0.1",
+    name="SciFlow",  # Replace with your own username
+    version="0.1",
     author="Chalk Research Lab (UNF)",
     author_email="schalk@unf.edu",
     description="An interface for management and storage of SciData JSON-LD "
