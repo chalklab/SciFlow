@@ -125,17 +125,22 @@ def normalize(dfile, sections, user, jl):
                         if facet['@id'] == facetid:
                             # update datafile facet entry
                             finfo = {"@id": normid, "@type": "sdo:" + section}
-                            # TODO: check that this works
                             facets[fidx] = finfo  # works as passed by ref
-                            # update other internal references
-
+                            # update other internal references (facetid)
+                            dfstr = json.dumps(dfile)
+                            dfile = json.loads(dfstr.replace('"' + facetid + '"', '"' + normid + '"'))
                             break
 
                     # add entry into json_facets
-                    link = JsonFacets()
-                    link.json_lookup_id = jl
-                    link.facets_lookup_id = ffileid
-                    link.save()
+                    found = JsonFacets.objects.get(
+                        json_lookup_id=jl,
+                        facets_lookup_id=ffileid
+                    )
+                    if not found:
+                        link = JsonFacets()
+                        link.json_lookup_id = jl
+                        link.facets_lookup_id = ffileid
+                        link.save()
                     actlog("WF_A08: Compound found in DB: ( " + str(section) + ", file id " + str(ffileid) + " )")
                 else:
                     errorlog("WF_E08: Compound not found in or added to DB ( " + str(section) + ", " + str(entry) + " )")
