@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Requests{% endblock %}
+{% block content %}
+
+<div class="m-4 card">
+    <h5 class="card-header">Requests:</h5>
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+              <thead class="bg-success text-white">
+                <tr>
+                  <th scope="col">User</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Action</th>
+                  <th scope="col">Content</th>
+                  <th scope="col">Options</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {% for request in allrequests %}
+                      <form action="" method="POST">
+                         {% csrf_token %}
+                          <tr>
+                            <td>{{request.user}}</td>
+                            <td>{{request.type}}</td>
+                            <td>{{request.action}}</td>
+                            <td>{{request.content}}</td>
+                            <td><input type="submit" class="btn btn-primary" value="Approve" name="approve_{{request.id}}">
+                                <input type="submit" class="btn btn-danger" value="Reject" name="reject_{{request.id}}">
+                            </td>
+                          </tr>
+                      </form>
+                  {% endfor %}
+              </tbody>
+            </table>
+        </div>
+</div>
+
+{% endblock %}

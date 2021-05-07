@@ -1,0 +1,686 @@
+{
+    "@context": [
+        "https://stuchalk.github.io/scidata/contexts/scidata.jsonld",
+        {
+            "sdo": "http://stuchalk.github.io/scidata/ontology/scidata.owl#",
+            "meas": "https://stuchalk.github.io/scidata/ontology/scidata_measurement.owl#",
+            "qudt": "http://www.qudt.org/qudt/owl/1.0.0/unit.owl#",
+            "dc": "http://purl.org/dc/terms/",
+            "xsd": "http://www.w3.org/2001/XMLSchema#"
+        },
+        {"@base": "https://scidata.unf.edu/trc:jced:je900549r/"}
+    ],
+    "@id": "https://scidata.unf.edu/data/<dataid>",
+    "generatedAt": "2020-11-17 15:01:19",
+    "version": 1,
+    "@graph": {
+        "@id": "https://scidata.unf.edu/trc:jced:je900549r/",
+        "@type": "sdo:scidataFramework",
+        "uid": "trc:jced:je900549r",
+        "title": "(Liquid + Liquid) Equilibria of (Cyclohexane + Dimethyl Sulfoxide + Cyclohexanone) and (Cyclohexane + Dimethyl Sulfoxide + Cyclohexanol) at = 303.2 K",
+        "author": [
+            {
+                "@id": "author/1/",
+                "@type": "dc:creator",
+                "name": "Sin Young Kim"
+            },
+            {
+                "@id": "author/2/",
+                "@type": "dc:creator",
+                "name": "Jaehoon Choe"
+            },
+            {
+                "@id": "author/3/",
+                "@type": "dc:creator",
+                "name": "Kwang Ho Song"
+            }
+        ],
+        "description": "Report of thermochemical data in ThermoML format from the NIST TRC website http://www.trc.nist.gov/ThermoML/",
+        "publisher": "American Chemical Society",
+        "startdate": "2019-06-21 11:07:06",
+        "permalink": "https://chalk.coas.unf.edu/trc/datasets/view/033449",
+        "toc": [
+            "sdo:chemical",
+            "sdo:compound",
+            "sdo:condition",
+            "sdo:datagroup",
+            "sdo:dataset",
+            "sdo:mixture",
+            "sdo:seriescondition",
+            "sdo:system"
+        ],
+        "ids": [
+            "gb:P04819",
+            "gb:T06321",
+            "ito:ITO_0087",
+            "qudt:GM-PER-100GM",
+            "qudt:K",
+            "qudt:KiloPA",
+            "qudt:MOL-PER-MOL",
+            "qudt:MOL-PERCENT"
+        ],
+        "scidata": {
+            "@id": "scidata",
+            "@type": "sdo:scientificData",
+            "system": {
+                "@id": "system/",
+                "@type": "sdo:system",
+                "discipline": "chemistry",
+                "subdiscipline": "physical chemistry",
+                "facets": [
+                    {
+                        "@id": "compound/1/",
+                        "@type": "sdo:compound",
+                        "name": "cyclohexane",
+                        "formula": "C6H12",
+                        "molweight": "84.162",
+                        "iupacname": "cyclohexane",
+                        "inchi": "InChI=1S/C6H12/c1-2-4-6-5-3-1/h1-6H2",
+                        "inchikey": "XDTMQSROBMDMFD-UHFFFAOYSA-N"
+                    },
+                    {
+                        "@id": "chemical/1/",
+                        "@type": "sdo:chemical",
+                        "source": "compound/1/",
+                        "acquired": "Commercial source",
+                        "purity": {
+                            "@id": "purity/2/",
+                            "@type": "sdo:purity",
+                            "steps": {
+                                "1": {
+                                    "@id": "step/1/",
+                                    "@type": "sdo:value",
+                                    "part": "compound",
+                                    "analysis": "Stated by supplier",
+                                    "purification": null,
+                                    "number": "99",
+                                    "sigfigs": "2",
+                                    "unitref": "qudt:GM-PER-100GM"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "@id": "compound/2/",
+                        "@type": "sdo:compound",
+                        "name": "cyclohexanone",
+                        "formula": "C6H10O",
+                        "molweight": "98.145",
+                        "iupacname": "cyclohexanone",
+                        "inchi": "InChI=1S/C6H10O/c7-6-4-2-1-3-5-6/h1-5H2",
+                        "inchikey": "JHIVVAPYMSGYDF-UHFFFAOYSA-N"
+                    },
+                    {
+                        "@id": "chemical/2/",
+                        "@type": "sdo:chemical",
+                        "source": "compound/2/",
+                        "acquired": "Commercial source",
+                        "purity": {
+                            "@id": "purity/3/",
+                            "@type": "sdo:purity",
+                            "steps": {
+                                "1": {
+                                    "@id": "step/1/",
+                                    "@type": "sdo:value",
+                                    "part": "compound",
+                                    "analysis": "Stated by supplier",
+                                    "purification": null,
+                                    "number": "99.5",
+                                    "sigfigs": "3",
+                                    "unitref": "qudt:GM-PER-100GM"
+                                },
+                                "2": {
+                                    "@id": "step/2/",
+                                    "@type": "sdo:value",
+                                    "part": "compound",
+                                    "analysis": "Gas chromatography",
+                                    "purification": null,
+                                    "number": "99.5",
+                                    "sigfigs": "3",
+                                    "unitref": "qudt:GM-PER-100GM"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "@id": "compound/3/",
+                        "@type": "sdo:compound",
+                        "name": "methyl (methylthio)methyl sulfoxide",
+                        "formula": "C3H8OS2",
+                        "molweight": "124.216",
+                        "iupacname": "methylsulfanyl(methylsulfinyl)methane",
+                        "inchi": "InChI=1S/C3H8OS2/c1-5-3-6(2)4/h3H2,1-2H3",
+                        "inchikey": "OTKFCIVOVKCFHR-UHFFFAOYSA-N"
+                    },
+                    {
+                        "@id": "chemical/3/",
+                        "@type": "sdo:chemical",
+                        "source": "compound/3/",
+                        "acquired": "Commercial source",
+                        "purity": {
+                            "@id": "purity/4/",
+                            "@type": "sdo:purity",
+                            "steps": {
+                                "1": {
+                                    "@id": "step/1/",
+                                    "@type": "sdo:value",
+                                    "part": "compound",
+                                    "analysis": "Not known",
+                                    "purification": null,
+                                    "number": "99.5",
+                                    "sigfigs": "3",
+                                    "unitref": "qudt:GM-PER-100GM"
+                                },
+                                "2": {
+                                    "@id": "step/2/",
+                                    "@type": "sdo:value",
+                                    "part": "compound",
+                                    "analysis": "DSC",
+                                    "purification": null,
+                                    "number": "99.9",
+                                    "sigfigs": "3",
+                                    "unitref": "qudt:MOL-PERCENT"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "@id": "substance/1/",
+                        "@type": "sdo:mixture",
+                        "composition": "ternary mixture",
+                        "phase": "Two phase system",
+                        "name": "methyl sulfoxide + cyclohexanone + cyclohexane",
+                        "constituents": [
+                            {
+                                "@id": "substance/1/constituent/1/",
+                                "@type": "sdo:chemical",
+                                "source": "chemical/2/"
+                            },
+                            {
+                                "@id": "substance/1/constituent/2/",
+                                "@type": "sdo:chemical",
+                                "source": "chemical/3/"
+                            },
+                            {
+                                "@id": "substance/1/constituent/3/",
+                                "@type": "sdo:chemical",
+                                "source": "chemical/4/"
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "condition/1/",
+                        "@type": "sdo:condition",
+                        "quantity": "amount-of-substance fraction",
+                        "property": "Mole fraction of component 1 (liquid mixture 1)",
+                        "propertyref": "ito:ITO_0087",
+                        "unitref": "qudt:MOL-PER-MOL",
+                        "valuearray": [
+                            {
+                                "@id": "condition/1/value/1/",
+                                "@type": "sdo:value",
+                                "number": ".5568"
+                            },
+                            {
+                                "@id": "condition/1/value/2/",
+                                "@type": "sdo:value",
+                                "number": ".5923"
+                            },
+                            {
+                                "@id": "condition/1/value/3/",
+                                "@type": "sdo:value",
+                                "number": ".6943"
+                            },
+                            {
+                                "@id": "condition/1/value/4/",
+                                "@type": "sdo:value",
+                                "number": ".7969"
+                            },
+                            {
+                                "@id": "condition/1/value/5/",
+                                "@type": "sdo:value",
+                                "number": ".8579"
+                            },
+                            {
+                                "@id": "condition/1/value/6/",
+                                "@type": "sdo:value",
+                                "number": ".9106"
+                            },
+                            {
+                                "@id": "condition/1/value/7/",
+                                "@type": "sdo:value",
+                                "number": ".9663"
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "condition/2/",
+                        "@type": "sdo:seriescondition",
+                        "quantity": "temperature",
+                        "property": "System temperature",
+                        "propertyref": "gb:T06321",
+                        "unitref": "qudt:K",
+                        "valuearray": [
+                            {
+                                "@id": "condition/2/value/1/",
+                                "@type": "sdo:value",
+                                "number": "303.2"
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "condition/3/",
+                        "@type": "sdo:seriescondition",
+                        "quantity": "pressure",
+                        "property": "System pressure",
+                        "propertyref": "gb:P04819",
+                        "unitref": "qudt:KiloPA",
+                        "valuearray": [
+                            {
+                                "@id": "condition/3/value/1/",
+                                "@type": "sdo:value",
+                                "number": "101"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "dataset": {
+                "@id": "dataset/",
+                "@type": "sdo:dataset",
+                "scope": "mixture/1/",
+                "datagroup": [
+                    {
+                        "@id": "datagroup/1/",
+                        "@type": "sdo:datagroup",
+                        "conditions": [
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "datapoint": [
+                            "datapoint/1/",
+                            "datapoint/2/",
+                            "datapoint/3/",
+                            "datapoint/4/",
+                            "datapoint/5/",
+                            "datapoint/6/",
+                            "datapoint/7/"
+                        ]
+                    }
+                ],
+                "datapoint": [
+                    {
+                        "@id": "datapoint/1/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/7/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/1/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid mixture 1)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/1/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".023",
+                                    "error": ".0001"
+                                }
+                            },
+                            {
+                                "@id": "/datapoint/1/datum/2/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 1",
+                                "property": "Mole fraction of component 1 (Liquid mixture 2)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/1/datum/2/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0642",
+                                    "error": ".0001"
+                                }
+                            },
+                            {
+                                "@id": "/datapoint/1/datum/3/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid mixture 2)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/1/datum/3/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".06",
+                                    "error": ".0001"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/2/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/6/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/2/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid mixture 1)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/2/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0654",
+                                    "error": ".0001"
+                                }
+                            },
+                            {
+                                "@id": "/datapoint/2/datum/2/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 1",
+                                "property": "Mole fraction of component 1 (Liquid mixture 2)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/2/datum/2/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0941",
+                                    "error": ".0001"
+                                }
+                            },
+                            {
+                                "@id": "/datapoint/2/datum/3/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid mixture 2)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/2/datum/3/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".1435",
+                                    "error": ".0001"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/3/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/5/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/3/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid mixture 1)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/3/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".1017",
+                                    "error": ".0001"
+                                }
+                            },
+                            {
+                                "@id": "/datapoint/3/datum/2/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 1",
+                                "property": "Mole fraction of component 1 (Liquid mixture 2)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/3/datum/2/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".1278",
+                                    "error": ".0001"
+                                }
+                            },
+                            {
+                                "@id": "/datapoint/3/datum/3/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid mixture 2)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/3/datum/3/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".198",
+                                    "error": ".0001"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/4/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/4/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/4/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid mixture 1)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/4/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".1407",
+                                    "error": ".0001"
+                                }
+                            },
+                            {
+                                "@id": "/datapoint/4/datum/2/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 1",
+                                "property": "Mole fraction of component 1 (Liquid mixture 2)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/4/datum/2/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".1765",
+                                    "error": ".0001"
+                                }
+                            },
+                            {
+                                "@id": "/datapoint/4/datum/3/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid mixture 2)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/4/datum/3/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".241",
+                                    "error": ".0001"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/5/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/3/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/5/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid mixture 1)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/5/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".1966",
+                                    "error": ".0001"
+                                }
+                            },
+                            {
+                                "@id": "/datapoint/5/datum/2/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 1",
+                                "property": "Mole fraction of component 1 (Liquid mixture 2)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/5/datum/2/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".2383",
+                                    "error": ".0001"
+                                }
+                            },
+                            {
+                                "@id": "/datapoint/5/datum/3/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid mixture 2)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/5/datum/3/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".2715",
+                                    "error": ".0001"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/6/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/2/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/6/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid mixture 1)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/6/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".2321",
+                                    "error": ".0001"
+                                }
+                            },
+                            {
+                                "@id": "/datapoint/6/datum/2/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 1",
+                                "property": "Mole fraction of component 1 (Liquid mixture 2)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/6/datum/2/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".3087",
+                                    "error": ".0001"
+                                }
+                            },
+                            {
+                                "@id": "/datapoint/6/datum/3/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid mixture 2)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/6/datum/3/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".2844",
+                                    "error": ".0001"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/7/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/1/",
+                            "condition/2/value/1/",
+                            "condition/3/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/7/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid mixture 1)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/7/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".2428",
+                                    "error": ".0001"
+                                }
+                            },
+                            {
+                                "@id": "/datapoint/7/datum/2/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 1",
+                                "property": "Mole fraction of component 1 (Liquid mixture 2)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/7/datum/2/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".3598",
+                                    "error": ".0001"
+                                }
+                            },
+                            {
+                                "@id": "/datapoint/7/datum/3/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid mixture 2)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/7/datum/3/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".2794",
+                                    "error": ".0001"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "references": [
+            {
+                "@id": "reference/1/",
+                "@type": "dc:source",
+                "citation": "(Liquid + Liquid) Equilibria of (Cyclohexane + Dimethyl Sulfoxide + Cyclohexanone) and (Cyclohexane + Dimethyl Sulfoxide + Cyclohexanol) at T = 303.2 K' Kim, Sin Young; Choe, Jaehoon; Song, Kwang Ho, J. Chem. Eng. Data 2010 55(3) 1109-1112",
+                "url": "https://doi.org/10.1021/je900549r"
+            },
+            {
+                "@id": "reference/2/",
+                "@type": "dc:source",
+                "citation": "Original data file from NIST TRC Archive at http://www.trc.nist.gov/ThermoML/",
+                "url": "http://www.trc.nist.gov/ThermoML/10.1021/je900549r"
+            }
+        ],
+        "rights": {
+            "@id": "rights/1/",
+            "@type": "dc:rights",
+            "holder": "NIST Thermodynamics Research Center (Boulder, CO)",
+            "license": "https://creativecommons.org/licenses/by-nc/4.0/"
+        }
+    }
+}

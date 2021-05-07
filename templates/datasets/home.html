@@ -1,0 +1,17 @@
+{% extends 'basepublic.html' %}
+
+{% block title %} SciFlow Workflow System {% endblock %}
+{% block header %} SciFlow Workflow System {% endblock %}
+{% block content %}
+    <h4>Welcome to SciFlow</h4>
+    <p>This website is for adminstration of the workflow for adding SciData
+        format JSON-LD files into a graph DB</p>
+    <p>Current datasets and statistics...</p>
+    <ul>
+        {% for set in sets %}
+        <li><a href="/datasets/view/{{ set.id }}?page=1">
+            {{ set.name }}</a> ({{ set.count }})
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -25,7 +25,7 @@ SECRET_KEY = 'xzdi*3p9062t$u9yz5jehu2xsjc=9!+75hlic=-3k^=k^!ssch7rf'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['sds.coas.unf.edu', '127.0.0.1']
 
 
 # Application definition
@@ -37,7 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
+    'social_django',
+    'crosswalks',
+    'datasets',
     'substances',
+    'users',
+    'workflow',
+    'datafiles',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +55,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -55,8 +64,7 @@ ROOT_URLCONF = 'sciflow.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,36 +83,39 @@ WSGI_APPLICATION = 'sciflow.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
+LOCALDB = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'fair',
-        'USER': 'fair',
-        'PASSWORD': 'fair2020chin',
-        'HOST': '/opt/local/var/run/mysql57/mysqld.sock',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+UNFDB = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'sciflow',
+        'USER': 'sciflow',
+        'PASSWORD': 'letthedatafl0w',
+        'HOST': '127.0.0.1',
+        'PORT': '3307'
+    }
+}
+
+DATABASES = UNFDB
 
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
-
+ua = 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'
+ml = 'django.contrib.auth.password_validation.MinimumLengthValidator'
+cp = 'django.contrib.auth.password_validation.CommonPasswordValidator'
+np = 'django.contrib.auth.password_validation.NumericPasswordValidator'
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': ua}, {'NAME': ml}, {'NAME': cp}, {'NAME': np}
 ]
 
+# database autofield selection (Django 3.2)
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -120,3 +131,52 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# Crispy settings
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+
+# graphdb ingest directory on sds
+gdrivesds = "/Users/n00002621/GoogleDrive/Research/sciflow"
+
+
+# User settings
+
+LOGIN_URL = '/login/auth0'
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+
+# Slack settings
+
+SLACK_CLIENT_ID = '4596507645.1171018047123'
+SLACK_CLIENT_SECRET = '497b35bbd6b1ae0b721bff4ca1e0660b'
+SLACK_VERIFICATION_TOKEN = '83qbRMdzma6QJBlF5LnV4XnN'
+SLACK_BOT_USER_TOKEN = 'xoxb-4596507645-1171034330099-eP4swGipytYQHLnomPvBoOPO'
+
+
+# Auth0 Settings
+
+SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
+SOCIAL_AUTH_AUTH0_DOMAIN = 'sciflow.us.auth0.com'
+SOCIAL_AUTH_AUTH0_KEY = 'yqDlGgfUFMr9GUNW7nEFLrc92IoccnNU'
+secret = 'QWZvHaULslFysaVMaXqYPqinzKfMLo8MrgLEEMBmRKy99vb-q2LpuTCurSDWhSJR'
+SOCIAL_AUTH_AUTH0_SECRET = secret
+
+SOCIAL_AUTH_AUTH0_SCOPE = [
+    'openid',
+    'profile',
+    'email'
+]
+
+AUTHENTICATION_BACKENDS = {
+    'users.auth0backend.Auth0',
+    'django.contrib.auth.backends.ModelBackend'
+}
+
+# Debug toolbar settings
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]

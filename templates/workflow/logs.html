@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %} JSON LD Logs {% endblock %}
+{% block header %} Logs: {% endblock %}
+
+{% block content %}
+
+<h4>Ordered by Recently Updated:</h4>
+{% for entry in lookups|dictsortreversed:"updated" %}
+<li><a href="/workflow/logs/{{ entry.id }}">{{entry.uniqueid}}</a></li>
+{% endfor %}
+
+{% endblock %}
+

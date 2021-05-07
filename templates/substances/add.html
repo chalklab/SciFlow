@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %} Substances Index {% endblock %}
+{% block header %} Substance {% endblock %}
+
+{% block content %}
+    <h3>Metadata</h3>
+    <ul>
+        {% for key, item in meta.items %}
+        <li>{{ key }}: {{ item }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Identifiers</h3>
+    <ul>
+        {% for key, item in ids.items %}
+        <li>{{ key }}: {{ item }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Descriptors</h3>
+    <ul>
+        {% for key, item in descs.items %}
+        <li>{{ key }}: {{ item }}</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

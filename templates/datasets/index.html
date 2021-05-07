@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %} SciFlow Datasets {% endblock %}
+{% block header %} Datasets {% endblock %}
+{% block content %}
+    <h4>Search:</h4>
+    <form action="" method="post">
+        {% csrf_token %}
+        <input name="q" type="text" placeholder="Search for a JSON-LD">
+        <button class="btn btn-success" type="submit" name="action">Search</button>
+    </form>
+
+
+    <h4>Current Datasets</h4>
+    <ul>
+    {% for set in datasets %}
+        <li><a href="/datasets/view/{{ set.id }}">{{ set.name }}</a></li>
+    {% endfor %}
+    </ul>
+
+
+{% endblock %}

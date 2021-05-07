@@ -1,0 +1,590 @@
+{
+    "@context": [
+        "https://stuchalk.github.io/scidata/contexts/scidata.jsonld",
+        {
+            "sdo": "http://stuchalk.github.io/scidata/ontology/scidata.owl#",
+            "meas": "https://stuchalk.github.io/scidata/ontology/scidata_measurement.owl#",
+            "qudt": "http://www.qudt.org/qudt/owl/1.0.0/unit.owl#",
+            "dc": "http://purl.org/dc/terms/",
+            "xsd": "http://www.w3.org/2001/XMLSchema#"
+        },
+        {"@base": "https://scidata.unf.edu/trc:jced:je500286x/"}
+    ],
+    "@id": "https://scidata.unf.edu/data/<dataid>",
+    "generatedAt": "2020-11-18 05:38:07",
+    "version": 1,
+    "@graph": {
+        "@id": "https://scidata.unf.edu/trc:jced:je500286x/",
+        "@type": "sdo:scidataFramework",
+        "uid": "trc:jced:je500286x",
+        "title": "4-Amino-3,6-dichloropyridazine Solubility Measurement and Correlation in Seven Pure Organic Solvents from (278.15 to 333.15) K",
+        "author": [
+            {
+                "@id": "author/1/",
+                "@type": "dc:creator",
+                "name": "Jin-Qiang Liu"
+            },
+            {
+                "@id": "author/2/",
+                "@type": "dc:creator",
+                "name": "Yao-Yao Li"
+            },
+            {
+                "@id": "author/3/",
+                "@type": "dc:creator",
+                "name": "Ai-Yan Wang"
+            },
+            {
+                "@id": "author/4/",
+                "@type": "dc:creator",
+                "name": "Dong-Feng Hong"
+            },
+            {
+                "@id": "author/5/",
+                "@type": "dc:creator",
+                "name": "Li-Yue Zhang"
+            },
+            {
+                "@id": "author/6/",
+                "@type": "dc:creator",
+                "name": "Sha Wu"
+            },
+            {
+                "@id": "author/7/",
+                "@type": "dc:creator",
+                "name": "Qiao-Yun Bai"
+            },
+            {
+                "@id": "author/8/",
+                "@type": "dc:creator",
+                "name": "Si-Yu Chen"
+            }
+        ],
+        "description": "Report of thermochemical data in ThermoML format from the NIST TRC website http://www.trc.nist.gov/ThermoML/",
+        "publisher": "American Chemical Society",
+        "startdate": "2019-06-21 11:07:06",
+        "permalink": "https://chalk.coas.unf.edu/trc/datasets/view/024898",
+        "toc": [
+            "sdo:chemical",
+            "sdo:compound",
+            "sdo:condition",
+            "sdo:datagroup",
+            "sdo:dataset",
+            "sdo:mixture",
+            "sdo:seriescondition",
+            "sdo:system"
+        ],
+        "ids": [
+            "gb:P04819",
+            "gb:T06321",
+            "ito:ITO_0087",
+            "qudt:GM-PER-100GM",
+            "qudt:K",
+            "qudt:KiloPA"
+        ],
+        "scidata": {
+            "@id": "scidata",
+            "@type": "sdo:scientificData",
+            "system": {
+                "@id": "system/",
+                "@type": "sdo:system",
+                "discipline": "chemistry",
+                "subdiscipline": "physical chemistry",
+                "facets": [
+                    {
+                        "@id": "compound/1/",
+                        "@type": "sdo:compound",
+                        "name": "acetone",
+                        "formula": "C3H6O",
+                        "molweight": "58.08",
+                        "iupacname": "propan-2-one",
+                        "inchi": "InChI=1S/C3H6O/c1-3(2)4/h1-2H3",
+                        "inchikey": "CSCPPACGZOOCGX-UHFFFAOYSA-N"
+                    },
+                    {
+                        "@id": "chemical/1/",
+                        "@type": "sdo:chemical",
+                        "source": "compound/1/",
+                        "acquired": "Commercial source",
+                        "purity": {
+                            "@id": "purity/2/",
+                            "@type": "sdo:purity",
+                            "steps": {
+                                "1": {
+                                    "@id": "step/1/",
+                                    "@type": "sdo:value",
+                                    "part": "compound",
+                                    "analysis": "Estimated by the compiler",
+                                    "purification": null,
+                                    "number": "98",
+                                    "sigfigs": "2",
+                                    "unitref": "qudt:GM-PER-100GM"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "@id": "compound/2/",
+                        "@type": "sdo:compound",
+                        "name": "3,6-dichloropyridazin-4-amine",
+                        "formula": "C4H3Cl2N3",
+                        "molweight": "163.989",
+                        "iupacname": "3,6-dichloropyridazin-4-amine",
+                        "inchi": "InChI=1S/C4H3Cl2N3/c5-3-1-2(7)4(6)9-8-3/h1H,(H2,7,8)",
+                        "inchikey": "HODYDVHWWMTUEL-UHFFFAOYSA-N"
+                    },
+                    {
+                        "@id": "chemical/2/",
+                        "@type": "sdo:chemical",
+                        "source": "compound/2/",
+                        "acquired": "Commercial source",
+                        "purity": {
+                            "@id": "purity/3/",
+                            "@type": "sdo:purity",
+                            "steps": {
+                                "1": {
+                                    "@id": "step/1/",
+                                    "@type": "sdo:value",
+                                    "part": "compound",
+                                    "analysis": "HPLC",
+                                    "purification": null,
+                                    "number": "99.8",
+                                    "sigfigs": "3",
+                                    "unitref": "qudt:GM-PER-100GM"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "@id": "substance/1/",
+                        "@type": "sdo:mixture",
+                        "composition": "binary mixture",
+                        "phase": "Solution",
+                        "name": "acetone + 3,6-dichloro-4-pyridazinamine",
+                        "constituents": [
+                            {
+                                "@id": "substance/1/constituent/1/",
+                                "@type": "sdo:chemical",
+                                "source": "chemical/2/"
+                            },
+                            {
+                                "@id": "substance/1/constituent/2/",
+                                "@type": "sdo:chemical",
+                                "source": "chemical/3/"
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "condition/1/",
+                        "@type": "sdo:condition",
+                        "quantity": "temperature",
+                        "property": "System temperature",
+                        "propertyref": "gb:T06321",
+                        "unitref": "qudt:K",
+                        "valuearray": [
+                            {
+                                "@id": "condition/1/value/1/",
+                                "@type": "sdo:value",
+                                "number": "295.65"
+                            },
+                            {
+                                "@id": "condition/1/value/2/",
+                                "@type": "sdo:value",
+                                "number": "298.15"
+                            },
+                            {
+                                "@id": "condition/1/value/3/",
+                                "@type": "sdo:value",
+                                "number": "300.65"
+                            },
+                            {
+                                "@id": "condition/1/value/4/",
+                                "@type": "sdo:value",
+                                "number": "303.15"
+                            },
+                            {
+                                "@id": "condition/1/value/5/",
+                                "@type": "sdo:value",
+                                "number": "305.65"
+                            },
+                            {
+                                "@id": "condition/1/value/6/",
+                                "@type": "sdo:value",
+                                "number": "308.15"
+                            },
+                            {
+                                "@id": "condition/1/value/7/",
+                                "@type": "sdo:value",
+                                "number": "310.65"
+                            },
+                            {
+                                "@id": "condition/1/value/8/",
+                                "@type": "sdo:value",
+                                "number": "313.15"
+                            },
+                            {
+                                "@id": "condition/1/value/9/",
+                                "@type": "sdo:value",
+                                "number": "315.65"
+                            },
+                            {
+                                "@id": "condition/1/value/10/",
+                                "@type": "sdo:value",
+                                "number": "318.15"
+                            },
+                            {
+                                "@id": "condition/1/value/11/",
+                                "@type": "sdo:value",
+                                "number": "320.65"
+                            },
+                            {
+                                "@id": "condition/1/value/12/",
+                                "@type": "sdo:value",
+                                "number": "323.15"
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "condition/2/",
+                        "@type": "sdo:seriescondition",
+                        "quantity": "pressure",
+                        "property": "System pressure",
+                        "propertyref": "gb:P04819",
+                        "unitref": "qudt:KiloPA",
+                        "valuearray": [
+                            {
+                                "@id": "condition/2/value/1/",
+                                "@type": "sdo:value",
+                                "number": "100"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "dataset": {
+                "@id": "dataset/",
+                "@type": "sdo:dataset",
+                "scope": "mixture/1/",
+                "datagroup": [
+                    {
+                        "@id": "datagroup/1/",
+                        "@type": "sdo:datagroup",
+                        "conditions": ["condition/2/value/1/"],
+                        "datapoint": [
+                            "datapoint/1/",
+                            "datapoint/2/",
+                            "datapoint/3/",
+                            "datapoint/4/",
+                            "datapoint/5/",
+                            "datapoint/6/",
+                            "datapoint/7/",
+                            "datapoint/8/",
+                            "datapoint/9/",
+                            "datapoint/10/",
+                            "datapoint/11/",
+                            "datapoint/12/"
+                        ]
+                    }
+                ],
+                "datapoint": [
+                    {
+                        "@id": "datapoint/1/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/1/",
+                            "condition/2/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/1/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/1/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".024354",
+                                    "error": ".00024354"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/2/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/2/",
+                            "condition/2/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/2/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/2/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".025774",
+                                    "error": ".00025774"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/3/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/3/",
+                            "condition/2/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/3/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/3/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".027607",
+                                    "error": ".00027607"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/4/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/4/",
+                            "condition/2/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/4/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/4/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".029289",
+                                    "error": ".00029289"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/5/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/5/",
+                            "condition/2/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/5/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/5/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".0311",
+                                    "error": ".000311"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/6/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/6/",
+                            "condition/2/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/6/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/6/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".032673",
+                                    "error": ".00032673"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/7/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/7/",
+                            "condition/2/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/7/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/7/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".034247",
+                                    "error": ".00034247"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/8/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/8/",
+                            "condition/2/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/8/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/8/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".035997",
+                                    "error": ".00035997"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/9/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/9/",
+                            "condition/2/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/9/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/9/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".03769",
+                                    "error": ".0003769"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/10/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/10/",
+                            "condition/2/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/10/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/10/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".039342",
+                                    "error": ".00039342"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/11/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/11/",
+                            "condition/2/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/11/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/11/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".041006",
+                                    "error": ".00041006"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/12/",
+                        "@type": "sdo:datapoint",
+                        "conditions": [
+                            "condition/1/value/12/",
+                            "condition/2/value/1/"
+                        ],
+                        "data": [
+                            {
+                                "@id": "/datapoint/12/datum/1/",
+                                "@type": "sdo:datum",
+                                "quantity": "Mole fraction of component 2",
+                                "property": "Mole fraction of component 2 (Liquid)",
+                                "propertyref": "ito:ITO_0087",
+                                "value": {
+                                    "@id": "/datapoint/12/datum/1/value/",
+                                    "@type": "sdo:value",
+                                    "number": ".042712",
+                                    "error": ".00042712"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "references": [
+            {
+                "@id": "reference/1/",
+                "@type": "dc:source",
+                "citation": "'4-Amino-3,6-dichloropyridazine Solubility Measurement and Correlation in Seven Pure Organic Solvents from (278.15 to 333.15) K' Liu, J.Q.; Li, Y.Y.; Wang, A.Y.; Hong, D.F.; Zhang, L.Y.; Wu, S.; Bai, Q.Y.; Chen, S.Y., J. Chem. Eng. Data 2014 59(12) 3947-3952",
+                "url": "https://doi.org/10.1021/je500286x"
+            },
+            {
+                "@id": "reference/2/",
+                "@type": "dc:source",
+                "citation": "Original data file from NIST TRC Archive at http://www.trc.nist.gov/ThermoML/",
+                "url": "http://www.trc.nist.gov/ThermoML/10.1021/je500286x"
+            }
+        ],
+        "rights": {
+            "@id": "rights/1/",
+            "@type": "dc:rights",
+            "holder": "NIST Thermodynamics Research Center (Boulder, CO)",
+            "license": "https://creativecommons.org/licenses/by-nc/4.0/"
+        }
+    }
+}

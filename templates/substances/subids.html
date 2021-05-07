@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %} Substances Index {% endblock %}
+{% block header %} Substance {% endblock %}
+{% block content %}
+     <ul>
+        <li> Name: {{ substance.name }}</li>
+        <li> Formula: {{ substance.formula }}</li>
+        <li> Molecular Weight: {{ substance.molweight }} g/mol</li>
+        <li> CAS Registry #: {{ substance.casrn }}</li>
+    </ul>
+    <table data-toggle="table"
+          data-search="true"
+          data-show-columns="true"
+          data-detail-view="true"
+          data-detail-formatter="detailFormatter"
+          data-pagination="true"
+          data-page-list="[10, 25, 50, all]"
+          data-show-export="true">
+        <thead>
+            <tr class="tr-class-1">
+                <th data-field="name" rowspan="2" data-valign="middle" data-sortable="true">Identifier</th>
+                <th colspan="4">Source</th>
+            </tr>
+            <tr class="tr-class-2">
+                <th data-field="Chembl" data-sortable="true">Chembl</th>
+                <th data-field="Classyfire" data-sortable="true">Classyfire</th>
+                <th data-field="Pubchem" data-sortable="true">Pubchem</th>
+                <th data-field="Wikidata" data-sortable="true">Wikidata</th>
+                <th data-field="CommonChem" data-sortable="true">Common Chemistry</th>
+            </tr>
+        </thead>
+        <tbody>
+              {% for id in ids %}
+              <tr>
+                <td>{{id.type}}</td>
+                <td>
+                    {% if id.source == "chembl" %}
+                        {{id.value}}
+                    {% else %}
+                        Null
+                    {% endif %}
+                </td>
+                <td>
+                    {% if id.source == "classyfire" %}
+                        {{id.value}}
+                    {% else %}
+                        Null
+                    {% endif %}
+                </td>
+                <td>
+                    {% if id.source == "pubchem" %}
+                        {{id.value}}
+                    {% else %}
+                        Null
+                    {% endif %}
+                </td>
+                <td>
+                    {% if id.source == "wikidata" %}
+                        {{id.value}}
+                    {% else %}
+                        Null
+                    {% endif %}
+                </td>
+              <td>
+                    {% if id.source == "comchem" %}
+                        {{id.value}}
+                    {% else %}
+                        Null
+                    {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+    </table>
+
+    <script>
+          function detailFormatter(index, row) {
+            let html = ['<form action="" method="post">{% csrf_token %}']
+            $.each(row, function (key, value) {
+              let c = key.includes('_')
+              if (c !== true) {
+                html.push('<p><b>' + key + ':</b> ' + value + '  '
+                + '<input name="'+key+'_'+value+'" type="text" placeholder="Edit '+key+'">' + '</p>')
+              }})
+              html.push('<button class="btn btn-primary" type="submit" name="action">Submit</button>')
+            return html.join('')
+          }
+        </script>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %} SciFlow Files {% endblock %}
+{% block header %} {{ file.title }} {% endblock %}
+{% block content %}
+    <h4>Data File: {{ file.graphname }}</h4>
+    <ul>
+        {% for ver in file.vers %}
+            {% if ver.type == 'normalized' %}
+                <li><a href="/files/jsonld/{{ ver.id }}">Version: {{ ver.version }} ({{ ver.updated }})</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock %}

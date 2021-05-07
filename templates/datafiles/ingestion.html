@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %} JSON LD Ingestion {% endblock %}
+{% block header %} Ingestion: {% endblock %}
+
+{% block content %}
+<h5>Select one or more files for ingestion</h5>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-success">Submit</button>
+</form>
+
+{% endblock %}
+

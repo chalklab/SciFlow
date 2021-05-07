@@ -1,0 +1,1072 @@
+{
+    "@context": [
+        "https://stuchalk.github.io/scidata/contexts/scidata.jsonld",
+        "https://stuchalk.github.io/scidata/contexts/fce.jsonld",
+        {
+            "sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#",
+            "obo": "http://purl.obolibrary.org/obo/",
+            "ss": "http://semanticscience.org/resource/",
+            "atc": "http://purl.bioontology.org/ontology/ATC/",
+            "w3i": "https://w3id.org/skgo/modsci#"
+        },
+        {"@base": "https://scidata.unf.edu/chalklab:substance:AOAOXSUNFXXSGI-UHFFFAOYSA-N/"}
+    ],
+    "@id": "https://scidata.unf.edu/facet/67",
+    "generatedAt": "2020-10-30 15:32:07.742085",
+    "version": 1,
+    "@graph": {
+        "@id": "https://scidata.unf.edu/chalklab:substance:AOAOXSUNFXXSGI-UHFFFAOYSA-N/",
+        "@type": "sdo:scidataFramework",
+        "uid": "chalklab:substance:AOAOXSUNFXXSGI-UHFFFAOYSA-N",
+        "title": "Chemical Substance SciData JSON-LD file for 2,6-bis[2-(4-methylphenyl)ethyl]pyridine",
+        "author": [
+            {
+                "@id": "author/1/",
+                "@type": "dc:author",
+                "name": "Stuart Chalk",
+                "orcid": "0000-0002-0703-7776"
+            }
+        ],
+        "description": "Metadata, identifiers, descriptors and molecular graph about a chemical substance",
+        "publisher": "Chalk Research Laboratory, University of North Florida",
+        "version": "1.0",
+        "keywords": [
+            "FAIR chemical entity",
+            "chemical substance",
+            "chemical compound"
+        ],
+        "permalink": "https://scidata.unf.edu/chalklab:substance:AOAOXSUNFXXSGI-UHFFFAOYSA-N/",
+        "toc": [
+            "sdo:scientificData",
+            "sdo:system",
+            "sdo:compound",
+            "dc:source",
+            "dc:rights"
+        ],
+        "ids": [
+            "obo:IAO_0000578",
+            "ss:CHEMINF_000123",
+            "ss:CHEMINF_000022",
+            "obo:NCIT_C1940",
+            "obo:CHEBI_25555",
+            "ss:SIO_011118",
+            "obo:CHEBI_25555",
+            "obo:CHEBI_27594",
+            "obo:CHEBI_49637"
+        ],
+        "scidata": {
+            "@id": "scidata",
+            "@type": "sdo:scientificData",
+            "discipline": "w3i:Chemistry",
+            "system": {
+                "@id": "system/",
+                "@type": "sdo:system",
+                "facets": [
+                    {
+                        "@id": "compound/1/",
+                        "@type": "sdo:compound",
+                        "name": "2,6-bis[2-(4-methylphenyl)ethyl]pyridine",
+                        "formula": "C23H25N",
+                        "molweight": 315.5,
+                        "monoisotopicmass": 315.199,
+                        "identifiers": {
+                            "@id": "identifier/",
+                            "@type": "obo:IAO_0000578",
+                            "inchi": "InChI=1S/C23H25N/c1-18-6-10-20(11-7-18)14-16-22-4-3-5-23(24-22)17-15-21-12-8-19(2)9-13-21/h3-13H,14-17H2,1-2H3",
+                            "inchikey": "AOAOXSUNFXXSGI-UHFFFAOYSA-N",
+                            "csmiles": "CC1=CC=C(C=C1)CCC2=NC(=CC=C2)CCC3=CC=C(C=C3)C",
+                            "ismiles": "Cc1ccc(CCc2cccc(CCc3ccc(C)cc3)n2)cc1",
+                            "casrn": null,
+                            "pubchem": "71606713",
+                            "chemspider": null,
+                            "chebi": null,
+                            "chembl": null,
+                            "reaxys": null,
+                            "dsstox": null,
+                            "gmelin": null,
+                            "wikidata": null
+                        },
+                        "descriptors": {
+                            "@id": "descriptor/",
+                            "@type": "ss:CHEMINF_000123",
+                            "heavy_atom": "24",
+                            "atom_chiral": "0",
+                            "bond_chiral": "0",
+                            "isotope_atom": "0",
+                            "h_bond_acceptor": "1",
+                            "h_bond_donor": "0",
+                            "rotatable_bond": "6",
+                            "covalent_unit": "1",
+                            "tautomers": "-1",
+                            "aromatic_rings": "3",
+                            "atccode": [],
+                            "chemont": []
+                        },
+                        "molgraph": {
+                            "@id": "molgraph/",
+                            "@type": "ss:CHEMINF_000022",
+                            "elements": [
+                                {
+                                    "@id": "element/1/",
+                                    "@type": "obo:NCIT_C1940",
+                                    "name": "Nitrogen",
+                                    "element": "obo:CHEBI_25555"
+                                },
+                                {
+                                    "@id": "element/2/",
+                                    "@type": "obo:NCIT_C1940",
+                                    "name": "Carbon",
+                                    "element": "obo:CHEBI_27594"
+                                },
+                                {
+                                    "@id": "element/3/",
+                                    "@type": "obo:NCIT_C1940",
+                                    "name": "Hydrogen",
+                                    "element": "obo:CHEBI_49637"
+                                }
+                            ],
+                            "atoms": [
+                                {
+                                    "@id": "atom/1/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/1/",
+                                    "xcoord": "8.0622",
+                                    "ycoord": "-0.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/2/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "6.3301",
+                                    "ycoord": "-0.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 4
+                                },
+                                {
+                                    "@id": "atom/3/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "9.7942",
+                                    "ycoord": "-0.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 4
+                                },
+                                {
+                                    "@id": "atom/4/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "5.4641",
+                                    "ycoord": "0.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 4
+                                },
+                                {
+                                    "@id": "atom/5/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "10.6603",
+                                    "ycoord": "0.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 4
+                                },
+                                {
+                                    "@id": "atom/6/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "7.1962",
+                                    "ycoord": "0.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/7/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "8.9282",
+                                    "ycoord": "0.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/8/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "4.5981",
+                                    "ycoord": "-0.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/9/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "11.5263",
+                                    "ycoord": "-0.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/10/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "7.1962",
+                                    "ycoord": "1.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/11/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "8.9282",
+                                    "ycoord": "1.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/12/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "8.0622",
+                                    "ycoord": "1.7500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/13/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "3.7320",
+                                    "ycoord": "0.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/14/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "4.5981",
+                                    "ycoord": "-1.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/15/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "11.5263",
+                                    "ycoord": "-1.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/16/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "12.3923",
+                                    "ycoord": "0.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/17/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "2.8660",
+                                    "ycoord": "-1.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/18/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "13.2583",
+                                    "ycoord": "-1.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/19/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "2.8660",
+                                    "ycoord": "-0.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/20/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "3.7320",
+                                    "ycoord": "-1.7500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/21/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "12.3923",
+                                    "ycoord": "-1.7500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/22/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "13.2583",
+                                    "ycoord": "-0.2500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 2,
+                                    "doublebonds": 1
+                                },
+                                {
+                                    "@id": "atom/23/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "2.0000",
+                                    "ycoord": "-1.7500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 4
+                                },
+                                {
+                                    "@id": "atom/24/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/2/",
+                                    "xcoord": "14.1244",
+                                    "ycoord": "-1.7500",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 4
+                                },
+                                {
+                                    "@id": "atom/25/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "5.9316",
+                                    "ycoord": "-0.7249",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/26/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "6.7287",
+                                    "ycoord": "-0.7249",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/27/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "9.3957",
+                                    "ycoord": "-0.7249",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/28/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "10.1928",
+                                    "ycoord": "-0.7249",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/29/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "5.8626",
+                                    "ycoord": "0.7249",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/30/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "5.0656",
+                                    "ycoord": "0.7249",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/31/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "11.0588",
+                                    "ycoord": "0.7249",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/32/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "10.2617",
+                                    "ycoord": "0.7249",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/33/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "6.6592",
+                                    "ycoord": "1.5600",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/34/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "9.4651",
+                                    "ycoord": "1.5600",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/35/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "8.0622",
+                                    "ycoord": "2.3700",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/36/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "3.7320",
+                                    "ycoord": "0.8700",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/37/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "5.1350",
+                                    "ycoord": "-1.5600",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/38/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "10.9893",
+                                    "ycoord": "-1.5600",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/39/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "12.3923",
+                                    "ycoord": "0.8700",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/40/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "2.3291",
+                                    "ycoord": "0.0600",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/41/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "3.7320",
+                                    "ycoord": "-2.3700",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/42/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "12.3923",
+                                    "ycoord": "-2.3700",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/43/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "13.7953",
+                                    "ycoord": "0.0600",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/44/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "1.6900",
+                                    "ycoord": "-1.2131",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/45/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "1.4631",
+                                    "ycoord": "-2.0600",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/46/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "2.3100",
+                                    "ycoord": "-2.2869",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/47/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "13.8144",
+                                    "ycoord": "-2.2869",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/48/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "14.6613",
+                                    "ycoord": "-2.0600",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                },
+                                {
+                                    "@id": "atom/49/",
+                                    "@type": "obo:CHEBI_33250",
+                                    "element": "element/3/",
+                                    "xcoord": "14.4344",
+                                    "ycoord": "-1.2131",
+                                    "zcoord": "0.0000",
+                                    "singlebonds": 1
+                                }
+                            ],
+                            "bonds": [
+                                {
+                                    "@id": "bond/1/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "2",
+                                    "atoms": [
+                                        "atom/1/",
+                                        "atom/6/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/2/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/1/",
+                                        "atom/7/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/3/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/2/",
+                                        "atom/4/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/4/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/2/",
+                                        "atom/6/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/5/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/2/",
+                                        "atom/25/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/6/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/2/",
+                                        "atom/26/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/7/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/3/",
+                                        "atom/5/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/8/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/3/",
+                                        "atom/7/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/9/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/3/",
+                                        "atom/27/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/10/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/3/",
+                                        "atom/28/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/11/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/4/",
+                                        "atom/8/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/12/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/4/",
+                                        "atom/29/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/13/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/4/",
+                                        "atom/30/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/14/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/5/",
+                                        "atom/9/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/15/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/5/",
+                                        "atom/31/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/16/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/5/",
+                                        "atom/32/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/17/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/6/",
+                                        "atom/10/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/18/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "2",
+                                    "atoms": [
+                                        "atom/7/",
+                                        "atom/11/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/19/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "2",
+                                    "atoms": [
+                                        "atom/8/",
+                                        "atom/13/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/20/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/8/",
+                                        "atom/14/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/21/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "2",
+                                    "atoms": [
+                                        "atom/9/",
+                                        "atom/15/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/22/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/9/",
+                                        "atom/16/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/23/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "2",
+                                    "atoms": [
+                                        "atom/10/",
+                                        "atom/12/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/24/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/10/",
+                                        "atom/33/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/25/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/11/",
+                                        "atom/12/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/26/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/11/",
+                                        "atom/34/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/27/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/12/",
+                                        "atom/35/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/28/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/13/",
+                                        "atom/19/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/29/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/13/",
+                                        "atom/36/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/30/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "2",
+                                    "atoms": [
+                                        "atom/14/",
+                                        "atom/20/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/31/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/14/",
+                                        "atom/37/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/32/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/15/",
+                                        "atom/21/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/33/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/15/",
+                                        "atom/38/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/34/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "2",
+                                    "atoms": [
+                                        "atom/16/",
+                                        "atom/22/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/35/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/16/",
+                                        "atom/39/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/36/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "2",
+                                    "atoms": [
+                                        "atom/17/",
+                                        "atom/19/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/37/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/17/",
+                                        "atom/20/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/38/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/17/",
+                                        "atom/23/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/39/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "2",
+                                    "atoms": [
+                                        "atom/18/",
+                                        "atom/21/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/40/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/18/",
+                                        "atom/22/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/41/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/18/",
+                                        "atom/24/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/42/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/19/",
+                                        "atom/40/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/43/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/20/",
+                                        "atom/41/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/44/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/21/",
+                                        "atom/42/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/45/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/22/",
+                                        "atom/43/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/46/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/23/",
+                                        "atom/44/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/47/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/23/",
+                                        "atom/45/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/48/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/23/",
+                                        "atom/46/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/49/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/24/",
+                                        "atom/47/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/50/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/24/",
+                                        "atom/48/"
+                                    ]
+                                },
+                                {
+                                    "@id": "bond/51/",
+                                    "@type": "ss:SIO_011118",
+                                    "order": "1",
+                                    "atoms": [
+                                        "atom/24/",
+                                        "atom/49/"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "sources": [
+            {
+                "@id": "source/1/",
+                "@type": "dc:source",
+                "title": "UNF SciFlow System",
+                "url": "https://sciflow.unf.edu"
+            }
+        ],
+        "rights": [
+            {
+                "@id": "rights/1/",
+                "@type": "dc:rights",
+                "holder": "University of North Florida",
+                "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+            }
+        ]
+    }
+}

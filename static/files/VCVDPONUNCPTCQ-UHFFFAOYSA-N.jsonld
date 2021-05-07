@@ -1,0 +1,115 @@
+{
+    "@context": [
+        "https://stuchalk.github.io/scidata/contexts/scidata.jsonld",
+        "https://stuchalk.github.io/scidata/contexts/fair_molecule.jsonld",
+        {
+            "sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#",
+            "obo": "http://purl.obolibrary.org/obo/",
+            "ss": "http://semanticscience.org/resource/",
+            "atc": "http://purl.bioontology.org/ontology/ATC/",
+            "w3i": "https://w3id.org/skgo/modsci#"
+        },
+        {"@base": "https://scidata.unf.edu/chalklab:substance:VCVDPONUNCPTCQ-UHFFFAOYSA-N/"}
+    ],
+    "@id": "https://scidata.unf.edu/facet/00000002",
+    "generatedAt": "2020-10-02 19:27:42.182171",
+    "version": "1",
+    "@graph": {
+        "@id": "https://scidata.unf.edu/chalklab:substance:VCVDPONUNCPTCQ-UHFFFAOYSA-N/",
+        "@type": "sdo:scidataFramework",
+        "uid": "chalklab:substance:VCVDPONUNCPTCQ-UHFFFAOYSA-N",
+        "title": "Substance SciData JSON-LD file for 1-[2-[2-(difluoromethoxy)phenyl]-1-phenylethyl]piperazine",
+        "author": [
+            {
+                "@id": "author/1/",
+                "@type": "dc:author",
+                "name": "Stuart Chalk",
+                "orcid": "0000-0002-0703-7776"
+            }
+        ],
+        "description": "Metadata, identifiers and descriptors about a chemical substance",
+        "publisher": "Chalk Research Laboratory, University of North Florida",
+        "version": "1.0",
+        "keywords": [
+            "chemical substance",
+            "chemical compound"
+        ],
+        "starttime": "2020-10-02 19:27:42.182171",
+        "permalink": "https://scidata.unf.edu/chalklab:substance:VCVDPONUNCPTCQ-UHFFFAOYSA-N/",
+        "toc": ["sdo:compound"],
+        "scidata": {
+            "@id": "scidata",
+            "@type": "sdo:scientificData",
+            "discipline": "w3i:Chemistry",
+            "system": {
+                "@id": "system/",
+                "@type": "sdo:system",
+                "facets": [
+                    {
+                        "@id": "compound/1/",
+                        "@type": "sdo:compound",
+                        "name": "1-[2-[2-(difluoromethoxy)phenyl]-1-phenylethyl]piperazine",
+                        "formula": "C19H22F2N2O",
+                        "molweight": 332.4,
+                        "monoisotopicmass": 332.17,
+                        "identifiers": {
+                            "@id": "identifier/",
+                            "@type": "obo:IAO_0000578",
+                            "inchi": "InChI=1S/C19H22F2N2O/c20-19(21)24-18-9-5-4-8-16(18)14-17(15-6-2-1-3-7-15)23-12-10-22-11-13-23/h1-9,17,19,22H,10-14H2",
+                            "inchikey": "VCVDPONUNCPTCQ-UHFFFAOYSA-N",
+                            "csmiles": "C1CN(CCN1)C(CC2=CC=CC=C2OC(F)F)C3=CC=CC=C3",
+                            "ismiles": null,
+                            "casrn": "860302-42-7",
+                            "pubchem": null,
+                            "chemspider": null,
+                            "chebi": null,
+                            "chembl": "CHEMBL1083708",
+                            "reaxys": null,
+                            "dsstox": null,
+                            "gmelin": null,
+                            "wikidata": null
+                        },
+                        "descriptors": {
+                            "@id": "descriptor/",
+                            "@type": "ss:CHEMINF_000123",
+                            "heavy_atom": [],
+                            "atom_chiral": [],
+                            "bond_chiral": [],
+                            "isotope_atom": [],
+                            "h_bond_acceptor": [],
+                            "h_bond_donor": [],
+                            "rotatable_bond": [],
+                            "covalent_unit": [],
+                            "tautomers": [],
+                            "aromatic_rings": [],
+                            "atccode": [],
+                            "chemont": []
+                        },
+                        "molgraph": {
+                            "@id": "molgraph/",
+                            "@type": "ss:CHEMINF_000022",
+                            "atoms": [],
+                            "bonds": []
+                        }
+                    }
+                ]
+            }
+        },
+        "sources": [
+            {
+                "@id": "source/1/",
+                "@type": "dc:source",
+                "title": "UNF SciFlow System",
+                "url": "https://sciflow.unf.edu"
+            }
+        ],
+        "rights": [
+            {
+                "@id": "rights/1/",
+                "@type": "dc:rights",
+                "holder": "University of North Florida",
+                "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+            }
+        ]
+    }
+}
