@@ -17,13 +17,14 @@ def sublist(request):
     return render(request, "substances/list.html", {'substances': substances})
 
 
-def home(request):
+def home(response):
     """present an overview page about the substance in sciflow"""
     subcount = Substances.objects.count()
     idcount = Identifiers.objects.count()
     descount = Descriptors.objects.count()
-    return render(request, "substances/home.html",
-                  {'subcount': subcount, 'idcount': idcount, 'descount': descount})
+
+    return render(response, "substances/home.html",
+                  {'subcount': subcount, 'idcount': idcount, 'descount': descount,})
 
 
 def subview(request, subid):

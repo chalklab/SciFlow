@@ -37,12 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     'crispy_forms',
-    'social_django',
+
     'crosswalks',
     'datasets',
     'substances',
-    'users',
     'workflow',
     'datafiles',
     'debug_toolbar',
@@ -130,8 +134,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
-
 
 # Crispy settings
 
@@ -142,38 +144,34 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 gdrivesds = "/Users/n00002621/GoogleDrive/Research/sciflow"
 
 
-# User settings
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES = os.path.join(BASE_DIR, 'static')
 
-LOGIN_URL = '/login/auth0'
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
+SITE_ID = 1
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
-# Slack settings
-
-SLACK_CLIENT_ID = '4596507645.1171018047123'
-SLACK_CLIENT_SECRET = '497b35bbd6b1ae0b721bff4ca1e0660b'
-SLACK_VERIFICATION_TOKEN = '83qbRMdzma6QJBlF5LnV4XnN'
-SLACK_BOT_USER_TOKEN = 'xoxb-4596507645-1171034330099-eP4swGipytYQHLnomPvBoOPO'
-
-
-# Auth0 Settings
-
-SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
-SOCIAL_AUTH_AUTH0_DOMAIN = 'sciflow.us.auth0.com'
-SOCIAL_AUTH_AUTH0_KEY = 'yqDlGgfUFMr9GUNW7nEFLrc92IoccnNU'
-secret = 'QWZvHaULslFysaVMaXqYPqinzKfMLo8MrgLEEMBmRKy99vb-q2LpuTCurSDWhSJR'
-SOCIAL_AUTH_AUTH0_SECRET = secret
-
-SOCIAL_AUTH_AUTH0_SCOPE = [
-    'openid',
-    'profile',
-    'email'
-]
-
-AUTHENTICATION_BACKENDS = {
-    'users.auth0backend.Auth0',
-    'django.contrib.auth.backends.ModelBackend'
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
 }
+
+AUTHENTICATION_BACKENDS = (
+ 'django.contrib.auth.backends.ModelBackend',
+ 'allauth.account.auth_backends.AuthenticationBackend',
+ )
+
+authorized_users = [
+        'cweb1182@gmail.com',
+    ]
 
 # Debug toolbar settings
 

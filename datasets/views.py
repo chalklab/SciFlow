@@ -2,13 +2,26 @@
 from datasets.ds_functions import *
 from django.shortcuts import render
 from django.core.paginator import Paginator
+from sciflow.settings import authorized_users
 
 
-def home(request):
+def home(response):
     """view to generate list of substances on homepage"""
     updatestats()
     sets = Datasets.objects.exclude(count=0)
-    return render(request, "datasets/home.html", {'sets': sets})
+
+    user = response.user
+    message = 'Welcome to SciFlow'
+
+    if not user.is_anonymous:
+        if user.email in authorized_users:
+            message = 'Hello '+user.first_name+', Welcome to SciFlow.'
+
+        else:
+            message = 'You are not an approved user! Please contact Dr. Chalk to become authorized to use this site.'
+            user.delete()
+
+    return render(response, "datasets/home.html", {'sets': sets, 'message':message})
 
 
 def index(request):

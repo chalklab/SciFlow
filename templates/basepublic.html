@@ -1,5 +1,6 @@
 <!doctype html>
 {% load static %}
+{% load socialaccount %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,10 +19,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
-                    <!--{% if request.user.is_authenticated %}-->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/dashboard">User Dashboard</a>
-                    </li>
+                    {% if request.user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="/files/ingest">Ingestion</a>
                     </li>
@@ -38,10 +36,10 @@
                         <a class="nav-link" href="/logout/">Logout</a>
                     </li>
                     {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login/auth0">Login</a>
-                    </li>
-                    <!--{% endif %}-->
+                      <li class="nav-item active">
+                        <a class="nav-link" href="{% provider_login_url 'google' %}">Login<span class="sr-only">(current)</span></a>
+                      </li>
+                    {% endif %}
                 </ul>
             </div>
         </nav>
