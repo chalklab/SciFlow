@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %} Ontology Term View {% endblock %}
+{% block header %} Ontology Term: {{ term.title }}{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <ul>
+                <li>Definition: {{ term.definition }}</li>
+                <li>Code: {{ term.code }}</li>
+                <li>Homepage: <a href="{{ url }}" target="_blank">{{ url }}</a></li>
+                <li>SciData Section: {{ term.sdsection }}</li>
+                <li>SciData Subsection: {{ term.sdsubsection }}</li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %} Namepsace List {% endblock %}
+{% block header %} {{ facet }} {% endblock %}
+{% block content %}
+
+<h3>Currently Defined Namespaces</h3>
+    <ul>
+    {% for ns in spaces %}
+        <li><a href="/crosswalks/nsview/{{ ns.id }}">{{ ns.name }} ({{ns.ns}})</a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

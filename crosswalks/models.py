@@ -29,6 +29,7 @@ class Ontterms(models.Model):
     definition = models.CharField(max_length=2048, blank=True, null=True)
     code = models.CharField(max_length=64)
     nspace = models.ForeignKey(Nspaces, on_delete=models.DO_NOTHING)
+    url = models.CharField(max_length=512, blank=True, null=True)
     sdsection = models.CharField(max_length=11, blank=True, null=True)
     sdsubsection = models.CharField(max_length=64, blank=True, null=True)
     to_remove = models.CharField(max_length=8, blank=True, null=True)

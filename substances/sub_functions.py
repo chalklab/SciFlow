@@ -431,12 +431,10 @@ def savedescs(subid, descs):
             # check if value is list or string
             if isinstance(v, list):
                 for x in v:
-                    desc = Descriptors(substance_id=subid, type=k, value=x,
-                                       source=source)
+                    desc = Descriptors(substance_id=subid, type=k, value=x, source=source)
                     desc.save()
             else:
-                desc = Descriptors(substance_id=subid, type=k, value=v,
-                                   source=source)
+                desc = Descriptors(substance_id=subid, type=k, value=v, source=source)
                 desc.save()
 
 
@@ -444,8 +442,7 @@ def savesrcs(subid, srcs):
     """ save sources data """
     # srcs = {"pubchem": {"result":1, "notes":None}
     for x, y in srcs.items():
-        src = Sources(substance_id=subid, source=x, result=y["result"],
-                      notes=y.get("notes", "Null"))
+        src = Sources(substance_id=subid, source=x, result=y["result"],notes=y.get("notes", "Null"))
         src.save()
 
 
@@ -460,8 +457,7 @@ def getsubid(identifier):
 
 def subingraph(subid):
     """ whatever is in the graphdb field for a substance"""
-    found = Substances.objects.all().\
-        values_list('graphdb', flat=True).get(id=subid)
+    found = Substances.objects.all().values_list('graphdb', flat=True).get(id=subid)
     if found:
         return found
     return False
@@ -469,8 +465,7 @@ def subingraph(subid):
 
 def subinfiles(subid):
     """ whatever is in the graphdb field for a substance"""
-    found = Substances.objects.all().\
-        values_list('facet_lookup_id', flat=True).get(id=subid)
+    found = Substances.objects.all().values_list('facet_lookup_id', flat=True).get(id=subid)
     if found:
         return found
     return False
@@ -485,12 +480,10 @@ def getinchikey(subid):
     if len(keys) == 0:
         errorlog("SUB_E01: Couldn't find inchikey for substance " + str(subid))
     elif len(keys) == 1:
-        actlog(
-            "SUB_A01: Got inchikey '" + str(keys) + "' for sub " + str(subid))
+        actlog("SUB_A01: Got inchikey '" + str(keys) + "' for sub " + str(subid))
         return keys[0]
     elif len(keys) > 1:
-        errorlog(
-            "SUB_E02: Many inchikeys (" + str(keys) + ") 4 sub " + str(subid))
+        errorlog("SUB_E02: Many inchikeys (" + str(keys) + ") 4 sub " + str(subid))
     return False
 
 
@@ -527,9 +520,7 @@ def elementdata(strng, field1, field2):
     return answer
 
 
-searchterms = {'compound': ['^[A-Z]{14}-[A-Z]{10}-[A-Z]$',
-                            '^InChI=',
-                            '^[0-9]{2,7}-[0-9]{2}-[0-9]$']}
+searchterms = {'compound': ['^[A-Z]{14}-[A-Z]{10}-[A-Z]$', '^InChI=', '^[0-9]{2,7}-[0-9]{2}-[0-9]$']}
 
 
 def getaddsub(section, meta):

@@ -5,8 +5,7 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-    """ migrations configuration class for the crosswalks DB tables
-    (add dataset specific later) """
+    """ migrations configuration class for the crosswalks DB tables (add dataset specific later) """
     initial = True
 
     dependencies = [
