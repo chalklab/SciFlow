@@ -171,6 +171,7 @@ AUTHENTICATION_BACKENDS = (
 
 authorized_users = [
         'cweb1182@gmail.com',
+        'jaredracicot@gmail.com',
     ]
 
 # Debug toolbar settings
