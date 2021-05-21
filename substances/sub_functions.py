@@ -465,7 +465,7 @@ def savesrcs(subid, srcs):
     """ save sources data """
     # srcs = {"pubchem": {"result":1, "notes":None}
     for x, y in srcs.items():
-        src = Sources(substance_id=subid, source=x, result=y["result"],notes=y.get("notes", "Null"))
+        src = Sources(substance_id=subid, source=x, result=y["result"], notes=y.get("notes", "Null"))
         src.save()
 
 
