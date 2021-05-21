@@ -1,4 +1,6 @@
 """ functions for use with the substances and related tables..."""
+import re
+
 from django.db.models import Q
 from substances.external import *
 from substances.models import *
@@ -98,6 +100,27 @@ def addsubstance(identifier, output='meta'):
         return sub
     else:
         return meta
+
+
+def addunksub(sub):
+    """add the metadata for substance that cannot be found online"""
+
+    meta, ids, desc = {}, {}, {}
+    # try and identify what type each metadata element is
+    for key, val in sub.items():
+        if 'name' in key:
+            meta.update({'name': val})
+        elif key.startswith('InChI'):
+            ids.update({'inchi': val})
+        elif re.fullmatch('[A-Z]{14}-[A-Z]{10}-[A-Z]', val):
+            ids.update({'inchikey': val})
+        elif 'form' in key or re.fullmatch('[A-Z][a-z]?\\d*|(?<!\\([^)])\\(.*\\)\\d+(?![^(]*\\))', val):
+            meta.update({'formula': val})
+        elif 'cas' in key or re.fullmatch('[0-9]{2,7}-[0-9]{2}-[0-9]', val):
+            meta.update({'casrn': val})
+            ids.update({'casrn': val})
+        elif ('mw' in key or 'mol' in key) and type(val) in ['float', 'int']:
+            meta.update({'mw': val})
 
 
 def updatesubstance(subid, field, value):

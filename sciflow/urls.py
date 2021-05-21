@@ -32,5 +32,6 @@ urlpatterns = [
     path('', include('datasets.urls')),
     path('substances/', include('substances.urls')),
     path('workflow/', include('workflow.urls')),
+    path('crosswalks/', include('crosswalks.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
