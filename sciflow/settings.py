@@ -166,14 +166,14 @@ SOCIALACCOUNT_PROVIDERS = {
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
- )
+    'allauth.account.auth_backends.AuthenticationBackend'
+)
 
 authorized_users = [
-        'cweb1182@gmail.com',
-        'jaredracicot@gmail.com',
-        'stuartjchalk@gmail.com'
-    ]
+    'cweb1182@gmail.com',
+    'jaredracicot@gmail.com',
+    'stuartjchalk@gmail.com'
+]
 
 # Debug toolbar settings
 
