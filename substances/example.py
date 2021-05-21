@@ -15,12 +15,12 @@ add = True
 if add:
     # example substance that is not found online...
     meta = {
-            "name": "sodium gadolinium titanate",
-            "formula": "GdNaO4Ti",
-            "molweight": 292.104,
-            "iupacname": "Gadolinium sodium titanium oxide",
-            "inchi": "InChI=1S/Gd.Na.4O.Ti/q+3;+1;4*-2;+4",
-            "inchikey": "HZKODDDQUJIOQB-UHFFFAOYSA-N"
+        "name": "sodium gadolinium titanate",
+        "formula": "GdNaO4Ti",
+        "molweight": 292.104,
+        "iupacname": "Gadolinium sodium titanium oxide",
+        "inchi": "InChI=1S/Gd.Na.4O.Ti/q+3;+1;4*-2;+4",
+        "inchikey": "HZKODDDQUJIOQB-UHFFFAOYSA-N"
     }
     key = "HZKODDDQUJIOQB-UHFFFAOYSA-N"
     added = addsubstance(key)

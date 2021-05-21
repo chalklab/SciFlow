@@ -15,13 +15,13 @@ def home(response):
 
     if not user.is_anonymous:
         if user.email in authorized_users:
-            message = 'Hello '+user.first_name+', Welcome to SciFlow.'
+            message = 'Hello ' + user.first_name + ', Welcome to SciFlow.'
 
         else:
             message = 'You are not an approved user! Please contact Dr. Chalk to become authorized to use this site.'
             user.delete()
 
-    return render(response, "datasets/home.html", {'sets': sets, 'message':message})
+    return render(response, "datasets/home.html", {'sets': sets, 'message': message})
 
 
 def index(request):

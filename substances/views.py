@@ -24,7 +24,7 @@ def home(response):
     descount = Descriptors.objects.count()
 
     return render(response, "substances/home.html",
-                  {'subcount': subcount, 'idcount': idcount, 'descount': descount,})
+                  {'subcount': subcount, 'idcount': idcount, 'descount': descount})
 
 
 def subview(request, subid):
