@@ -4,14 +4,14 @@
 {% block header %} Namespace: {{ space.name }}{% endblock %}
 {% block content %}
     <div class="row">
-        <div class="col-6">
+        <div class="col-12">
             <ul>
                 <li>Alias: {{ space.ns }}</li>
                 <li>Path: {{ space.path }}</li>
                 <li>Homepage: <a href="{{ space.homepage }}" target="_blank">{{ space.homepage }}</a></li>
             </ul>
         </div>
-        <div class="col-6">
+        <div class="col-12">
             <h3>Terms using this Namespace</h3>
             <ul>
                 {% for term in terms %}

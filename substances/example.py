@@ -11,12 +11,23 @@ from substances.external import *
 from scyjava import config, jimport
 
 # add a new substance to the database
-add = None
+add = True
 if add:
-    key = "AOAOXSUNFXXSGI-UHFFFAOYSA-N"
+    # example substance that is not found online...
+    meta = {
+            "name": "sodium gadolinium titanate",
+            "formula": "GdNaO4Ti",
+            "molweight": 292.104,
+            "iupacname": "Gadolinium sodium titanium oxide",
+            "inchi": "InChI=1S/Gd.Na.4O.Ti/q+3;+1;4*-2;+4",
+            "inchikey": "HZKODDDQUJIOQB-UHFFFAOYSA-N"
+    }
+    key = "HZKODDDQUJIOQB-UHFFFAOYSA-N"
     added = addsubstance(key)
+
     if not added:
         print("Substance not added")
+        print(added)
         exit()
 
     # generate the JSON-LD file for the substance
@@ -148,6 +159,6 @@ if runsj:
 
     print(cdk.fromSMILES("CCC"))
 
-runls = True
+runls = None
 if runls:
     subview(None, 5044)
