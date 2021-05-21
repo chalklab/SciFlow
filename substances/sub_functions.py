@@ -105,7 +105,7 @@ def addsubstance(identifier, output='meta'):
 def addunksub(sub):
     """add the metadata for substance that cannot be found online"""
 
-    meta, ids, desc = {}, {}, {}
+    meta, ids = {}, {}
     # try and identify what type each metadata element is
     for key, val in sub.items():
         if 'name' in key:
