@@ -4,45 +4,64 @@
 {% block header %} Substance {% endblock %}
 {% block content %}
     <div class="row">
-     <div class="col-6">
-     <ul>
-        <li> Name: {{ substance.name }}</li>
-        <li> Formula: {{ substance.formula }}</li>
-        <li> Molecular Weight: {{ substance.molweight }} g/mol</li>
-        <li> CAS Registry #: {{ substance.casrn }}</li>
-    </ul>
-    <h5>Sources</h5>
-    <ul>
-    {% for src in srcs %}
-        {% if src.result == '1' %}
-        <li>{{src.source}}: Success, {{src.updated}} </li>
-        {% else %}
-        <li>{{src.source}}: Failed, {{src.updated}} </li>
-        {% endif %}
-    {% endfor %}
-    </ul>
-
-    <h5>Identifiers</h5>
-     <ul>
-    {% for ident, vdict in ids.items %}
-        {% for val, srcs in vdict.items %}
-            <li>{{ident}}: {{ val }} ({{ srcs|join:', ' }}) </li>
-        {% endfor %}
-    {% endfor %}
-    </ul>
-    </div>
-    <div class="col-6">
+        <div class="col-6">
         <h5>Descriptors</h5>
-     <ul>
-    {% for desc, vdict in descs.items %}
-        {% for val, srcs in vdict.items %}
-            <li>{{desc}}: {{ val }} ({{ srcs|join:', ' }}) </li>
-        {% endfor %}
-    {% endfor %}
-    </ul>
-    </div>
+            <ul>
+            {% for desc, vdict in descs.items %}
+            {% for val, srcs in vdict.items %}
+                <li>{{desc}}: {{ val }} ({{ srcs|join:', ' }}) </li>
+            {% endfor %}
+            {% endfor %}
+
+            </ul>
+        </div>
+
+        <div class="col-6">
+        <div class="row">
+            <div class="row-cols-12">
+                <div class="card">
+                    <div class="card-image">
+                        <a href="{{ image_url }}"><img src="{{ image_url }}" alt=""></a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ image_found }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+            <ul>
+                <li> Name: {{ substance.name }}</li>
+                <li> Formula: {{ substance.formula }}</li>
+                <li> Molecular Weight: {{ substance.molweight }} g/mol</li>
+                <li> CAS Registry #: {{ substance.casrn }}</li>
+            </ul>
+
+            <h5>Sources</h5>
+            <ul>
+                {% for src in srcs %}
+                {% if src.result == '1' %}
+                    <li>{{src.source}}: Success, {{src.updated}} </li>
+                {% else %}
+                    <li>{{src.source}}: Failed, {{src.updated}} </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+
+            <h5>Identifiers</h5>
+            <ul>
+                {% for ident, vdict in ids.items %}
+                {% for val, srcs in vdict.items %}
+                    <li>{{ident}}: {{ val }} ({{ srcs|join:', ' }}) </li>
+                {% endfor %}
+            {% endfor %}
+            </ul>
+        </div>
     </div>
 
+
+<div class="row">
     <div class="d-flex flex-wrap justify-content-center">
         <br>
             <button type="button" class="m-4 btn btn-success" style="width: 300px"
@@ -53,4 +72,6 @@
                 View Descriptors</button>
         </br>
     </div>
+</div>
 {% endblock %}
+</div>

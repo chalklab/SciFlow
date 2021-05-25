@@ -5,6 +5,7 @@ from django.core.paginator import Paginator
 from substances.sub_functions import *
 from sciflow.settings import BASE_DIR
 from zipfile import ZipFile
+import requests
 
 
 def sublist(request):
@@ -33,6 +34,21 @@ def subview(request, subid):
     ids = substance.identifiers_set.values_list('type', 'value', 'source')
     descs = substance.descriptors_set.values_list('type', 'value', 'source')
     srcs = substance.sources_set.all()
+    inchikey = getinchikey(substance.id)
+    baseimage = 'https://cactus.nci.nih.gov/chemical/structure/{}/image'
+
+    image_url = baseimage.format(inchikey)
+    print(inchikey)
+
+    r = requests.get(image_url)
+    print(str(r.status_code))
+    if r.status_code == 200:
+        image_found = ''
+    else:
+        image_found = 'Error Image not Found'
+        image_url = ''
+    print(image_found)
+    print(image_url)
     if not descs:
         key = ""
         for i in ids:
@@ -62,7 +78,7 @@ def subview(request, subid):
     # exit()
     return render(request, "substances/subview.html",
                   {'substance': substance, "ids": idlist,
-                   "descs": dlist, "srcs": srcs})
+                   "descs": dlist, "srcs": srcs, "image_url": image_url, "image_found": image_found})
 
 
 def subids(request, subid):
@@ -151,7 +167,7 @@ def ingest(request):
                             print(m)
                         else:
                             print(':(')
-    return render(request, "substances/ingest.html",)
+    return render(request, "substances/ingest.html", )
 
 
 def ingestlist(request):
@@ -207,6 +223,7 @@ def search(request, query):
 
     if request.method == "POST":
         query = request.POST.get('q')
+
         return redirect('/substances/search/' + str(query))
 
     return render(request, "substances/search.html", context)
