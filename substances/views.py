@@ -35,7 +35,7 @@ def subview(request, subid):
     descs = substance.descriptors_set.values_list('type', 'value', 'source')
     srcs = substance.sources_set.all()
     inchikey = getinchikey(substance.id)
-    baseimage = 'https://cactus.nci.nih.gov/chemical/structure/{}/image'
+    baseimage = 'https://cactus.nci.nih.gov/chemical/structure/{}/file?format=sdf&get3d=true'
 
     image_url = baseimage.format(inchikey)
     print(inchikey)
@@ -45,7 +45,7 @@ def subview(request, subid):
     if r.status_code == 200:
         image_found = ''
     else:
-        image_found = 'Error Image not Found'
+        image_found = 'Error Model not Found'
         image_url = ''
     print(image_found)
     print(image_url)
