@@ -1,7 +1,8 @@
 """quad table function library"""
 from quads.models import Quads
-import pyld
 import json
+import hashlib
+
 
 def ingest(upload, user):
     """function to ingest JSON-LD, convert it to quads, and save in the quads table"""
@@ -11,8 +12,11 @@ def ingest(upload, user):
         file = json.loads(text)
 
 
-def add(q):
+def add(quad):
     """adds a quad to the table"""
-    quad = Quads(s=q['s'], p=q['p'], o=q['o'], g=q['s'])
-    quad.save()
+    q = quad.replace(' .', '').replace('> ', '>*').replace('" <', '"*<').split('*')
+    if len(q) == 4:
+        Quads.objects.get_or_create(sub=q[0], prd=q[1], obj=q[2], gph=q[3])
+    elif len(q) == 3:
+        Quads.objects.get_or_create(sub=q[0], prd=q[1], obj=q[2])
     return

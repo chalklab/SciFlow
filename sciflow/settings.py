@@ -43,13 +43,13 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'crispy_forms',
-
     'crosswalks',
     'datasets',
     'substances',
     'workflow',
     'datafiles',
     'debug_toolbar',
+    'quads',
 ]
 
 MIDDLEWARE = [
