@@ -3,6 +3,7 @@
 {% block title %} Substances Index {% endblock %}
 {% block header %} Substance {% endblock %}
 {% block content %}
+
     <div class="row">
         <div class="col-6">
         <h5>Descriptors</h5>
@@ -20,18 +21,21 @@
         <div class="row">
             <div class="row-cols-12">
                 <div class="jmol_panel">
+                    {% load static %}
                     <div class="panel-primary">
-                        <div style="text-align: center;margin-inside: 10;font-size: 48px">{{ image_found }}</div></div>
-                    <script type="text/javascript" src="../../static/jsmol/JSmol.min.js"></script>
+                        <div style="text-align: center;margin-inside: 10;font-size: 48px">{{ image_found }}</div>
+                    <script type="text/javascript" src="{% static '/jsmol/JSmol.min.js' %}"></script>
                     <script type="text/javascript">
                         var Info = {
                     color: "White",
                     height: 300,
                     width: 400,
                     use: "HTML5",
-                    j2sPath: "../../static/jsmol/j2s",
+                    j2sPath: "{% static '/jsmol/j2s' %}",
                     src:"{{ image_url }}"};
-                        Jmol.getApplet("jmol1", Info);</script>
+                    Jmol.getApplet("jmol1", Info);
+
+                    </script>
 
 
                 </div>

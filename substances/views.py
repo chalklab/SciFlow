@@ -5,6 +5,8 @@ from django.core.paginator import Paginator
 from substances.sub_functions import *
 from sciflow.settings import BASE_DIR
 from zipfile import ZipFile
+import os.path
+from os import path
 import requests
 
 
@@ -38,6 +40,9 @@ def subview(request, subid):
     baseimage = 'https://cactus.nci.nih.gov/chemical/structure/{}/file?format=sdf&get3d=true'
 
     image_url = baseimage.format(inchikey)
+    testvar = path.exists("static/jsmol/JSmol.min.js")
+
+    print('js path is ' + str(testvar))
     print(inchikey)
 
     r = requests.get(image_url)
