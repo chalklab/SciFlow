@@ -9,10 +9,10 @@ from django.db import models
 
 
 class Quads(models.Model):
-    s = models.CharField(max_length=256)
-    p = models.CharField(max_length=256)
-    o = models.CharField(max_length=256)
-    g = models.CharField(max_length=256)
+    sub = models.CharField(max_length=256)
+    prd = models.CharField(max_length=256)
+    obj = models.CharField(max_length=256)
+    gph = models.CharField(max_length=256)
     updated = models.DateTimeField()
 
     class Meta:
