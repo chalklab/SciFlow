@@ -24,15 +24,22 @@
                     {% load static %}
                     <div class="panel-primary">
                         <div style="text-align: center;margin-inside: 10;font-size: 48px">{{ image_found }}</div>
-                    <script type="text/javascript" src="{% static '/jsmol/JSmol.min.js' %}"></script>
+                    <script type="text/javascript" src="{% static '/Jsmol/JSmol.min.js' %}"></script>
+{#                        <script type="text/javascript" src="{% static '/js/Jsmolapplet_for_html.js' %}"></script>#}
+{#                        <script type="text/javascript">Jmol.getApplet("jmol1", Info);</script>#}
                     <script type="text/javascript">
                         var Info = {
-                    color: "White",
-                    height: 300,
-                    width: 400,
-                    use: "HTML5",
-                    j2sPath: "{% static '/jsmol/j2s' %}",
-                    src:"{{ image_url }}"};
+                            color: "White",
+                            height: 300,
+                            width: 400,
+                            use: "HTML5",
+                            j2sPath: "{% static '/Jsmol/j2s' %}",
+                            src:"{{ image_url }}",
+
+                            serverURL : "https://osdb.stuchalk.domains.unf.edu/js/jsmol/php/jsmol.php",
+                            {# Server URL needs to be changed when website is hosted on the server to the correct php file. right now uses Dr. Chalks former project for the file.#}
+                        };
+
                     Jmol.getApplet("jmol1", Info);
 
                     </script>

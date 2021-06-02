@@ -40,7 +40,7 @@ def subview(request, subid):
     baseimage = 'https://cactus.nci.nih.gov/chemical/structure/{}/file?format=sdf&get3d=true'
 
     image_url = baseimage.format(inchikey)
-    testvar = path.exists("static/jsmol/JSmol.min.js")
+    testvar = path.exists("/static/Jsmol/JSmol.min.js")
 
     print('js path is ' + str(testvar))
     print(inchikey)
