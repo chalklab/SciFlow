@@ -78,24 +78,6 @@ def pubchem(identifier, meta, ids, descs, srcs):
                 prop['urn']['name'] == "Rotatable Bond":
             descs["pubchem"]["rotatable_bond"] = prop["value"]["ival"]
 
-        # get addition descriptor data if available
-        search = 'inchikey/' + identifier + '/json?record_type=3d'
-        response = requests.get(apipath + search)
-        if response.status_code == 200:
-            search = 'inchikey/' + identifier + '/json?record_type=3d'
-            json = requests.get(apipath + search).json()
-            full = json["PC_Compounds"][0]
-            coords = full["coords"]
-            for coord in coords:
-                for x in coord["conformers"]:
-                    for y in x["data"]:
-                        if y["urn"]["label"] == "Fingerprint" and \
-                                y["urn"]["name"] == "Shape":
-                            descs["pubchem"]["fingerprint"] = \
-                                y["value"]["slist"]
-                        elif y["urn"]["label"] == "Shape" and \
-                                y["urn"]["name"] == "Volume":
-                            descs["pubchem"]["volume3D"] = y["value"]["fval"]
 
         srcs["pubchem"].update({"result": 1})
 

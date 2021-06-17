@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'workflow',
     'datafiles',
     'debug_toolbar',
+    'targets',
     'quads',
 ]
 
@@ -173,7 +174,8 @@ AUTHENTICATION_BACKENDS = (
 authorized_users = [
     'cweb1182@gmail.com',
     'jaredracicot@gmail.com',
-    'stuartjchalk@gmail.com'
+    'stuartjchalk@gmail.com',
+    'n01448636@gmail.com'
 ]
 
 # Debug toolbar settings
