@@ -2,7 +2,7 @@
 from workflow.gdb_functions import *
 from datafiles.df_functions import *
 from substances.sub_functions import *
-from targets.target_functions import *
+# from targets.target_functions import *
 from datafiles.models import *
 from sciflow import gvars
 from django.db.models import Max
@@ -36,7 +36,9 @@ def ingest(upload, user):
         mettypes = ['procedure']
         # this would be expanded as we get me code written for other unique
         # types...
-        systypes = ['compound', 'target']
+        systypes = ['compound']
+        # systypes = ['compound', 'target']
+
 
         for mettype in mettypes:
             found = getaspect(file, mettype)

@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'workflow',
     'datafiles',
     'debug_toolbar',
-    'targets',
     'quads',
 ]
 
