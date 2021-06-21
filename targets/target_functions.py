@@ -116,12 +116,12 @@ def getaddtarg(section, meta):
                             continue
                         else:
                             if v.startswith('CHEMBL'):
-                                targid = v
+                                targid = Targets.objects.values('id').get(chembl_id=v)['id']
                                 break
             else:
                     # cast all values to str (avoids error)
                     if value.startswith('CHEMBL'):
-                        targid = value
+                        targid = Targets.objects.values('id').get(chembl_id=v)['id']
                         break
 
     if not targid:
