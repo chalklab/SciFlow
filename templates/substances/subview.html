@@ -25,8 +25,6 @@
                     <div class="panel-primary">
                         <div style="text-align: center;margin-inside: 10;font-size: 48px">{{ image_found }}</div>
                     <script type="text/javascript" src="{% static '/Jsmol/JSmol.min.js' %}"></script>
-{#                        <script type="text/javascript" src="{% static '/js/Jsmolapplet_for_html.js' %}"></script>#}
-{#                        <script type="text/javascript">Jmol.getApplet("jmol1", Info);</script>#}
                     <script type="text/javascript">
                         var Info = {
                             color: "White",
@@ -34,21 +32,15 @@
                             width: 400,
                             use: "HTML5",
                             j2sPath: "{% static '/Jsmol/j2s' %}",
-                            src:"{{ image_url }}",
+                            src:"https://cactus.nci.nih.gov/chemical/structure/{{ inchikey }}/file?format=sdf&get3d=true",
 
-                            serverURL : "https://osdb.stuchalk.domains.unf.edu/js/jsmol/php/jsmol.php",
+                            serverURL : "https://osdb.stuchalk.domains.unf.edu/js/jsmol/php/jsmol.php",};
                             {# Server URL needs to be changed when website is hosted on the server to the correct php file. right now uses Dr. Chalks former project for the file.#}
-                        };
-
-                    Jmol.getApplet("jmol1", Info);
-
+                        Jmol.getApplet("jmol1", Info);
                     </script>
-
-
+                    </div>
                 </div>
             </div>
-        </div>
-
 
 
             <ul>
@@ -57,7 +49,7 @@
                 <li> Molecular Weight: {{ substance.molweight }} g/mol</li>
                 <li> CAS Registry #: {{ substance.casrn }}</li>
             </ul>
-
+        <div class="row">
             <h5>Sources</h5>
             <ul>
                 {% for src in srcs %}
@@ -67,16 +59,17 @@
                     <li>{{src.source}}: Failed, {{src.updated}} </li>
                 {% endif %}
                 {% endfor %}
-            </ul>
-
+            </ul></div>
+        <div class="row">
             <h5>Identifiers</h5>
+
             <ul>
                 {% for ident, vdict in ids.items %}
                 {% for val, srcs in vdict.items %}
                     <li>{{ident}}: {{ val }} ({{ srcs|join:', ' }}) </li>
                 {% endfor %}
             {% endfor %}
-            </ul>
+            </ul></div>
         </div>
     </div>
 
