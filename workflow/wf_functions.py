@@ -2,6 +2,7 @@
 from workflow.gdb_functions import *
 from datafiles.df_functions import *
 from substances.sub_functions import *
+# from targets.target_functions import *
 from datafiles.models import *
 from sciflow import gvars
 from django.db.models import Max
@@ -36,6 +37,8 @@ def ingest(upload, user):
         # this would be expanded as we get me code written for other unique
         # types...
         systypes = ['compound']
+        # systypes = ['compound', 'target']
+
 
         for mettype in mettypes:
             found = getaspect(file, mettype)
@@ -139,7 +142,40 @@ def normalize(dfile, sections, user, jl):
                     actlog("WF_A08: Compound found in DB: ( " + str(section) + ", file id " + str(ffileid) + " )")
                 else:
                     errorlog("WF_E08: Compound not found in or added to DB ( " + str(section) + ", " + str(entry) + " )")
-
+        # if section == "target":
+        #     for entry in entries:
+        #         targid = getaddtarg(section, entry)
+        #         if targid:
+        #             ffileid = targinfiles(targid)
+        #             graphid = targingraph(targid)
+        #
+        #             # load facet file to extract @id for compound
+        #             fobjt = FacetFiles.objects.get(facet_lookup_id=ffileid)
+        #             ffile = json.loads(fobjt.file)
+        #             normid = ffile['@graph']['@id'] + 'target/1/'
+        #
+        #             # target already in graph so update facet entry with
+        #             # link to facet in graph
+        #             facets = dfile['@graph']['scidata']['system']['facets']
+        #             facetid = entry[section]['@id']
+        #             for fidx, facet in enumerate(facets):
+        #                 if facet['@id'] == facetid:
+        #                     # update datafile facet entry
+        #                     finfo = {"@id": normid, "@type": "sdo:" + section}
+        #                     facets[fidx] = finfo  # works as passed by ref
+        #                     # update other internal references (facetid)
+        #                     dfstr = json.dumps(dfile)
+        #                     dfile = json.loads(dfstr.replace('"' + facetid + '"', '"' + normid + '"'))
+        #                     break
+        # 
+        #             # add entry into json_facets
+        #             JsonFacets.objects.get_or_create(
+        #                 json_lookup_id=jl,
+        #                 facets_lookup_id=ffileid
+        #             )
+        #             actlog("WF_A08: Target found in DB: ( " + str(section) + ", file id " + str(ffileid) + " )")
+        #         else:
+        #             errorlog("WF_E08: Target not found in or added to DB ( " + str(section) + ", " + str(entry) + " )")
     # update file in DB
     updated = updatedatafile(dfile, 'normalized')
     if updated:
