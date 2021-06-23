@@ -41,7 +41,7 @@ def subview(request, subid):
 
     image_url = baseimage.format(inchikey)
     testvar = path.exists("/static/Jsmol/JSmol.min.js")
-
+    print(substance)
     print('js path is ' + str(testvar))
     print(inchikey)
 
@@ -83,7 +83,7 @@ def subview(request, subid):
     # exit()
     return render(request, "substances/subview.html",
                   {'substance': substance, "ids": idlist,
-                   "descs": dlist, "srcs": srcs, "image_url": image_url, "image_found": image_found})
+                   "descs": dlist, "srcs": srcs, "image_url": image_url, "image_found": image_found, "inchikey" : inchikey})
 
 
 def subids(request, subid):
