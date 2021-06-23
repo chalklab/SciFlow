@@ -3,7 +3,7 @@
 {% block title %} Facet List {% endblock %}
 {% block header %} {{ facet }} {% endblock %}
 {% block content %}
-    <form action="" method="post">
+    <form action="/substances/search/<query>/" method="post">
         {% csrf_token %}
         <h4 class="d-inline-block">Search:</h4>
         <input name="q" type="text" placeholder="Search for a substance">
