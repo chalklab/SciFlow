@@ -137,7 +137,7 @@ def normalize(dfile, sections, user, jl):
                     # add entry into json_facets
                     JsonFacets.objects.get_or_create(
                         json_lookup_id=jl,
-                        facets_lookup_id=ffileid
+                        facet_lookup_id=ffileid
                     )
                     actlog("WF_A08: Compound found in DB: ( " + str(section) + ", file id " + str(ffileid) + " )")
                 else:
@@ -171,7 +171,7 @@ def normalize(dfile, sections, user, jl):
         #             # add entry into json_facets
         #             JsonFacets.objects.get_or_create(
         #                 json_lookup_id=jl,
-        #                 facets_lookup_id=ffileid
+        #                 facet_lookup_id=ffileid
         #             )
         #             actlog("WF_A08: Target found in DB: ( " + str(section) + ", file id " + str(ffileid) + " )")
         #         else:
