@@ -1,28 +1,52 @@
 """example functions for development"""
 import os
 import django
+import time
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
 
-from substances.sub_functions import *
 from substances.views import *
 from datafiles.df_functions import *
 from substances.external import *
 from scyjava import config, jimport
+from workflow.gdb_functions import *
 
 
 # add a new substance jld to the database
 runjld = True
 if runjld:
-    subid = 7608
-    # generate new json-ld
-    jld = createsubjld(subid)
-    # get data from facet_lookup
-    sub = getmeta(subid)
-    # load into facets_files
+    count = 0
+    subs = Substances.objects.all().order_by('id')
+    for sub in subs:
+        facet = FacetLookup.objects.get(id=sub.facet_lookup_id)
+        if facet.currentversion == 1:
+            subid = sub.id
+            # generate new json-ld file (as python dictionary)
+            jld = createsubjld(subid)
+            jld["@id"] = sub.graphdb  # updating the graphname from the initial ingest
+            # get the latest version of this file from facet_files
+            lastver = FacetFiles.objects.filter(facet_lookup_id=sub.facet_lookup_id).order_by('-version')[0]
+            newver = lastver.version + 1
+            # load into facet_files
+            file = FacetFiles(facet_lookup_id=sub.facet_lookup_id,
+                              file=json.dumps(jld, separators=(',', ':')), type='raw', version=newver)
+            file.save()
+            # add json-ld to the graph replacing the old version
+            addgraph('facet', sub.facet_lookup_id, 'remote', sub.graphdb)
+            # update facet_lookup
+            lookup = FacetLookup.objects.get(id=sub.facet_lookup_id)
+            lookup.currentversion = newver
+            lookup.save()
+            print("Updated '" + sub.graphdb + "'")
+            time.sleep(4)
+        else:
+            print("Already updated '" + sub.graphdb + "'")
+        count += 1
+        if count > 4:
+            exit()
 
-    print(sub)
-    exit()
+exit()
 
 # add a new substance to the database
 add = None

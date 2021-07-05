@@ -199,7 +199,7 @@ def createsubjld(subid):
     """
 
     # get the substance template file from the database
-    tmpl = Templates.objects.filter(type="newcmpd").order_by('-version')[0]
+    tmpl = Templates.objects.filter(type="compound").order_by('-version')[0]
     sd = json.loads(tmpl.json)
     cmpd = sd['@graph']['scidata']['system']['facets'][0]
 
@@ -269,7 +269,7 @@ def createsubjld(subid):
     if "pubchem" in ids.keys():
         pcid = ids["pubchem"]
         mol = pubchemmol(pcid)
-        atoms = mol['atoms']
+        atoms = mol["atoms"]
         bonds = mol['bonds']
         chrgs = mol['chrgs']
 

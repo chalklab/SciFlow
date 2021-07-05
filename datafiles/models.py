@@ -25,6 +25,7 @@ class JsonFiles(models.Model):
     file = models.TextField(default='')
     type = models.CharField(max_length=32, default='')
     version = models.IntegerField(default='')
+    jhash = models.CharField(max_length=52, blank=True, null=True)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -105,7 +106,6 @@ class FacetFiles(models.Model):
     file = models.TextField()
     type = models.CharField(max_length=32)
     version = models.IntegerField()
-    jhash = models.CharField(max_length=52, blank=True, null=True)
     updated = models.DateTimeField()
 
     class Meta:
@@ -198,7 +198,7 @@ class AspectErrors(models.Model):
 class JsonAspects(models.Model):
     """model for the json_aspects join table"""
     json_lookup = models.ForeignKey(JsonLookup, on_delete=models.PROTECT)
-    aspects_lookup = models.ForeignKey(AspectLookup, on_delete=models.PROTECT)
+    aspect_lookup = models.ForeignKey(AspectLookup, on_delete=models.PROTECT)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -209,7 +209,7 @@ class JsonAspects(models.Model):
 class JsonFacets(models.Model):
     """model for the json_facets join table"""
     json_lookup = models.ForeignKey(JsonLookup, on_delete=models.PROTECT)
-    facets_lookup = models.ForeignKey(FacetLookup, on_delete=models.PROTECT)
+    facet_lookup = models.ForeignKey(FacetLookup, on_delete=models.PROTECT)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:

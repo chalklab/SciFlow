@@ -15,8 +15,8 @@ class Migration(migrations.Migration):
             name='AspectActlog',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('aspects_lookup_id', models.IntegerField()),
-                ('aspects_file_id', models.IntegerField()),
+                ('aspect_lookup_id', models.IntegerField()),
+                ('aspect_file_id', models.IntegerField()),
                 ('activitycode', models.CharField(max_length=16)),
                 ('comment', models.CharField(max_length=256)),
                 ('updated', models.DateTimeField()),
@@ -30,8 +30,8 @@ class Migration(migrations.Migration):
             name='AspectErrors',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('aspects_lookup_id', models.IntegerField()),
-                ('aspects_file_id', models.IntegerField()),
+                ('aspect_lookup_id', models.IntegerField()),
+                ('aspect_file_id', models.IntegerField()),
                 ('errorcode', models.CharField(max_length=16)),
                 ('comment', models.CharField(max_length=256)),
                 ('updated', models.DateTimeField()),
@@ -77,8 +77,8 @@ class Migration(migrations.Migration):
             name='FacetActlog',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('facets_lookup_id', models.IntegerField()),
-                ('facets_file_id', models.IntegerField()),
+                ('facet_lookup_id', models.IntegerField()),
+                ('facet_file_id', models.IntegerField()),
                 ('activitycode', models.CharField(max_length=16)),
                 ('comment', models.CharField(max_length=256)),
                 ('updated', models.DateTimeField()),
@@ -92,8 +92,8 @@ class Migration(migrations.Migration):
             name='FacetErrors',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('facets_lookup_id', models.IntegerField()),
-                ('facets_file_id', models.IntegerField()),
+                ('facet_lookup_id', models.IntegerField()),
+                ('facet_file_id', models.IntegerField()),
                 ('errorcode', models.CharField(max_length=16)),
                 ('comment', models.CharField(max_length=256)),
                 ('updated', models.DateTimeField()),
