@@ -16,9 +16,10 @@ from workflow.gdb_functions import *
 # add a new substance jld to the database
 runjld = True
 if runjld:
-    count = 0
     subs = Substances.objects.all().order_by('id')
     for sub in subs:
+        if sub.graphdb is None:
+            continue
         facet = FacetLookup.objects.get(id=sub.facet_lookup_id)
         if facet.currentversion == 1:
             subid = sub.id
@@ -42,11 +43,7 @@ if runjld:
             time.sleep(4)
         else:
             print("Already updated '" + sub.graphdb + "'")
-        count += 1
-        if count > 4:
-            exit()
 
-exit()
 
 # add a new substance to the database
 add = None
