@@ -214,8 +214,18 @@ def infacetfiles(facetid):
     """
     find out if a facet with this id has been saved to the facet_files table
     """
-    found = FacetLookup.objects.all().values_list(
-        'graphdb', flat=True).get(id=facetid)
+    found = FacetLookup.objects.all().values_list('graphdb', flat=True).get(id=facetid)
+    if found:
+        return True
+    else:
+        return False
+
+
+def getflookup(facetid):
+    """
+    find out if a facet with this id has been saved to the facet_files table
+    """
+    found = FacetLookup.objects.all().values_list('graphdb', flat=True).get(id=facetid)
     if found:
         return True
     else:

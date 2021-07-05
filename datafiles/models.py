@@ -60,6 +60,29 @@ class JsonActlog(models.Model):
         db_table = 'json_actlog'
 
 
+class References(models.Model):
+    id = models.SmallAutoField(primary_key=True)
+    journal = models.CharField(max_length=256, blank=True, null=True)
+    journal_id = models.IntegerField()
+    authors = models.CharField(max_length=2048, blank=True, null=True)
+    aulist = models.CharField(max_length=1024, blank=True, null=True)
+    year = models.PositiveSmallIntegerField(blank=True, null=True)
+    volume = models.CharField(max_length=12, blank=True, null=True)
+    issue = models.CharField(max_length=16, blank=True, null=True)
+    startpage = models.CharField(max_length=16, blank=True, null=True)
+    endpage = models.CharField(max_length=16, blank=True, null=True)
+    title = models.CharField(max_length=512, blank=True, null=True)
+    bibliography = models.CharField(max_length=1024, blank=True, null=True)
+    url = models.CharField(max_length=256, blank=True, null=True)
+    doi = models.CharField(max_length=256)
+    count = models.SmallIntegerField(blank=True, null=True)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'references'
+
+
 # facet tables
 class FacetLookup(models.Model):
     """ model for the facet_lookup DB table """
@@ -82,6 +105,7 @@ class FacetFiles(models.Model):
     file = models.TextField()
     type = models.CharField(max_length=32)
     version = models.IntegerField()
+    jhash = models.CharField(max_length=52, blank=True, null=True)
     updated = models.DateTimeField()
 
     class Meta:

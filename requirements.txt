@@ -1,4 +1,4 @@
-asgiref==3.3.4
+asgiref>=3.3
 cachetools==4.2.2
 certifi>=2020.12.5
 cffi==1.14.5
@@ -8,13 +8,13 @@ cryptography==3.4.7
 defusedxml==0.7.1
 Django>=3.2.4
 django-allauth==0.44.0
-django-crispy-forms==1.11.2
+django-crispy-forms>=1.11
 django-debug-toolbar==3.2.1
 djangorestframework==3.12.4
 easydict==1.9
 ecdsa>=0.16.1
 ez-setup==0.9
-frozendict==2.0.2
+frozendict>=2.0
 idna>=2.10
 itsdangerous>=2.0.0
 jgo==1.0.1

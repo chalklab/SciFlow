@@ -29,8 +29,7 @@ def testimport():
 # used in datasets/mysql.py:getcodenames
 def getdatasetnames():
     """ retrieve the shortnames of all the datasets """
-    qset = Datasets.objects.all().values_list(
-        'datasetname', flat=True).order_by('id')
+    qset = Datasets.objects.all().values_list('datasetname', flat=True).order_by('id')
     lst = list(qset)
     return lst
 
