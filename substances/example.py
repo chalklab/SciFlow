@@ -10,8 +10,22 @@ from datafiles.df_functions import *
 from substances.external import *
 from scyjava import config, jimport
 
+
+# add a new substance jld to the database
+runjld = True
+if runjld:
+    subid = 7608
+    # generate new json-ld
+    jld = createsubjld(subid)
+    # get data from facet_lookup
+    sub = getmeta(subid)
+    # load into facets_files
+
+    print(sub)
+    exit()
+
 # add a new substance to the database
-add = True
+add = None
 if add:
     # example substance that is not found online...
     meta = {

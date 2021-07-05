@@ -1,91 +1,78 @@
 {% extends 'base.html' %}
 
-{% block title %} Substances Index {% endblock %}
-{% block header %} Substance {% endblock %}
+{% block title %} Substance View {% endblock %}
 {% block content %}
-
     <div class="row">
         <div class="col-6">
-        <h5>Descriptors</h5>
+                <h3>Substance
+                {% if user.get_username == 'stuart' %}
+                    <button type="button" class="col-sm-3 m-4 btn btn-success" onclick="document.location.href = '/substances/newjld/{{ substance.id }}'">Add new twin</button>
+                {% endif %}
+                </h3>
+            <h5>Descriptors</h5>
             <ul>
             {% for desc, vdict in descs.items %}
-            {% for val, srcs in vdict.items %}
-                <li>{{desc}}: {{ val }} ({{ srcs|join:', ' }}) </li>
+                {% for val, srcs in vdict.items %}
+                    <li>{{ desc }}: {{ val }} ({{ srcs|join:', ' }}) </li>
+                {% endfor %}
             {% endfor %}
-            {% endfor %}
-
             </ul>
         </div>
-
         <div class="col-6">
-        <div class="row">
-            <div class="row-cols-12">
-                <div class="jmol_panel">
-                    {% load static %}
-                    <div class="panel-primary">
-                        <div style="text-align: center;margin-inside: 10;font-size: 48px">{{ image_found }}</div>
-                    <script type="text/javascript" src="{% static '/Jsmol/JSmol.min.js' %}"></script>
-                    <script type="text/javascript">
-                        var Info = {
-                            color: "White",
-                            height: 300,
-                            width: 400,
-                            use: "HTML5",
-                            j2sPath: "{% static '/Jsmol/j2s' %}",
-                            src:"https://cactus.nci.nih.gov/chemical/structure/{{ inchikey }}/file?format=sdf&get3d=true",
+            <div class="row">
+                <div class="cols-sm-12">
+                    <div class="jmol_panel">
+                        {% load static %}
+                        <div class="panel-primary">
+                            <div style="text-align: center;margin-inside: 10;font-size: 48px">{{ image_found }}</div>
+                            <script type="text/javascript" src="{% static '/Jsmol/JSmol.min.js' %}"></script>
+                            <script type="text/javascript">
+                                let Info = {
+                                    color: "White",
+                                    height: 300,
+                                    width: 400,
+                                    use: "HTML5",
+                                    j2sPath: "{% static '/Jsmol/j2s' %}",
+                                    src:"https://cactus.nci.nih.gov/chemical/structure/{{ inchikey }}/file?format=sdf&get3d=true",
 
-                            serverURL : "https://osdb.stuchalk.domains.unf.edu/js/jsmol/php/jsmol.php",};
-                            {# Server URL needs to be changed when website is hosted on the server to the correct php file. right now uses Dr. Chalks former project for the file.#}
-                        Jmol.getApplet("jmol1", Info);
-                    </script>
+                                    serverURL : "https://osdb.stuchalk.domains.unf.edu/js/jsmol/php/jsmol.php",};
+                                {# Server URL needs to be changed when website is hosted on the server to the correct php file. right now uses Dr. Chalks former project for the file.#}
+                                Jmol.getApplet("jmol1", Info);
+                            </script>
+                        </div>
+                    </div>
+                    <div>
+                        <ul>
+                            <li> Name: {{ substance.name }}</li>
+                            <li> Formula: {{ substance.formula }}</li>
+                            <li> Molecular Weight: {{ substance.molweight }} g/mol</li>
+                            <li> CAS Registry #: {{ substance.casrn }}</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5>Sources</h5>
+                        <ul>
+                            {% for src in srcs %}
+                                {% if src.result == '1' %}
+                                    <li>{{src.source}}: Success, {{src.updated}} </li>
+                                {% else %}
+                                    <li>{{src.source}}: Failed, {{src.updated}} </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div>
+                        <h5>Identifiers</h5>
+                        <ul>
+                            {% for ident, vdict in ids.items %}
+                                {% for val, srcs in vdict.items %}
+                                    <li>{{ident}}: {{ val }} ({{ srcs|join:', ' }}) </li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
             </div>
-
-
-            <ul>
-                <li> Name: {{ substance.name }}</li>
-                <li> Formula: {{ substance.formula }}</li>
-                <li> Molecular Weight: {{ substance.molweight }} g/mol</li>
-                <li> CAS Registry #: {{ substance.casrn }}</li>
-            </ul>
-        <div class="row">
-            <h5>Sources</h5>
-            <ul>
-                {% for src in srcs %}
-                {% if src.result == '1' %}
-                    <li>{{src.source}}: Success, {{src.updated}} </li>
-                {% else %}
-                    <li>{{src.source}}: Failed, {{src.updated}} </li>
-                {% endif %}
-                {% endfor %}
-            </ul></div>
-        <div class="row">
-            <h5>Identifiers</h5>
-
-            <ul>
-                {% for ident, vdict in ids.items %}
-                {% for val, srcs in vdict.items %}
-                    <li>{{ident}}: {{ val }} ({{ srcs|join:', ' }}) </li>
-                {% endfor %}
-            {% endfor %}
-            </ul></div>
         </div>
     </div>
-
-
-<div class="row">
-    <div class="d-flex flex-wrap justify-content-center">
-        <br>
-            <button type="button" class="m-4 btn btn-success" style="width: 300px"
-                    onclick="document.location.href = '/substances/view/{{substance.id}}/subids'">
-                View Identifiers</button>
-            <button type="button" class="m-4 btn btn-success" style="width: 300px"
-                    onclick="document.location.href = '/substances/view/{{substance.id}}/subdescs'">
-                View Descriptors</button>
-        </br>
-    </div>
-</div>
-    </div>
 {% endblock %}
-</div>

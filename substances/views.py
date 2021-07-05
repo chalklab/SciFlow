@@ -10,6 +10,11 @@ from os import path
 import requests
 
 
+def newjld(request, identifier):
+    print(identifier)
+    exit()
+
+
 def sublist(request):
     """view to generate list of substances on homepage"""
     if request.method == "POST":

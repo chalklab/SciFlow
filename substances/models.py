@@ -103,6 +103,7 @@ class Templates(models.Model):
     """ getting data from the template """
     type = models.CharField(max_length=16)
     json = models.TextField()
+    version = models.SmallIntegerField()
     updated = models.DateTimeField()
 
     class Meta:

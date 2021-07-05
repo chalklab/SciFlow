@@ -1,6 +1,4 @@
 """ functions for use with the substances and related tables..."""
-import re
-
 from django.db.models import Q
 from substances.external import *
 from substances.models import *
@@ -201,7 +199,7 @@ def createsubjld(subid):
     """
 
     # get the substance template file from the database
-    tmpl = Templates.objects.get(type="compound")
+    tmpl = Templates.objects.filter(type="newcmpd").order_by('-version')[0]
     sd = json.loads(tmpl.json)
     cmpd = sd['@graph']['scidata']['system']['facets'][0]
 
@@ -237,7 +235,8 @@ def createsubjld(subid):
                 base = sd['@context'][last]['@base'].replace("<inchikey>", val)
                 sd['@context'][last]['@base'] = base
                 sd['@graph']['@id'] = base
-                sd['@graph']['permalink'] = base
+                plink = sd['@graph']['permalink'].replace("<inchikey>", val)
+                sd['@graph']['permalink'] = plink
                 uid = sd['@graph']['uid'].replace("<inchikey>", val)
                 sd['@graph']['uid'] = uid
         elif section == 'descriptors':
