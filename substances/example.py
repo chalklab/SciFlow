@@ -44,7 +44,6 @@ if runjld:
         else:
             print("Already updated '" + sub.graphdb + "'")
 
-
 # add a new substance to the database
 add = None
 if add:

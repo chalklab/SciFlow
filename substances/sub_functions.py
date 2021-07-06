@@ -229,15 +229,15 @@ def createsubjld(subid):
         value = []
         if section == 'identifiers':
             # if identifier=inchikey then populate other locations in json file
-            val = get_item(ids, label)
+            value = get_item(ids, label)
             if label == 'inchikey':
                 last = len(sd['@context']) - 1
-                base = sd['@context'][last]['@base'].replace("<inchikey>", val)
+                base = sd['@context'][last]['@base'].replace("<inchikey>", value)
                 sd['@context'][last]['@base'] = base
                 sd['@graph']['@id'] = base
-                plink = sd['@graph']['permalink'].replace("<inchikey>", val)
+                plink = sd['@graph']['permalink'].replace("<inchikey>", value)
                 sd['@graph']['permalink'] = plink
-                uid = sd['@graph']['uid'].replace("<inchikey>", val)
+                uid = sd['@graph']['uid'].replace("<inchikey>", value)
                 sd['@graph']['uid'] = uid
         elif section == 'descriptors':
             if field.group is None:
@@ -267,9 +267,9 @@ def createsubjld(subid):
     # add molecular graph
     # get molfile from pubchem (if available)
     if "pubchem" in ids.keys():
-        pcid = ids["pubchem"]
+        pcid = ids['pubchem']
         mol = pubchemmol(pcid)
-        atoms = mol["atoms"]
+        atoms = mol['atoms']
         bonds = mol['bonds']
         chrgs = mol['chrgs']
 
