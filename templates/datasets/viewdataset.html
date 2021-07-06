@@ -3,11 +3,26 @@
 {% block title %} SciFlow Datasets {% endblock %}
 {% block header %} Dataset: {{ dataset.name }} {% endblock %}
 {% block content %}
+
+
     <ul>
-    {% for id, title in page_obj %}
-        <li><a href="/files/view/{{ id }}">{{ title }}</a></li>
+    {% for title, ids in page_obj %}
+        <li>{{ title }}</li>
+
+        {% for id in ids.split %}
+            <a href="/files/view/{{ id|cut:"," }}">&nbsp;{{ id }}</a>
+        {% endfor %}
+
     {% endfor %}
     </ul>
+
+
+{#    <ul>#}
+{#    {% for id, title in page_obj %}#}
+{#        <li><a href="/files/view/{{ id }}">{{ title }}</a></li>#}
+{#    {% endfor %}#}
+{#    </ul>#}
+
 
     <div class="pagination">
     <span class="step-links">

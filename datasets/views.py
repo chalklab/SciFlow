@@ -1,4 +1,6 @@
 """ django views file for the datasets app """
+
+
 from datasets.ds_functions import *
 from django.shortcuts import render
 from django.core.paginator import Paginator
@@ -32,10 +34,16 @@ def index(request):
 
 def viewdataset(request, setid):
     """view a dataset list of files"""
-    files = JsonLookup.objects.filter(dataset_id=setid).order_by('title').values_list('id', 'title').distinct()
-    paginator = Paginator(files, 20)
+    titles = JsonLookup.objects.filter(dataset_id=setid).order_by('title').values_list('title', flat=True).distinct()
+    papers = {}
+    for title in titles:
+        ids = list(JsonLookup.objects.filter(dataset_id=setid, title=title).values_list('id', flat=True)).__str__()
+        papers.update({title: ids})
+    papers_items = [(title, ids.strip("[]{},")) for title, ids in papers.items()]
+    paginator = Paginator(papers_items, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     dataset = Datasets.objects.get(id=setid)
+
     return render(request, "datasets/viewdataset.html",
                   {'page_obj': page_obj, 'dataset': dataset})
