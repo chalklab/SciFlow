@@ -77,8 +77,6 @@ def pubchem(identifier, meta, ids, descs, srcs):
         elif prop['urn']['label'] == "Count" and \
                 prop['urn']['name'] == "Rotatable Bond":
             descs["pubchem"]["rotatable_bond"] = prop["value"]["ival"]
-
-
         srcs["pubchem"].update({"result": 1})
 
 

@@ -5,7 +5,6 @@ from django.core.paginator import Paginator
 from substances.sub_functions import *
 from sciflow.settings import BASE_DIR
 from zipfile import ZipFile
-import os.path
 from os import path
 import requests
 
@@ -87,8 +86,8 @@ def subview(request, subid):
     # print(srcs)
     # exit()
     return render(request, "substances/subview.html",
-                  {'substance': substance, "ids": idlist,
-                   "descs": dlist, "srcs": srcs, "image_url": image_url, "image_found": image_found, "inchikey" : inchikey})
+                  {'substance': substance, "ids": idlist, "descs": dlist, "srcs": srcs,
+                   "image_url": image_url, "image_found": image_found, "inchikey": inchikey})
 
 
 def subids(request, subid):

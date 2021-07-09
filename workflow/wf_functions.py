@@ -39,7 +39,6 @@ def ingest(upload, user):
         systypes = ['compound']
         # systypes = ['compound', 'target']
 
-
         for mettype in mettypes:
             found = getaspect(file, mettype)
             if found:
@@ -135,13 +134,10 @@ def normalize(dfile, sections, user, jl):
                             break
 
                     # add entry into json_facets
-                    JsonFacets.objects.get_or_create(
-                        json_lookup_id=jl,
-                        facet_lookup_id=ffileid
-                    )
+                    JsonFacets.objects.get_or_create(json_lookup_id=jl, facet_lookup_id=ffileid)
                     actlog("WF_A08: Compound found in DB: ( " + str(section) + ", file id " + str(ffileid) + " )")
                 else:
-                    errorlog("WF_E08: Compound not found in or added to DB ( " + str(section) + ", " + str(entry) + " )")
+                    errorlog("WF_E08: Compound not found in or added to DB (" + str(section) + ", " + str(entry) + " )")
         # if section == "target":
         #     for entry in entries:
         #         targid = getaddtarg(section, entry)

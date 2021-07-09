@@ -1,15 +1,6 @@
 """quad table function library"""
 from quads.models import Quads
 import json
-import hashlib
-
-
-def ingest(upload, user):
-    """function to ingest JSON-LD, convert it to quads, and save in the quads table"""
-    if str(upload).endswith('.jsonld'):
-        upload.seek(0)
-        text = upload.read()
-        file = json.loads(text)
 
 
 def add(quad):
@@ -22,8 +13,8 @@ def add(quad):
     return
 
 
-def find(type,text):
-    filter_kwargs = { "{}__icontains".format(type): text }
+def find(type, text):
+    filter_kwargs = {"{}__icontains".format(type): text}
     hits = Quads.objects.values(type).filter(**filter_kwargs)
     return hits
 

@@ -18,7 +18,7 @@ if f1:
 f2 = True
 if f2:
     """
-    goes though data files in a dataset looking for 
+    goes though data files in a dataset looking for
     duplicates in json_lookup and attemtps to clean them up
     currently missing code for any entries in the json_errors table
     """

@@ -2,12 +2,10 @@
 import os
 import django
 import requests
-import json
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
 
-from django.conf import settings
 from datafiles.views import *
 from pyld import jsonld
 from quads.qd_functions import *
