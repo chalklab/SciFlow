@@ -11,8 +11,22 @@ from scyjava import config, jimport
 from workflow.gdb_functions import *
 
 
+# fix empty molgraphs in json-ld files
+runfix = True
+if runfix:
+    fixes = FacetFiles.objects.all().filter(file__contains='"atoms":[]').filter(file__contains='chemtwin')
+    for fix in fixes:
+        # just replace the file don't create a new version in facet_files
+        sub = Substances.objects.get(facet_lookup_id=fix.facet_lookup_id)
+        jld = createsubjld(sub.id)
+        jld["@id"] = sub.graphdb
+        fix.file = json.dumps(jld, separators=(',', ':'))
+        fix.save()
+        print('Fixed facet_lookup ' + str(fix.facet_lookup_id))
+        exit()
+
 # add a new substance jld to the database
-runjld = True
+runjld = False
 if runjld:
     subs = Substances.objects.all().order_by('id')
     for sub in subs:
