@@ -163,7 +163,6 @@ def normalize(dfile, sections, user, jl):
         #                     dfstr = json.dumps(dfile)
         #                     dfile = json.loads(dfstr.replace('"' + facetid + '"', '"' + normid + '"'))
         #                     break
-        # 
         #             # add entry into json_facets
         #             JsonFacets.objects.get_or_create(
         #                 json_lookup_id=jl,

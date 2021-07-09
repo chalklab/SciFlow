@@ -1,6 +1,5 @@
 """quad table function library"""
 from quads.models import Quads
-import json
 
 
 def add(quad):
