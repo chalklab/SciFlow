@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %} Context List {% endblock %}
+{% block header %} {{ facet }} {% endblock %}
+{% block content %}
+
+<h3>Current Contexts</h3>
+    <ul>
+    {% for ctx in contexts %}
+        <li><a href="/contexts/view/{{ ctx.id }}">{{ ctx.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

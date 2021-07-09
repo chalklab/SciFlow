@@ -2,6 +2,6 @@
 from django.apps import AppConfig
 
 
-class CrosswalksConfig(AppConfig):
+class ContextsConfig(AppConfig):
     """ crosswlks database configuration """
-    name = 'crosswalks'
+    name = 'contexts'

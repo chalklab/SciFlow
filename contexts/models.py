@@ -1,4 +1,4 @@
-""" models for the crosswalks DB """
+""" models for the contexts DB """
 
 # This is an auto-generated Django model module.
 # You'll have to do the following manually to clean this up:
@@ -10,8 +10,20 @@
 from django.db import models
 
 
+class Contexts(models.Model):
+    dataset_id = models.IntegerField()
+    name = models.CharField(max_length=64)
+    description = models.CharField(max_length=128)
+    url = models.CharField(max_length=128)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'contexts'
+
+
 class Nspaces(models.Model):
-    """ crosswalks nspaces table """
+    """ contexts nspaces table """
     name = models.CharField(max_length=64)
     ns = models.CharField(max_length=8)
     path = models.CharField(unique=True, max_length=64)
@@ -24,7 +36,7 @@ class Nspaces(models.Model):
 
 
 class Ontterms(models.Model):
-    """ crosswalks ontterms table """
+    """ contexts ontterms table """
     title = models.CharField(max_length=256)
     definition = models.CharField(max_length=2048, blank=True, null=True)
     code = models.CharField(max_length=64)
@@ -41,7 +53,7 @@ class Ontterms(models.Model):
 
 
 class Metadata(models.Model):
-    """ crosswalks metadata table """
+    """ contexts metadata table """
     table = models.CharField(max_length=128)
     field = models.CharField(max_length=128)
     label = models.CharField(max_length=16, blank=True, null=True)
@@ -62,3 +74,29 @@ class Metadata(models.Model):
     class Meta:
         managed = False
         db_table = 'metadata'
+
+
+class Crosswalks(models.Model):
+    context = models.ForeignKey(Contexts, on_delete=models.DO_NOTHING)
+    dataset_id = models.SmallIntegerField(blank=True, null=True)
+    table = models.CharField(max_length=128)
+    field = models.CharField(max_length=256)
+    filter = models.CharField(max_length=128, blank=True, null=True)
+    cardinality = models.PositiveIntegerField(blank=True, null=True)
+    ontterm = models.ForeignKey(Ontterms, on_delete=models.DO_NOTHING)
+    sdsection = models.CharField(max_length=11, blank=True, null=True)
+    sdsubsection = models.CharField(max_length=128, blank=True, null=True)
+    sdsubsubsection = models.CharField(max_length=64, blank=True, null=True)
+    newname = models.CharField(max_length=32, blank=True, null=True)
+    category = models.CharField(max_length=64, blank=True, null=True)
+    unit = models.CharField(max_length=32, blank=True, null=True)
+    datatype = models.CharField(max_length=8)
+    intlinks = models.CharField(max_length=1024, blank=True, null=True)
+    meta = models.CharField(max_length=64, blank=True, null=True)
+    ignore = models.CharField(max_length=32, blank=True, null=True)
+    comments = models.CharField(max_length=128, blank=True, null=True)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'crosswalks'

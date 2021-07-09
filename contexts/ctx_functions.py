@@ -1,5 +1,17 @@
 """ functions file for the datafiles app"""
-from crosswalks.models import *
+from contexts.models import *
+
+
+def getctxs():
+    """get a list of contexts"""
+    ctxs = Contexts.objects.all()
+    return ctxs
+
+
+def getctx(ctxid):
+    """get a list of contexts"""
+    ctx = Contexts.objects.get(id=ctxid)
+    return ctx
 
 
 def getnspaces():

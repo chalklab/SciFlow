@@ -5,7 +5,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
 
 
-from crosswalks.cw_functions import *
+from contexts.ctx_functions import *
 
 # add a new substance to the database
 nslist = None
