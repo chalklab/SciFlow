@@ -2,7 +2,7 @@
 from django.db.models import Q
 from substances.external import *
 from substances.models import *
-from crosswalks.models import *
+from contexts.models import *
 from datetime import datetime
 from workflow.log_functions import *
 import json
@@ -231,6 +231,10 @@ def createsubjld(subid):
             # if identifier=inchikey then populate other locations in json file
             value = get_item(ids, label)
             if label == 'inchikey':
+                if value is None:
+                    print(subid)
+                    print(ids)
+                    exit()
                 last = len(sd['@context']) - 1
                 base = sd['@context'][last]['@base'].replace("<inchikey>", value)
                 sd['@context'][last]['@base'] = base

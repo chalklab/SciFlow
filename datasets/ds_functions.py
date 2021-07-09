@@ -26,6 +26,11 @@ def testimport():
 
 # ----- MySQL Functions -----
 
+# get dataset
+def getset(setid):
+    return Datasets.objects.get(id=setid)
+
+
 # used in datasets/mysql.py:getcodenames
 def getdatasetnames():
     """ retrieve the shortnames of all the datasets """

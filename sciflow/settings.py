@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'crispy_forms',
-    'crosswalks',
+    'contexts',
     'datasets',
     'substances',
     'workflow',

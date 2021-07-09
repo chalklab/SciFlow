@@ -29,13 +29,13 @@ def logout(request):
 
 
 urlpatterns = [
+    path('', include('datasets.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('logout/', logout, name='logout'),
     path('files/', include('datafiles.urls')),
-    path('', include('datasets.urls')),
     path('substances/', include('substances.urls')),
     path('workflow/', include('workflow.urls')),
-    path('crosswalks/', include('crosswalks.urls')),
+    path('contexts/', include('contexts.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
