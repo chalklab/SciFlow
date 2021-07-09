@@ -1,8 +1,21 @@
 """ django view file """
 from django.shortcuts import render
-from crosswalks.cw_functions import *
+from contexts.ctx_functions import *
+from datasets.ds_functions import *
 
-# TODO: add functions for each dataset type
+
+def index(request):
+    ctxs = getctxs()
+    return render(request, "contexts/list.html", {'contexts': ctxs})
+
+
+def view(request, ctxid):
+    ctx = getctx(ctxid)
+    ds = getset(ctx.dataset_id)
+    cws = ctx.crosswalks_set.all()
+    onts = list[cws.values('ontterm_id', 'ontterm__url')]
+    return render(request, "contexts/view.html",
+                  {'context': ctx, 'dataset': ds, 'crosswalks': cws, 'onts': onts})
 
 
 def nslist(request):
