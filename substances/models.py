@@ -136,3 +136,13 @@ class SubstancesSystems(models.Model):
     class Meta:
         managed = False
         db_table = 'substances_systems'
+
+
+class Structures(models.Model):
+    substance = models.ForeignKey(Substances, on_delete=models.CASCADE, db_column='substance_id')
+    molfile = models.TextField()
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'structures'

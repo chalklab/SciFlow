@@ -9,21 +9,84 @@ from datafiles.df_functions import *
 from substances.external import *
 from scyjava import config, jimport
 from workflow.gdb_functions import *
+from django.core.exceptions import ObjectDoesNotExist
+from rdkit import Chem
 
+
+# add molfiles for substances
+runmol = False
+if runmol:
+    subs = Substances.objects.all().values_list('id', flat=True)
+    for sub in subs:
+        smiles = Identifiers.objects.get()
+
+# update pubchem csmiles where not available
+runpcs = True
+if runpcs:
+    subids = Identifiers.objects.all().filter(type='inchikey', source='pubchem').values_list('substance_id', flat=True)
+    for subid in subids:
+        ids = Identifiers.objects.all().filter(substance_id=subid).values_list('type', flat=True)
+        if 'csmiles' not in ids:
+            key = Identifiers.objects.get(substance_id=subid, type='inchikey', source='pubchem')
+            apipath = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/"
+            respnse = requests.get(apipath + 'inchikey/' + key.value + '/json').json()
+            props = respnse["PC_Compounds"][0]["props"]
+            for prop in props:
+                if prop["urn"]["label"] == "SMILES" and prop["urn"]["name"] == "Canonical":
+                    smiles = prop["value"]["sval"]
+                    id = Identifiers(substance_id=subid, type='csmiles', value=smiles, source='pubchem')
+                    id.save()
+                    print(id)
+                    break
+        if 'ismiles' not in ids:
+            key = Identifiers.objects.get(substance_id=subid, type='inchikey', source='pubchem')
+            apipath = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/"
+            respnse = requests.get(apipath + 'inchikey/' + key.value + '/json').json()
+            props = respnse["PC_Compounds"][0]["props"]
+            for prop in props:
+                if prop["urn"]["label"] == "SMILES" and prop["urn"]["name"] == "Isomeric":
+                    smiles = prop["value"]["sval"]
+                    id = Identifiers(substance_id=subid, type='ismiles', value=smiles, source='pubchem')
+                    id.save()
+                    print(id)
+                    break
+        else:
+            print(subid)
+
+
+# update pubchem ids where not available
+runpci = False
+if runpci:
+    subids = Identifiers.objects.all().filter(type='inchikey', source='pubchem').values_list('substance_id', flat=True)
+    for subid in subids:
+        ids = Identifiers.objects.all().filter(substance_id=subid).values_list('type', flat=True)
+        if 'pubchem' not in ids:
+            key = Identifiers.objects.get(substance_id=subid, type='inchikey', source='pubchem')
+            apipath = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/"
+            respnse = requests.get(apipath + 'inchikey/' + key.value + '/json').json()
+            cid = respnse["PC_Compounds"][0]["id"]["id"]["cid"]
+            id = Identifiers(substance_id=subid, type='pubchem', value=cid, source='pubchem')
+            id.save()
+            print(id)
+        else:
+            print(subid)
 
 # fix empty molgraphs in json-ld files
-runfix = True
+runfix = False
 if runfix:
     fixes = FacetFiles.objects.all().filter(file__contains='"atoms":[]').filter(file__contains='chemtwin')
     for fix in fixes:
         # just replace the file don't create a new version in facet_files
         sub = Substances.objects.get(facet_lookup_id=fix.facet_lookup_id)
-        jld = createsubjld(sub.id)
-        jld["@id"] = sub.graphdb
-        fix.file = json.dumps(jld, separators=(',', ':'))
-        fix.save()
-        print('Fixed facet_lookup ' + str(fix.facet_lookup_id))
-        exit()
+        try:
+            pcid = Identifiers.objects.get(substance_id=sub.id, type='pubchem', source='pubchem')
+            jld = createsubjld(sub.id)
+            jld["@id"] = sub.graphdb
+            fix.file = json.dumps(jld, separators=(',', ':'))
+            fix.save()
+            print('Fixed facet_lookup ' + str(fix.facet_lookup_id))
+        except ObjectDoesNotExist:
+            print('Facet_lookup ' + str(fix.facet_lookup_id) + ' not fixed (no PubChem id)')
 
 # add a new substance jld to the database
 runjld = False
