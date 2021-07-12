@@ -2,6 +2,8 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.core.paginator import Paginator
+from django.contrib import messages
+from workflow.gdb_functions import *
 from substances.sub_functions import *
 from sciflow.settings import BASE_DIR
 from zipfile import ZipFile
@@ -9,9 +11,47 @@ from os import path
 import requests
 
 
-def newjld(request, identifier):
-    print(identifier)
-    exit()
+def newjld(request, subid):
+    """create a new version of the substance json_ld file"""
+    sub = Substances.objects.get(id=subid)
+    if sub.inchikey is not None:
+        # generate new json-ld file (as python dictionary)
+        jld = createsubjld(subid)
+        # add entry in facet_lookup if no graphdb
+        if sub.graphdb is None:
+            title = jld["@graph"]["title"]
+            uid = jld["@graph"]["uid"]
+            lookup = FacetLookup(uniqueid=uid, title=title, type='substance', currentversion=1, auth_user_id=2)
+            lookup.save()
+            lookup.graphname = 'https://scidata.unf.edu/facet/' + str(lookup.id).zfill(8)
+            lookup.save()
+            sub.graphdb = lookup.graphname
+            sub.facet_lookup_id = str(lookup.id).zfill(8)
+            sub.save()
+        # update new file @id
+        jld["@id"] = sub.graphdb
+        # get the latest version of this file from facet_files
+        found = FacetFiles.objects.filter(facet_lookup_id=sub.facet_lookup_id)
+        if not found:
+            newver = 1
+        else:
+            lastver = FacetFiles.objects.filter(facet_lookup_id=sub.facet_lookup_id).order_by('-version')[0]
+            newver = lastver.version + 1
+        # load into facet_files
+        file = FacetFiles(facet_lookup_id=sub.facet_lookup_id,
+                          file=json.dumps(jld, separators=(',', ':')), type='raw', version=newver)
+        file.save()
+        # add json-ld to the graph replacing the old version if present
+        addgraph('facet', sub.facet_lookup_id, 'remote', sub.graphdb)
+        # update facet_lookup
+        lookup = FacetLookup.objects.get(id=sub.facet_lookup_id)
+        lookup.currentversion = newver
+        lookup.save()
+        # session message
+        messages.add_message(request, messages.INFO, 'Compound twin added')
+    else:
+        messages.add_message(request, messages.INFO, 'Compound twin could not be added (no inchikey)')
+    return subview(request, subid)
 
 
 def sublist(request):

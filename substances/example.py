@@ -9,6 +9,8 @@ from datafiles.df_functions import *
 from substances.external import *
 from scyjava import config, jimport
 from workflow.gdb_functions import *
+from substances.views import *
+from django.http import *
 from django.core.exceptions import ObjectDoesNotExist
 from rdkit import Chem
 
@@ -19,6 +21,7 @@ if runmol:
     subs = Substances.objects.all().values_list('id', flat=True)
     for sub in subs:
         smiles = Identifiers.objects.get()
+
 
 # update pubchem csmiles where not available
 runpcs = True
@@ -72,7 +75,7 @@ if runpci:
             print(subid)
 
 # fix empty molgraphs in json-ld files
-runfix = False
+runfix = True
 if runfix:
     fixes = FacetFiles.objects.all().filter(file__contains='"atoms":[]').filter(file__contains='chemtwin')
     for fix in fixes:

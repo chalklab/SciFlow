@@ -213,7 +213,7 @@ def createsubjld(subid):
 
     # add general metadata
     sd['generatedAt'] = str(datetime.now())
-    title = "Chemical Substance SciData JSON-LD file for " + substance.name
+    title = sd['@graph']['title'].replace("<iupacname>", substance.name)
     sd['@graph']['title'] = title
 
     # add general compound metadata

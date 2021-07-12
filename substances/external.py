@@ -362,7 +362,7 @@ def pubchemmol(pcid):
     :return dict dictionary
     """
     apipath = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/"
-    url = apipath + pcid + '/SDF'
+    url = apipath + str(pcid) + '/SDF'
     response = requests.get(url)
     sdf = None
     if response.status_code == 200:
