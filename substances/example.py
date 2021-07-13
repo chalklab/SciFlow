@@ -13,18 +13,30 @@ from substances.views import *
 from django.http import *
 from django.core.exceptions import ObjectDoesNotExist
 from rdkit import Chem
+from rdkit.Chem import AllChem
 
 
-# add molfiles for substances
-runmol = False
+# add rdkit molfiles for substances
+runmol = True
 if runmol:
-    subs = Substances.objects.all().values_list('id', flat=True)
+    done = Structures.objects.all().values_list('substance_id', flat=True)
+    subs = Identifiers.objects.all().filter(type='csmiles').exclude(substance_id__in=done).values_list('substance_id', flat=True)
     for sub in subs:
-        smiles = Identifiers.objects.get()
+        if sub not in done:
+            smiles = Identifiers.objects.all().filter(type='csmiles', substance_id=sub)
+            for smile in smiles:
+                print("Processing structure " + smile.value)
+                mo = Chem.MolFromSmiles(smile.value)
+                mh = Chem.AddHs(mo)
+                AllChem.EmbedMolecule(mh, randomSeed=0xf00d)
+                mf = Chem.MolToMolBlock(mh)
+                struc = Structures(substance_id=sub, molfile=mf)
+                struc.save()
+                print("Saved structure " + smile.value)
 
 
 # update pubchem csmiles where not available
-runpcs = True
+runpcs = False
 if runpcs:
     subids = Identifiers.objects.all().filter(type='inchikey', source='pubchem').values_list('substance_id', flat=True)
     for subid in subids:
@@ -75,7 +87,7 @@ if runpci:
             print(subid)
 
 # fix empty molgraphs in json-ld files
-runfix = True
+runfix = False
 if runfix:
     fixes = FacetFiles.objects.all().filter(file__contains='"atoms":[]').filter(file__contains='chemtwin')
     for fix in fixes:

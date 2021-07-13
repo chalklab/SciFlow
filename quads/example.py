@@ -1,4 +1,5 @@
 """ example code for the datafiles app"""
+import json
 import os
 import django
 import requests
@@ -15,7 +16,7 @@ from quads.qd_functions import *
 # dlist 1 (herg), 3 (trc)
 f1 = True
 if f1:
-    setobjs = requests.get('https://sds.coas.unf.edu/trc/datasets/sddslist/54072')
+    setobjs = requests.get('https://sds.coas.unf.edu/trc/datasets/sddslist/5')
     setlist = setobjs.json()
     # done = Quads.objects.order_by('obj').values_list('obj', flat=True).distinct()
     for fname, url in setlist.items():

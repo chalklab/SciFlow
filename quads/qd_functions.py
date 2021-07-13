@@ -23,5 +23,6 @@ def addbulk(quads):
         Quads(sub=q[0], prd=q[1], obj=q[2], gph=q[3])
         for q in quads
     ]
+    # print(objs)
     Quads.objects.bulk_create(objs)
     return

@@ -32,6 +32,7 @@ PyLD==2.0.3
 python-jose>=3.2
 python3-openid==3.2.0
 pytz>=2020.1
+rdkit-pypi>=2020.3
 qwikidata==0.4.0
 requests==2.25.1
 requests-cache>=0.6
@@ -43,3 +44,5 @@ sqlparse>=0.3.1
 typing-extensions==3.10.0.0
 url-normalize==1.4.3
 urllib3>=1.26.4
+
+setuptools~=57.1.0

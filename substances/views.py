@@ -3,12 +3,18 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.core.paginator import Paginator
 from django.contrib import messages
+from django.views.static import serve
 from workflow.gdb_functions import *
 from substances.sub_functions import *
 from sciflow.settings import BASE_DIR
 from zipfile import ZipFile
 from os import path
 import requests
+
+
+def molfile(request, subid):
+    file = Structures.objects.get(substance_id=subid)
+    return serve(request, file.molfile)
 
 
 def newjld(request, subid):
