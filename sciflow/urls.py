@@ -30,6 +30,7 @@ def logout(request):
 
 urlpatterns = [
     path('', include('datasets.urls')),
+    path('', include('datafiles.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('logout/', logout, name='logout'),

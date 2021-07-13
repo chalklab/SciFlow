@@ -4,8 +4,10 @@ from datafiles import views
 
 
 urlpatterns = [
-    path("ingest/", views.ingestion, name='view'),
-    path("view/<fileid>", views.viewfile, name='view'),
-    path("clean/<fileid>", views.clean, name='clean'),
-    path("jsonld/<fileid>", views.jsonld, name='jsonld'),
+    path("files/ingest/", views.ingestion, name='view'),
+    path("files/view/<fileid>", views.viewfile, name='view'),
+    path("files/clean/<fileid>", views.clean, name='clean'),
+    path("files/jsonld/<fileid>", views.jsonld, name='jsonld'),
+    path('references/index', views.getrefs, name='index'),
+    path('references/view/<refid>', views.viewref, name='index')
 ]

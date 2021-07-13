@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %} Context View {% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <h3>Reference</h3>
+            <ul>
+                <li>Title: {{ ref.title }}</li>
+                <li>Journal: {{ ref.journal }}</li>
+                <li>Authors: {{ ref.aulist }} </li>
+                <li>DOI: <a href="https://doi.org/{{ ref.doi }}" target="_blank">{{ ref.doi }}</a></li>
+            </ul>
+            <h4>Datasets</h4>
+            <ul>
+                {% for set in ref.jsonlookup_set.all %}
+                    <li>{{ set.uniqueid }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

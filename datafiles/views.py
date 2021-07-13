@@ -1,5 +1,6 @@
 """ django views file for the datafiles app """
 from django.shortcuts import render
+from django.core.paginator import Paginator
 from datasets.serializer import *
 from datafiles.forms import UploadFileForm
 from workflow.wf_functions import ingest
@@ -44,3 +45,16 @@ def jsonld(request, fileid):
     """send JSON-LD file to browser"""
     data = JsonFiles.objects.get(id=fileid)
     return HttpResponse(data.file, content_type="application/ld+json")
+
+
+def getrefs(request):
+    refs = References.objects.all()
+    paginator = Paginator(refs, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, "references/index.html", {'page_obj': page_obj})
+
+
+def viewref(request, refid):
+    ref = References.objects.get(id=refid)
+    return render(request, "references/view.html", {'ref': ref})
