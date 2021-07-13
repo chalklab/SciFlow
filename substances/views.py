@@ -8,13 +8,14 @@ from workflow.gdb_functions import *
 from substances.sub_functions import *
 from sciflow.settings import BASE_DIR
 from zipfile import ZipFile
+from django.http import HttpResponse
 from os import path
 import requests
 
 
 def molfile(request, subid):
     file = Structures.objects.get(substance_id=subid)
-    return serve(request, file.molfile)
+    return HttpResponse(str(file.molfile), content_type="text/plain")
 
 
 def newjld(request, subid):
@@ -140,8 +141,7 @@ def subids(request, subid):
     """present an overview page about the substance in sciflow"""
     substance = Substances.objects.get(id=subid)
     ids = substance.identifiers_set.all()
-    return render(request, "substances/subids.html",
-                  {'substance': substance, "ids": ids})
+    return render(request, "substances/subids.html", {'substance': substance, "ids": ids})
 
 
 def subdescs(request, subid):
