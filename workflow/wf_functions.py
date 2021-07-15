@@ -148,9 +148,29 @@ def normalize(dfile, sections, user, jl):
                 if targid:
                     ffileid = targinfiles(targid)
                     graphid = targingraph(targid)
-                    #TODO if not ffileid
-                    #TODO if not graphid
-
+                    if not ffileid:
+                        ffile = tempcreatetargjld(targid)
+                        # currently only opens chembl2085 file on this specfic computer
+                        maxid = FacetLookup.objects.all().aggregate(Max('id'))['id_max']
+                        nextid = maxid + 1 if maxid else 1
+                        fid = str(nextid).rjust(8, '0')
+                        ffile['@id'] = "https://scidata.unf.edu/facet/" +fid
+                        ffileid = addfacetfile(ffile, user)
+                        if not ffileid:
+                            errorlog("WF_E05: Target file metadata for target id " + str(targid) + " not added to facet lookup")
+                        if not updatefacetfile(ffile):
+                            errorlog("WF_E05: Target file id " + str(ffileid) + " was not added to facet_files")
+                        updatetarget(targid, 'facet_lookup_id', ffileid)
+                        actlog("WF_A06: Created target facet file id " + str(ffileid) + " and added to DB")
+                    if not graphid:
+                        namedgraph = 'https://scidata.unf.edu/facet/' + str(ffileid)
+                        if addgraph('facet', ffileid, 'remote', namedgraph):
+                            target = Targets.objects.get(id=subid)
+                            target.graphdb = namedgraph
+                            target.save()
+                            actlog("WF_A07: Target file id " + str(ffileid) + " added to GraphDB")
+                        else:
+                            errorlog("WF_E07: Target file id " + str(ffileid) + " was not added to GraphDB")
                     # load facet file to extract @id for target
                     dfile, entry, section, jl, ffileid = facetlink(dfile, entry, section, jl, ffileid)
                 else:

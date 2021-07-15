@@ -5,7 +5,6 @@ django.setup()
 
 
 """ functions for use with the targets and related tables..."""
-
 from targets.external import *
 from datetime import datetime
 import json
@@ -99,6 +98,124 @@ def creategenejld(addedgene):
 # with open("scidata_gene_"+tid + '.jsonld', 'w') as f:
 #     final_output = json.dump(creategenejld(addgene(tid)), f)
 
+#might not be needed because no targ_id in identifier section
+def gettargid (identifier):
+    targ = Targets.objects.all().filter(identifiers_values_exact=identifier)
+    if targ:
+        return targ[0].id
+    else:
+        return False
+
+def getidtype(identifier):
+    p = re.search('^CHEMBL[0-9]+$', identifier)
+    if p:
+        return "chemblid"
+    return "other"
+
+
+def gettargdata(identifier):
+
+    meta, ids, descs, srcs, = {}, {}, {}, {}
+    try:
+        search_chembl(identifier, meta, ids, descs, srcs)
+    except Exception as exception:
+        srcs.update({"chembl": {"result": 0, "notes": exception}})
+
+    return meta, ids, descs, srcs
+
+def updatetarget(targid, field, value):
+    target = Targets.objects.get(id=targid)
+    setattr(target, field, value)
+    target.save()
+
+def saveids(targid, ids):
+    for source, e in ids.items():
+        for k, v in e.items():
+            # if isinstance(v, list):
+            for x in v:
+                ident = Identifiers(target_id=targid, type=k, value=x, source=source)
+                ident.save()
+            # else:
+            #     if k == ''
+
+def savedescs(targid, descs):
+    for source, e in descs.items():
+        for k, v in e.items():
+
+            if isinstance(v, list):
+                for x in v:
+                    desc = Descriptors(target_id=targid, type=k, value=x, source=source)
+                    desc.save()
+            else:
+                desc = Descriptors(target_id=targid, type=k, value=v, source=source)
+                desc.save()
+
+def savesrcs(targid, srcs):
+    for x, y in srcs.items():
+        src = Sources(target_id=targid, source=x, result=y["result"], notes=y.get("notes", "Null"))
+        src.save()
+
+def addtarget(identifier, output = 'meta'):
+    found = Identifiers.objects.values().filter(value=identifier).\
+        values_list('value', 'target_id')
+    found = dict(found)
+    if found:
+        meta = Targets.objects.get(id=found[identifier])
+        ids = Identifiers.objects.values().\
+            filter(target_id=found[identifier])
+        descs = Descriptors.objects.values().\
+            filter(target_id=found[identifier])
+        srcs = Sources.objects.values().filter(target_id=found[identifier])
+        if output == 'all':
+            return meta, ids, descs, srcs
+        else:
+            return meta
+    idtype = getidtype(identifier)
+    if idtype != "chembl":
+
+        key = search_chembl(identifier)
+    else:
+        key = identifier
+                            #check out this function next (getsubdata)
+    meta, ids, descs, srcs = gettargdata(key)
+
+    if "chembl" in meta:
+        if meta['chembl']['pref_name'] is not None:
+            nm = meta['chembl']['pref_name']
+    if "chembl" in meta:
+        #subject to change, unsure of what to name what is inside quotations
+        if "type" in meta['chembl']:
+            type = meta['chembl']['relationship']
+        if "tax_id" in meta['chembl']:
+            tax_id = meta['chembl']['tax_id']
+        if "chembl_id" in meta['chembl']:
+            chembl_id = meta['chembl']['target_chembl_id']
+        if "organism" in meta['chembl']:
+            organism = meta['chembl']['organism']
+    #also subject to change variable name
+    targ = Targets(name=nm, type=type,tax_id=tax_id, chembl_id=chembl_id, organism=organism)
+
+    targ.save()
+    targid = targ.id
+
+    #check out these functions next
+    saveids(targid, ids)
+    savedescs(targid, descs)
+    savesrcs(targid, srcs)
+
+    if output == 'all':
+        return meta, ids, descs, srcs
+    elif output == 'targ':
+        return targ
+    else:
+        return meta
+
+def tempcreatetargjld():
+    with open('/Users/n01387071/Downloads/chembl_target_2085.jsonld', 'r') as chembl2085:
+        chembl2085 = chembl2085.read()
+        return chembl2085
+
+
 def getaddtarg(section, meta):
     targid = False
     for key, value in meta[section].items():
@@ -125,10 +242,12 @@ def getaddtarg(section, meta):
                         break
 
     if not targid:
+        targ = addtarget(identifier, 'targ')
+        targid = targ.id
         #TODO addtarget
         # sub = addsubstance(identifier, 'sub')
         # subid = sub.id
-        print('target not found')
+        # print('target not found')
 
     return targid
 
