@@ -145,8 +145,7 @@ gdrivesds = "/Users/n00002621/GoogleDrive/Research/sciflow"
 
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-# STATIC_ROOT = (os.path.join(BASE_DIR, 'static'),)
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES = os.path.join(BASE_DIR, 'static')
 
 SITE_ID = 1
@@ -174,7 +173,8 @@ authorized_users = [
     'cweb1182@gmail.com',
     'jaredracicot@gmail.com',
     'stuartjchalk@gmail.com',
-    'n01448636@gmail.com'
+    'n01448636@gmail.com',
+    'markaidestine@gmail.com'
 ]
 
 # Debug toolbar settings
