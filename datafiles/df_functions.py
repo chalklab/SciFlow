@@ -127,6 +127,7 @@ def addfacetfile(ffile=None, uploading_user=None):
     else:
         m = FacetLookup()
 
+        # for facet uids they are of format <datasetname>_<inchikey>
         uid = ffile['@graph']['uid']
         parts = None
         if ':' in uid:
@@ -135,8 +136,7 @@ def addfacetfile(ffile=None, uploading_user=None):
             parts = uid.split("_")
 
         # get dataset_id
-        dset = Datasets.objects.get(
-            sourcecode__exact=parts[0], datasetname=parts[1])
+        dset = Datasets.objects.get(datasetname=parts[0])
 
         if dset.id:
             m.dataset_id = dset.id
