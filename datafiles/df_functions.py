@@ -144,7 +144,11 @@ def addfacetfile(ffile=None, uploading_user=None):
             m.dataset_id = 0
         m.uniqueid = uid
         m.title = ffile['@graph']['title']
-        m.type = parts[1]
+        if parts[0] == 'chemtwin':
+            m.type = 'substance'
+        elif parts[0] == 'targtwin':
+            m.type = 'target'
+
         m.graphname = ffile['@id']
         m.currentversion = 0  # adding the file to facet_files will increment
         if uploading_user is None:
