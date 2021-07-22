@@ -65,5 +65,11 @@ def search_chembl(identifier, meta, ids, descs, srcs):
     if accession:
         ids["chembl"]["accession_id"] = accession
     # print(json.dumps(reqdata))
-identifier, meta, ids, descs, srcs = "CHEMBL240", {},{},{},{}
-search_chembl(identifier, meta, ids, descs, srcs)
+    return
+
+def search_chembl2085_identifier():
+        identifier = "CHEMBL2085"
+        return identifier
+
+#identifier, meta, ids, descs, srcs = "CHEMBL240", "",{},{},{}
+#search_chembl(identifier, meta, ids, descs, srcs)

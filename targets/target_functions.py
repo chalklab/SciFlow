@@ -100,9 +100,9 @@ def creategenejld(addedgene):
 
 #might not be needed because no targ_id in identifier section
 def gettargid (identifier):
-    targ = Targets.objects.all().filter(identifiers_values_exact=identifier)
-    if targ:
-        return targ[0].id
+    target = Targets.objects.all().filter(identifiers_values_exact=identifier)
+    if target:
+        return target[0].id
     else:
         return False
 
@@ -131,12 +131,12 @@ def updatetarget(targid, field, value):
 def saveids(targid, ids):
     for source, e in ids.items():
         for k, v in e.items():
-            # if isinstance(v, list):
-            for x in v:
-                ident = Identifiers(target_id=targid, type=k, value=x, source=source)
-                ident.save()
-            # else:
-            #     if k == ''
+            if isinstance(v, list):
+                for x in v:
+                    ident = Identifiers(target_id=targid, type=k, value=x, source=source)
+                    ident.save()
+            else:
+                print("not saved")
 
 def savedescs(targid, descs):
     for source, e in descs.items():
@@ -157,7 +157,7 @@ def savesrcs(targid, srcs):
 
 def addtarget(identifier, output = 'meta'):
     found = Identifiers.objects.values().filter(value=identifier).\
-        values_list('value', 'target_id')
+        values_list('value', 'id')
     found = dict(found)
     if found:
         meta = Targets.objects.get(id=found[identifier])
@@ -173,17 +173,16 @@ def addtarget(identifier, output = 'meta'):
     idtype = getidtype(identifier)
     if idtype != "chembl":
 
-        key = search_chembl(identifier)
+        key = search_chembl2085_identifier() #temporary function
+
     else:
         key = identifier
-                            #check out this function next (getsubdata)
+
     meta, ids, descs, srcs = gettargdata(key)
 
     if "chembl" in meta:
-        if meta['chembl']['pref_name'] is not None:
-            nm = meta['chembl']['pref_name']
-    if "chembl" in meta:
-        #subject to change, unsure of what to name what is inside quotations
+        if meta['chembl']('pref_name'):
+            nm = meta['chembl'].get['pref_name']
         if "type" in meta['chembl']:
             type = meta['chembl']['relationship']
         if "tax_id" in meta['chembl']:
@@ -192,26 +191,26 @@ def addtarget(identifier, output = 'meta'):
             chembl_id = meta['chembl']['target_chembl_id']
         if "organism" in meta['chembl']:
             organism = meta['chembl']['organism']
-    #also subject to change variable name
-    targ = Targets(name=nm, type=type,tax_id=tax_id, chembl_id=chembl_id, organism=organism)
+    target = Targets(name=nm, type=type, tax_id=tax_id, chembl_id=chembl_id, organism=organism)
 
-    targ.save()
-    targid = targ.id
+    target.save()
+    targid = target.id
 
-    #check out these functions next
+    #check sub version of functions
     saveids(targid, ids)
     savedescs(targid, descs)
     savesrcs(targid, srcs)
 
     if output == 'all':
         return meta, ids, descs, srcs
-    elif output == 'targ':
-        return targ
+    elif output == 'target':
+        return target
     else:
         return meta
 
 def tempcreatetargjld():
     with open('/Users/n01387071/Downloads/chembl_target_2085.jsonld', 'r') as chembl2085:
+        #function is specific to computer, insert where chembl_target_2085.jsonld is located
         chembl2085 = chembl2085.read()
         return chembl2085
 
@@ -238,12 +237,15 @@ def getaddtarg(section, meta):
             else:
                     # cast all values to str (avoids error)
                     if value.startswith('CHEMBL'):
-                        targid = Targets.objects.values('id').get(chembl_id=value)['id']
+                        try:
+                            targid = Targets.objects.values('id').get(chembl_id=value)['id']
+                        except:
+                            targid = False
                         break
 
     if not targid:
-        targ = addtarget(identifier, 'targ')
-        targid = targ.id
+        target = addtarget("CHEMBL2085", 'target') #temporary identifier = "CHEMBL2085"
+        targid = target.id
         #TODO addtarget
         # sub = addsubstance(identifier, 'sub')
         # subid = sub.id

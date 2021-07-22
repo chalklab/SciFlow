@@ -27,7 +27,7 @@ class Identifiers(models.Model):
     type = models.CharField(max_length=10, choices=TYPE_CHOICES, default=CHEMBL)
     value = models.CharField(max_length=768, default='')
     #iso might just be a way to make canonical SMILES format pseudo unique, might not be needed for targets
-    iso = models.CharField(max_length=5, default=None)
+    #iso = models.CharField(max_length=5, default=None)
     source = models.CharField(max_length=64, default='')
     updated = models.DateTimeField(auto_now=True)
 

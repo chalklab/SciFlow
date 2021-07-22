@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'datafiles',
     'debug_toolbar',
     'quads',
+    'targets'
 ]
 
 MIDDLEWARE = [

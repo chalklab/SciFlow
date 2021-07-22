@@ -114,7 +114,7 @@ def normalize(dfile, sections, user, jl):
                             errorlog("WF_E07: Compound file id " + str(ffileid) + " was not added to GraphDB")
 
                     # load facet file to extract @id for compound
-                    fobjt = FacetFiles.objects.get(facet_lookup_id=ffileid)
+                    fobjt = FacetFiles.objects.filter(facet_lookup_id=ffileid)[0]
                     ffile = json.loads(fobjt.file)
                     normid = ffile['@graph']['@id'] + 'compound/1/'
 
@@ -135,17 +135,46 @@ def normalize(dfile, sections, user, jl):
                     # add entry into json_facets
                     JsonFacets.objects.get_or_create(
                         json_lookup_id=jl,
-                        facets_lookup_id=ffileid
+                        facet_lookup_id=ffileid
                     )
                     actlog("WF_A08: Compound found in DB: ( " + str(section) + ", file id " + str(ffileid) + " )")
                 else:
                     errorlog("WF_E08: Compound not found in or added to DB ( " + str(section) + ", " + str(entry) + " )")
         if section == "target":
+            #pass
             for entry in entries:
                 targid = getaddtarg(section, entry)
                 if targid:
                     ffileid = targinfiles(targid)
                     graphid = targingraph(targid)
+
+                    if not ffileid:
+                        ffile = tempcreatetargjld()
+                        maxid = FacetLookup.objects.all().aggregate(Max('id'))['id__max']
+                        nextid = maxid + 1 if maxid else 1
+                        fid = str(nextid).rjust(8, '0')  # creates id with the right length
+                        ffile['@id'] = "https://scidata.unf.edu/facet/" + fid
+                        ffileid = addfacetfile(ffile, user)
+                        if not ffileid:
+                            errorlog("WF_E05: Target file metadata for substance id " + str(
+                                targid) + " not added to facet_lookup")
+                        if not updatefacetfile(ffile):
+                            errorlog("WF_E06: Target file id " + str(ffileid) + " was not added to facet_files")
+                        # now that facet file has be added link to DB table
+                        updatetarget(targid, 'facet_lookup_id', ffileid)
+                        actlog("WF_A06: Created target facet file id " + str(ffileid) + " and added to DB")
+                    if not graphid:
+                        namedgraph = 'https://scidata.unf.edu/facet/' + str(ffileid)
+                        # has the jsonld file been saved in the DB but not
+                        # added to the graph?
+                        if addgraph('facet', ffileid, 'remote', namedgraph):
+                            # update ftype table with id
+                            target = Targets.objects.get(id=subid)
+                            target.graphdb = namedgraph
+                            target.save()
+                            actlog("WF_A07: Target file id " + str(ffileid) + " added to GraphDB")
+                        else:
+                            errorlog("WF_E07: Target file id " + str(ffileid) + " was not added to GraphDB")
 
                     # load facet file to extract @id for compound
                     fobjt = FacetFiles.objects.get(facet_lookup_id=ffileid)
@@ -169,7 +198,7 @@ def normalize(dfile, sections, user, jl):
                     # add entry into json_facets
                     JsonFacets.objects.get_or_create(
                         json_lookup_id=jl,
-                        facets_lookup_id=ffileid
+                        facet_lookup_id=ffileid
                     )
                     actlog("WF_A08: Target found in DB: ( " + str(section) + ", file id " + str(ffileid) + " )")
                 else:
@@ -217,3 +246,4 @@ def getaspect(file, mettype):
             return False
     else:
         return False
+
