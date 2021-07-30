@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %} Ontterm List {% endblock %}
+{% block header %} {{ facet }} {% endblock %}
+{% block content %}
+
+<h3>Current Ontterms</h3>
+    <ul>
+    {% for term in ontterms %}
+        <li><a href="/ontterms/view/{{ term.id }}">{{ term.title }}</a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

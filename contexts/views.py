@@ -1,39 +1,59 @@
 """ django view file """
+import json
+
 from django.shortcuts import render
 from contexts.ctx_functions import *
 from datasets.ds_functions import *
 
 
-def index(request):
+def ctxlist(request):
     ctxs = getctxs()
     return render(request, "contexts/list.html", {'contexts': ctxs})
 
 
-def view(request, ctxid):
+def ctxview(request, ctxid):
     ctx = getctx(ctxid)
     ds = getset(ctx.dataset_id)
-    cws = ctx.crosswalks_set.all()
+    cws = ctx.crosswalks_set.all().order_by('table', 'field')
     onts = list[cws.values('ontterm_id', 'ontterm__url')]
     return render(request, "contexts/view.html",
                   {'context': ctx, 'dataset': ds, 'crosswalks': cws, 'onts': onts})
 
 
-def nslist(request):
+def cwklist(request):
     """view to generate list of namespaces"""
-    spaces = getnspaces()
+    crosswalks = getcwks()
+    return render(request, "crosswalks/list.html", {'crosswalks': crosswalks})
+
+
+def cwkview(request, cwkid):
+    """view to show all data about a namespace"""
+    crosswalk = getcwk(cwkid)
+    return render(request, "crosswalks/view.html", {'crosswalk': crosswalk})
+
+
+def nsplist(request):
+    """view to generate list of namespaces"""
+    spaces = getnsps()
     return render(request, "nspaces/list.html", {'spaces': spaces})
 
 
-def nsview(request, nsid):
+def nspview(request, nspid):
     """view to show all data about a namespace"""
-    space = getnspace(nsid)
-    terms = onttermsbyns(nsid)
+    space = getnsp(nspid)
+    terms = onttermsbyns(nspid)
     return render(request, "nspaces/view.html", {'space': space, 'terms': terms})
 
 
-def ontterm(request, tid):
+def ontlist(request):
+    """view to generate list of namespaces"""
+    ontterms = getonts()
+    return render(request, "ontterms/list.html", {'ontterms': ontterms})
+
+
+def ontview(request, ontid):
     """view to show all data about an ont term"""
-    term = getterm(tid)
-    space = getnspace(term.nspace_id)
-    url = term.url.replace(space.ns + ':', space.path)
-    return render(request, "terms/view.html", {'term': term, 'url': url})
+    term = getont(ontid)
+    space = getnsp(term.nspace_id)
+    uri = term.url.replace(space.ns + ':', space.path)
+    return render(request, "ontterms/view.html", {'term': term, 'uri': uri})

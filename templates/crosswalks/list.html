@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %} Crosswalk List {% endblock %}
+{% block content %}
+<h3>Current Crosswalks</h3>
+    <ul>
+    {% for cwk in crosswalks %}
+        <li><a href="/xwalks/view/{{ cwk.id }}">{{ cwk.field }} ( {{ cwk.table }} )</a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

@@ -49,6 +49,7 @@ class JsonFiles(models.Model):
     type = models.CharField(max_length=32, default='')
     version = models.IntegerField(default='')
     jhash = models.CharField(max_length=52, blank=True, null=True)
+    comments = models.CharField(max_length=32, blank=True, null=True)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:

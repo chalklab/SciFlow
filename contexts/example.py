@@ -10,12 +10,12 @@ from contexts.ctx_functions import *
 # add a new substance to the database
 nslist = None
 if nslist:
-    nslist = getnspaces()
+    nslist = getnsps()
     print(nslist)
     exit()
 
 term = True
 if term:
-    data = getterm(13)
+    data = getont(13)
     print(data.sdsection)
     exit()

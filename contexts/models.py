@@ -8,10 +8,11 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from datasets.models import Datasets
 
 
 class Contexts(models.Model):
-    dataset_id = models.IntegerField()
+    dataset = models.ForeignKey(Datasets, on_delete=models.DO_NOTHING, db_column='dataset_id')
     name = models.CharField(max_length=64)
     description = models.CharField(max_length=128)
     url = models.CharField(max_length=128)
@@ -77,13 +78,13 @@ class Metadata(models.Model):
 
 
 class Crosswalks(models.Model):
-    context = models.ForeignKey(Contexts, on_delete=models.DO_NOTHING)
-    dataset_id = models.SmallIntegerField(blank=True, null=True)
+    context = models.ForeignKey(Contexts, on_delete=models.DO_NOTHING, db_column='context_id')
+    dataset = models.ForeignKey(Datasets, on_delete=models.DO_NOTHING, db_column='dataset_id')
     table = models.CharField(max_length=128)
     field = models.CharField(max_length=256)
     filter = models.CharField(max_length=128, blank=True, null=True)
     cardinality = models.PositiveIntegerField(blank=True, null=True)
-    ontterm = models.ForeignKey(Ontterms, on_delete=models.DO_NOTHING)
+    ontterm = models.ForeignKey(Ontterms, on_delete=models.DO_NOTHING, db_column='ontterm_id')
     sdsection = models.CharField(max_length=11, blank=True, null=True)
     sdsubsection = models.CharField(max_length=128, blank=True, null=True)
     sdsubsubsection = models.CharField(max_length=64, blank=True, null=True)

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %} Crosswalk View {% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <h3>{{ crosswalk.field }} ({{ crosswalk.table }})</h3>
+            <ul>
+                <li>Dataset: {{ crosswalk.dataset.name }}</li>
+                <li>Term: {{ crosswalk.ontterm.title }} </li>
+                <li>Definition: {{ crosswalk.ontterm.definition }} </li>
+                <li>Ontology: {{ crosswalk.ontterm.nspace.name }} </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

@@ -4,10 +4,10 @@
 {% block header %} {{ facet }} {% endblock %}
 {% block content %}
 
-<h3>Currently Defined Namespaces</h3>
+<h3>Defined Namespaces</h3>
     <ul>
     {% for ns in spaces %}
-        <li><a href="/crosswalks/nsview/{{ ns.id }}">{{ ns.name }} ({{ns.ns}})</a></li>
+        <li><a href="/nspaces/view/{{ ns.id }}">{{ ns.name }} ({{ns.ns}})</a></li>
     {% endfor %}
     </ul>
 {% endblock %}
