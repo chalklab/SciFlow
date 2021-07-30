@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %} Add Term {% endblock %}
+{% block header %} {{ facet }} {% endblock %}
+{% block content %}
+    <h3>Add Ontology Term</h3>
+    <form action="/ontterms/add/" method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-xs-12 col-md-11 col-md-offset-1">
+                <input id="aliases" type="hidden" name="aliases" value="{{ aliases }}"/>
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span id="ns_name" class="input-group-text text-right col-sm-4">Name:</span>
+                        <input id="name" class="form-control-sm" type="text" name="name" value="" aria-describedby="ns_name"/>
+                    </div>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span id="ns_alias" class="input-group-text text-right col-sm-4">Alias:</span>
+                        <input id="alias" class="form-control-sm" type="text" name="alias" value="" aria-describedby="ns_alias"/>
+                    </div>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span id="ns_path" class="input-group-text text-right col-sm-4">Path:</span>
+                        <input id="path" class="form-control-sm" type="text" name="path" value="" aria-describedby="ns_path"/>
+                    </div>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span id="ns_home" class="input-group-text text-right col-sm-4">Homepage:</span>
+                        <input id="homepage" class="form-control-sm" type="text" name="homepage" value="" aria-describedby="ns_home"/>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <input class="col-xs-12" type="submit" value="OK"/>
+                </div>
+            </div>
+        </div>
+    </form>
+    {% endblock %}

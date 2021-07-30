@@ -3,11 +3,13 @@
 {% block title %} Namepsace List {% endblock %}
 {% block header %} {{ facet }} {% endblock %}
 {% block content %}
-
-<h3>Defined Namespaces</h3>
-    <ul>
-    {% for ns in spaces %}
-        <li><a href="/nspaces/view/{{ ns.id }}">{{ ns.name }} ({{ns.ns}})</a></li>
-    {% endfor %}
-    </ul>
+    <h3>Defined Namespaces</h3>
+    <div class="panel-responsive-220">
+        <ul>
+        {% for ns in spaces %}
+            <li><a href="/nspaces/view/{{ ns.id }}">{{ ns.name }} ({{ns.ns}})</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+    <a href="/nspaces/add/" type="button" class="btn btn-success">Add Ontology Namespace</a>
 {% endblock %}

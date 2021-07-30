@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
-
 {% block title %} Ontterm List {% endblock %}
 {% block header %} {{ facet }} {% endblock %}
 {% block content %}
-
-<h3>Current Ontterms</h3>
+    <h3>Current Ontology Terms</h3>
+    <div class="panel-responsive-220">
     <ul>
     {% for term in ontterms %}
         <li><a href="/ontterms/view/{{ term.id }}">{{ term.title }}</a></li>
     {% endfor %}
     </ul>
+    </div>
+    <a href="/ontterms/add/" type="button" class="btn btn-primary mt-3">Add Ontology Term</a>
 {% endblock %}

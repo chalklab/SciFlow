@@ -9,7 +9,9 @@ urlpatterns = [
     path("xwalks/", views.cwklist, name='cwklist'),
     path("xwalks/view/<cwkid>", views.cwkview, name='cwkview'),
     path("nspaces/", views.nsplist, name='nsplist'),
+    path("nspaces/add/", views.nspadd, name='nspadd'),
     path("nspaces/view/<nspid>", views.nspview, name='nspview'),
     path("ontterms/", views.ontlist, name='ontlist'),
     path("ontterms/view/<ontid>", views.ontview, name='ontview'),
+    path("ontterms/add/", views.ontadd, name='ontadd'),
 ]

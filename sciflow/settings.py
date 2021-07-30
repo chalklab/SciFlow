@@ -146,8 +146,7 @@ gdrivesds = "/Users/n00002621/GoogleDrive/Research/sciflow"
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'

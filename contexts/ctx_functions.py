@@ -28,7 +28,7 @@ def getcwk(ctxid):
 
 def getnsps():
     """get a list of namespaces"""
-    spaces = Nspaces.objects.all()
+    spaces = Nspaces.objects.all().order_by('name')
     return spaces
 
 
