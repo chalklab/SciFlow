@@ -7,6 +7,8 @@ django.setup()
 
 from datafiles.views import *
 from workflow.gdb_functions import *
+from datafiles.models import *
+from crossref.restful import Works
 
 
 f1 = False
@@ -15,7 +17,7 @@ if f1:
     viewfile(None, fid)
 
 
-f2 = True
+f2 = False
 if f2:
     """
     goes though data files in a dataset looking for
@@ -72,3 +74,12 @@ if f2:
             keep.save()
             time.sleep(5)
             print(keepidstr)
+
+
+f3 = True
+if f3:
+    ref = References.objects.get(id=1)
+    works = Works()
+    meta = works.doi(ref.doi)
+    print(json.dumps(meta, indent=4))
+    exit()

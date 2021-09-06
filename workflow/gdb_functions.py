@@ -20,6 +20,7 @@ def addgraph(ftype, fid, locale='local', replace=""):
     file.write(data + '\r\n')
     file.close()
 
+    locale = "local" # force saving to local machine (remove to direct to SDS)
     r = None
     if locale == "local":
         r = requests.post(graphlocalurl, data=data, headers=jsonhrs)

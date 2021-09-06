@@ -14,4 +14,6 @@ urlpatterns = [
     path("ontterms/", views.ontlist, name='ontlist'),
     path("ontterms/view/<ontid>", views.ontview, name='ontview'),
     path("ontterms/add/", views.ontadd, name='ontadd'),
+    path("ontterms/js/<ontid>", views.ontterms, name='ontterms'),
+
 ]

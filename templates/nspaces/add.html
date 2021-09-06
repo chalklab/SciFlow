@@ -1,41 +1,62 @@
 {% extends 'base.html' %}
-{% block title %} Add Namepsace {% endblock %}
-{% block header %} {{ facet }} {% endblock %}
 {% block content %}
-    <h3>Add Ontology Namespace</h3>
-    <div id="aliases" class="invisible" hidden>:{{ aliases|join:":" }}:</div>
-    <form action="/nspaces/add/" method="post">
-        {% csrf_token %}
-        <div class="row">
-            <div class="col-xs-12 col-md-11 col-md-offset-1">
-                <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                        <span id="ns_name" class="input-group-text text-right col-sm-4">Name:</span>
+    <div class="row">
+        <h3>Add Ontology Namespace</h3>
+    </div>
+    <div class="row row-cols-2">
+        <div>
+            <div id="aliases" class="invisible" hidden>:{{ aliases|join:":" }}:</div>
+            <form action="/nspaces/add/" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span id="ns_name" class="input-group-text">Name:</span>
+                        </div>
                         <input id="name" class="form-control-sm" type="text" name="name" value="" aria-describedby="ns_name"/>
                     </div>
                 </div>
-                <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                        <span id="ns_alias" class="input-group-text text-right col-sm-4">Alias:</span>
+                <div class="form-group">
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span id="ns_alias" class="input-group-text text-right">Alias:</span>
+                        </div>
                         <input id="alias" class="form-control-sm" type="text" name="alias" value="" aria-describedby="ns_alias"/>
                     </div>
                 </div>
-                <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                        <span id="ns_path" class="input-group-text text-right col-sm-4">Path:</span>
+                <div class="form-group">
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span id="ns_path" class="input-group-text">Path:</span>
+                        </div>
                         <input id="path" class="form-control-sm" type="text" name="path" value="" aria-describedby="ns_path"/>
                     </div>
                 </div>
-                <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                        <span id="ns_home" class="input-group-text text-right col-sm-4">Homepage:</span>
-                        <input id="homepage" class="form-control-sm" type="text" name="homepage" value="" aria-describedby="ns_home"/>
+                <div class="form-group">
+                   <div class="input-group input-group-sm mb-3">
+                       <div class="input-group-prepend">
+                           <span id="ns_home" class="input-group-text">Homepage:</span>
+                       </div>
+                       <input id="homepage" class="form-control-sm" type="text" name="homepage" value="" aria-describedby="ns_home"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                    <div class="pull-right">
+                        <input type="submit" value="OK"/>
                     </div>
                 </div>
-                <div class="pull-right">
-                    <input class="col-xs-12" type="submit" value="OK"/>
-                </div>
+            </form>
+        </div>
+        <div>
+            <h4>Ontologies from the EBI-OLS</h4>
+            <p class="small font-italic">Click to populate in form on left (list is scrollable)</p>
+            <div class="panel-responsive-220">
+                <ul class="list-group">
+                {% for alias, title, url, home in onts %}
+                    <a class="olsont list-group-item list-group-item-action py-1" data-ont="{{ title }}*{{ alias }}*{{ url }}*{{ home }}">{{ title }}</a>
+                {% endfor %}
+                </ul>
             </div>
         </div>
-    </form>
-    {% endblock %}
+    </div>
+{% endblock %}

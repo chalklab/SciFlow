@@ -17,9 +17,30 @@ import debug_toolbar
 from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import path, include
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import logout as auth_logout
+from rest_framework import routers, serializers, viewsets
+from contexts.models import *
+
+
+# Serializers define the API representation.
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ['url', 'username', 'email', 'is_staff']
+
+
+# ViewSets define the view behavior.
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+# Routers provide an easy way of automatically determining the URL conf.
+router = routers.DefaultRouter()
+router.register(r'users', UserViewSet)
 
 
 def logout(request):
@@ -32,6 +53,8 @@ urlpatterns = [
     path('', include('datasets.urls')),
     path('', include('datafiles.urls')),
     path('', include('contexts.urls')),
+    path('', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('logout/', logout, name='logout'),

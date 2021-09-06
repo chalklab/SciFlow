@@ -1,41 +1,87 @@
 {% extends 'base.html' %}
-{% block title %} Add Term {% endblock %}
-{% block header %} {{ facet }} {% endblock %}
 {% block content %}
-    <h3>Add Ontology Term</h3>
-    <form action="/ontterms/add/" method="post">
-        {% csrf_token %}
-        <div class="row">
-            <div class="col-xs-12 col-md-11 col-md-offset-1">
-                <input id="aliases" type="hidden" name="aliases" value="{{ aliases }}"/>
-                <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                        <span id="ns_name" class="input-group-text text-right col-sm-4">Name:</span>
-                        <input id="name" class="form-control-sm" type="text" name="name" value="" aria-describedby="ns_name"/>
+    <div class="row mt-2">
+        <h3>Add Ontology Term</h3>
+    </div>
+    <div class="row row-cols-2">
+        <div>
+            <form id="addform" action="/ontterms/add/" method="post">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <label id="ns_title" for="title" class="col-xs-2 col-form-label">Title:</label>
+                    <div class="col-xs-10">
+                         <input id="title" class="form-control form-control-sm" type="text" name="title" value="" aria-describedby="ns_title"/>
                     </div>
                 </div>
-                <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                        <span id="ns_alias" class="input-group-text text-right col-sm-4">Alias:</span>
-                        <input id="alias" class="form-control-sm" type="text" name="alias" value="" aria-describedby="ns_alias"/>
+                <div class="form-group row">
+                    <label id="ns_defn" for="definition" class="col-xs-2 col-form-label">Definition:</label>
+                    <div class="col-xs-10">
+                        <input id="definition" class="form-control form-control-sm" type="text" name="definition" value="" aria-describedby="ns_defn"/>
                     </div>
                 </div>
-                <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                        <span id="ns_path" class="input-group-text text-right col-sm-4">Path:</span>
-                        <input id="path" class="form-control-sm" type="text" name="path" value="" aria-describedby="ns_path"/>
+                <div class="form-group row">
+                    <label id="ns_code" for="code" class="col-xs-2 col-form-label">Term Code:</label>
+                    <div class="col-xs-10">
+                       <input id="code" class="form-control form-control-sm" type="text" name="code" value="" aria-describedby="ns_code"/>
                     </div>
                 </div>
-                <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                        <span id="ns_home" class="input-group-text text-right col-sm-4">Homepage:</span>
-                        <input id="homepage" class="form-control-sm" type="text" name="homepage" value="" aria-describedby="ns_home"/>
+                <div class="form-group row">
+                    <label id="nspaces" for="nsids" class="col-xs-2 col-form-label">Namespace:</label>
+                    <div class="col-xs-10">
+                        <select id="ns_id" class="form-control form-control-sm" name="nsids" aria-describedby="nsids">
+                            <option value="">Choose...</option>
+                            {% for id, name in nss %}
+                                <option value="{{ id }}">{{ name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
-                <div class="pull-right">
-                    <input class="col-xs-12" type="submit" value="OK"/>
+                <div class="form-group row">
+                    <label id="ns_sect" for="nspace_id" class="col-xs-2 col-form-label">SciData Section:</label>
+                    <div class="col-xs-10">
+                        <select id="sdsection" class="form-control form-control-sm" name="sdsection" aria-describedby="ns_sect">
+                            <option value="">Choose...</option>
+                            {% for val, name in sdsects %}
+                                <option value="{{ val }}">{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
+                <div class="form-group row">
+                    <label id="ns_subsect" class="col-xs-2 col-form-label">SciData Subsection:</label>
+                    <div class="col-xs-10">
+                        <select id="sdsubsection" class="form-control form-control-sm" name="sdsubsection" aria-describedby="ns_subsect">
+                            <option value="">Choose...</option>
+                            {% for sect, val, name in subsects %}
+                                <option value="{{ val }}" class="{{ sect }}">{{ name }} ({{ sect }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-xs-2 col-xs-offset-10">
+                        <input class="btn btn-primary" type="submit" value="Save"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <div class="col-xs-10">
+                        <select id="olsont" class="form-control form-control-sm" name="nspace_id" aria-describedby="ns_spaces">
+                            <option value="">Show terms in ontology...</option>
+                            {% for  alias, title, url, home in onts %}
+                                <option value="{{ alias }}">{{ title }} ({{ alias }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <div id="ontterms" class="panel-responsive-220">
+
             </div>
         </div>
-    </form>
+    </div>
     {% endblock %}

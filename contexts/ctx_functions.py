@@ -1,5 +1,6 @@
-""" functions file for the datafiles app"""
+""" functions file for the contexts app"""
 from contexts.models import *
+from contexts.ols_functions import *
 
 
 def getctxs():
@@ -38,6 +39,11 @@ def getnsp(nsid):
     return space
 
 
+def nsaliases():
+    aliases = Nspaces.objects.all().values_list('ns', flat=True).order_by('ns')
+    return aliases
+
+
 def getonts():
     """get the data for an ont term"""
     terms = Ontterms.objects.all().filter(to_remove__isnull=True).order_by('title')
@@ -54,3 +60,22 @@ def onttermsbyns(nsid):
     """get the ont terms using a namespace"""
     terms = Ontterms.objects.all().filter(nspace_id=nsid)
     return terms
+
+
+def ctxonts():
+    """
+    gets the ontologies in ols and then filter for only those already in sciflow
+    namespaces are already aligned otherwise this will not work
+    """
+    kept = []
+    aliases = list(nsaliases())
+    print(aliases)
+    allonts = olsonts()
+    allonts.sort(key=lambda tup: tup[0])
+    for i, ont in enumerate(allonts):
+        if ont[0] in aliases:
+            kept.append(ont)
+    print(kept)
+    exit()
+
+    return allonts

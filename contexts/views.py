@@ -2,9 +2,10 @@
 import json
 
 from django.shortcuts import render, redirect
-from contexts.ctx_functions import *
-from contexts.models import *
 from datasets.ds_functions import *
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from contexts.ctx_functions import *
 
 
 def ctxlist(request):
@@ -59,14 +60,16 @@ def nspadd(request):
         nspace.save()
         return redirect('/nspaces/')
 
-    nss = Nspaces.objects.all().values_list('ns', flat=True)
-    return render(request, "nspaces/add.html", {'aliases': nss})
+    aliases = nsaliases()
+    oonts = olsonts()  # list of tuples (four values)
+    oonts.sort(key=lambda tup: tup[1])
+    return render(request, "nspaces/add.html", {'aliases': aliases, 'onts': oonts})
 
 
 def ontlist(request):
     """view to generate list of namespaces"""
-    ontterms = getonts()
-    return render(request, "ontterms/list.html", {'ontterms': ontterms})
+    terms = getonts()
+    return render(request, "ontterms/list.html", {'ontterms': terms})
 
 
 def ontview(request, ontid):
@@ -82,13 +85,35 @@ def ontadd(request):
     if request.method == "POST":
         # save new namespace
         data = request.POST
-        nspace = Ontterms()
-        nspace.name = data['name']
-        nspace.ns = data['alias']
-        nspace.path = data['path']
-        nspace.homepage = data['homepage']
-        nspace.save()
-        return redirect('/nspaces/')
+        ontterm = Ontterms()
+        ontterm.title = data['title']
+        ontterm.definition = data['alias']
+        ontterm.code = data['code']
+        ontterm.nspace_id = data['nspace_id']
+        ontterm.sdsection = data['sdsubsection']
+        ontterm.sdsubsection = data['sdsubsection']
+        ontterm.save()
+        return redirect('/ontterms/')
 
-    nss = Nspaces.objects.all().values_list('ns','name')
-    return render(request, "ontterms/add.html", {'aliases': nss})
+    sdsects = [('methodology', 'Methodology (the "how" section)'), ('system', 'System (the "what" section)'), ('dataset', 'Dataset (the "data" section)')]
+    subsects = [('procedure', 'methodology', 'Procedure'), ('chemical', 'system', 'Chemical'),
+                ('exptdata', 'dataset', 'Experimental data')]
+
+    nss = Nspaces.objects.all().values_list('ns', 'name').order_by('name')
+    aliases = nsaliases()
+    onts = olsonts()  # list of tuples (four elements)
+    kept = []
+    onts.sort(key=lambda tup: tup[0])
+    # remove entries that are not in the namespace list
+    for i, ont in enumerate(onts):
+        if ont[0] in aliases:
+            kept.append(ont)
+    return render(request, "ontterms/add.html",
+                  {'nss': nss, 'sdsects': sdsects, 'subsects': subsects, 'onts': kept, 'aliases': aliases})
+
+
+# ajax functions (wrappers)
+@csrf_exempt
+def ontterms(request, ontid):
+    oterms = olsont(ontid)
+    return JsonResponse({"ontterms": oterms}, status=200)

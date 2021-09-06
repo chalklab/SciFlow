@@ -5,16 +5,40 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
 
 
+from contexts.ols_functions import *
+from contexts.views import *
 from contexts.ctx_functions import *
+from scipy.io import loadmat
+import pandas as pd
+
+
+# test matlab file import
+mlab = True
+if mlab:
+    file = loadmat('/Users/n00002621/Dropbox/Grants/Funded/NIST KnowLedger 2021 - 2022/Data/AmBench 2018/sam_0_output.mat')
+    data = [[row.flat[0] for row in line] for line in file['ans'][0]]
+    width = 320
+    pd.set_option('display.width', width)
+    pd.set_option('display.max_columns', 12)
+    table = pd.DataFrame(data)
+    print(table.head())
+    exit()
+
+# test ChEMBL API
+chembl = False
+if chembl:
+    out = ctxonts()
+    print(out)
+    exit()
 
 # add a new substance to the database
-nslist = None
+nslist = False
 if nslist:
     nslist = getnsps()
     print(nslist)
     exit()
 
-term = True
+term = False
 if term:
     data = getont(13)
     print(data.sdsection)

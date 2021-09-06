@@ -6,7 +6,6 @@ from datasets.models import *
 class References(models.Model):
     id = models.SmallAutoField(primary_key=True)
     journal = models.CharField(max_length=256, blank=True, null=True)
-    journal_id = models.IntegerField()
     authors = models.CharField(max_length=2048, blank=True, null=True)
     aulist = models.CharField(max_length=1024, blank=True, null=True)
     year = models.PositiveSmallIntegerField(blank=True, null=True)
