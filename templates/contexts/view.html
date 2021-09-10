@@ -2,22 +2,38 @@
 {% block title %} Context View {% endblock %}
 {% block content %}
     <div class="row">
-        <div class="col-12">
+        <div class="col col-12 mt-2">
             <h3>{{ context.name }}</h3>
             <ul>
                 <li>Dataset: {{ dataset.name }}</li>
                 <li>Description: {{ context.description }} </li>
                 <li>URL: <a href="{{ context.url }}" target="_blank">{{ context.url }}</a></li>
             </ul>
-            <h4>Defined Crosswalks</h4>
-            <ul>
-                {% for cw in crosswalks %}
-                    <li><b>{{ cw.table }}:{{ cw.field }} -></b> {% if cw.newname %}
-                        {{ cw.newname }} {% else %} {{ cw.field }} {% endif %} ({{ cw.datatype }})
-                        means <em>{{ cw.ontterm.title }}</em> [{{ cw.ontterm.url }}]
-                    </li>
-                {% endfor %}
-            </ul>
+        </div>
+        <div class="col col-12 mt-2">
+            <div class="card">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row">
+                        <div class="col col-xs-6 col-sm-8 col-md-4">
+                            <h4 style="margin: 3px 0;">Defined Crosswalks</h4>
+                        </div>
+                        <div class="col col-xs-6 col-sm-4 col-md-4 offset-md-4">
+                            <input id="cwksrc" placeholder="Search crosswalks (or scroll)" class="form-control form-control-sm float-right" data-search-override="true" type="text"/>
+                        </div>
+                    </div>
+                </div>
+                <div id="cwks" class="card-body panel-responsive-320">
+                    <ul>
+                        {% for cw in crosswalks %}
+                        <li title="{{ cw.table }} {{ cw.field }} {{ cw.newname }} {{ cw.datatype }} {{ cw.ontterm.title }} [{{ cw.ontterm.url }}]">
+                            <b>{{ cw.table }}:{{ cw.field }} -></b> {% if cw.newname %}
+                            {{ cw.newname }} {% else %} {{ cw.field }} {% endif %} ({{ cw.datatype }})
+                            means <em>{{ cw.ontterm.title }}</em> [{{ cw.ontterm.url }}]
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

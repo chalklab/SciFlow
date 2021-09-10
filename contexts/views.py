@@ -22,6 +22,29 @@ def ctxview(request, ctxid):
                   {'context': ctx, 'dataset': ds, 'crosswalks': cws, 'onts': onts})
 
 
+def ctxadd(request):
+    """view to add data about a context"""
+    if request.method == "POST":
+        # save new namespace
+        data = request.POST
+        ctx = Contexts()
+        ctx.dataset_id = data['dataset_id']
+        ctx.name = data['name']
+        ctx.description = data['description']
+        ctx.url = data['url']
+        ctx.save()
+        # save crosswalk entries that have not been saved
+        return redirect('/contexts/view/' + str(ctx.id))
+
+    sets = setlist()
+    trms = getonts()
+    return render(request, "contexts/add.html", {'sets': sets, 'trms': trms})
+
+
+def ctxupdate(request):
+    return render(request, "contexts/update.html")
+
+
 def cwklist(request):
     """view to generate list of namespaces"""
     crosswalks = getcwks()
@@ -48,7 +71,7 @@ def nspview(request, nspid):
 
 
 def nspadd(request):
-    """view to show all data about a namespace"""
+    """view to add data about a namespace"""
     if request.method == "POST":
         # save new namespace
         data = request.POST
@@ -117,3 +140,30 @@ def ontadd(request):
 def ontterms(request, ontid):
     oterms = olsont(ontid)
     return JsonResponse({"ontterms": oterms}, status=200)
+
+
+@csrf_exempt
+def jscwkadd(request, dbid=""):
+    if request.method == "POST":
+        data = request.POST
+        if dbid == "":
+            cwk = Crosswalks()
+        else:
+            cwk = Crosswalks.objects.get(id=dbid)
+        if data['table'] != "":
+            cwk.table = data['table']
+        if data['field'] != "":
+            cwk.field = data['field']
+        if data['term'] != "":
+            cwk.field = data['term']
+        if data['section'] != "":
+            cwk.field = data['section']
+        if data['sdtype'] != "":
+            cwk.field = data['sdtype']
+        if data['category'] != "":
+            cwk.field = data['category']
+        if data['datatype'] != "":
+            cwk.field = data['datatype']
+        print(cwk)
+        exit()
+        cwk.save()

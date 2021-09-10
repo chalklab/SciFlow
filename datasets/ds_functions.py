@@ -31,6 +31,11 @@ def getset(setid):
     return Datasets.objects.get(id=setid)
 
 
+# get id/name list of datasets
+def setlist():
+    return Datasets.objects.values_list('id', 'name').order_by('name')
+
+
 # used in datasets/mysql.py:getcodenames
 def getdatasetnames():
     """ retrieve the shortnames of all the datasets """

@@ -12,8 +12,23 @@ from scipy.io import loadmat
 import pandas as pd
 
 
+# test crosswalk list
+cwk = True
+if cwk:
+    getcwks(3)
+    exit()
+
+# test GitHub access
+gh = True
+if gh:
+    test = '{"@context": [{"@vocab": "https://www.w3.org/2001/XMLSchema#",' \
+           '"sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#",' \
+           '"condition": {"@id": "sdo:condition"}}]}'
+    addcxtfile('contexts/test.jsonld', 'test commit via API', test)
+    exit()
+
 # test matlab file import
-mlab = True
+mlab = False
 if mlab:
     file = loadmat('/Users/n00002621/Dropbox/Grants/Funded/NIST KnowLedger 2021 - 2022/Data/AmBench 2018/sam_0_output.mat')
     data = [[row.flat[0] for row in line] for line in file['ans'][0]]

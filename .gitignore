@@ -21,3 +21,4 @@ tests/report/
 venv/*
 venv/Lib/site-packages/MySQLdb/*
 venv/Lib/site-packages/mysqlclient-2.0.3.dist-info/*
+/sciflow/localsettings.py

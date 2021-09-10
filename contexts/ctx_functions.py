@@ -1,6 +1,8 @@
 """ functions file for the contexts app"""
 from contexts.models import *
 from contexts.ols_functions import *
+from sciflow.localsettings import ghtoken
+from contexts.git_functions import *
 
 
 def getctxs():
@@ -10,19 +12,18 @@ def getctxs():
 
 
 def getctx(ctxid):
-    """get a list of contexts"""
+    """get a context"""
     ctx = Contexts.objects.get(id=ctxid)
     return ctx
 
 
-def getcwks():
-    """get a list of contexts"""
-    cwks = Crosswalks.objects.all().order_by('field')
-    return cwks
+def getcwks(setid):
+    """get a list of crosswalks for a dataset"""
+    return Crosswalks.objects.all().filter(dataset_id=setid).values_list('id', 'table', 'field', 'ontterm__title').order_by('field')
 
 
 def getcwk(ctxid):
-    """get a list of contexts"""
+    """get a a crosswalk"""
     cwk = Crosswalks.objects.get(id=ctxid)
     return cwk
 
@@ -45,9 +46,8 @@ def nsaliases():
 
 
 def getonts():
-    """get the data for an ont term"""
-    terms = Ontterms.objects.all().filter(to_remove__isnull=True).order_by('title')
-    return terms
+    """get the list of ont terms"""
+    return Ontterms.objects.all().filter(to_remove__isnull=True).order_by('title')
 
 
 def getont(otid):
@@ -64,7 +64,7 @@ def onttermsbyns(nsid):
 
 def ctxonts():
     """
-    gets the ontologies in ols and then filter for only those already in sciflow
+    gets the ontologies in ols and then filters for only those already in sciflow
     namespaces are already aligned otherwise this will not work
     """
     kept = []

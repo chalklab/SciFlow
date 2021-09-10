@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row mt-2">
+        <h3>Add Context</h3>
+    </div>
+    <div class="row">
+        <form id="addform" action="/contexts/add/" method="post">
+            <div class="col-sm-12">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <label id="ctx_name" for="title" class="col-xs-2 col-form-label">Dataset:</label>
+                    <div class="col-xs-10">
+                        <select id="name" class="form-control form-control-sm" name="name" aria-describedby="ctx_name">
+                            <option value="">Choose...</option>
+                            {% for id, name in sets %}
+                                <option value="{{ id }}">{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label id="ctx_desc" for="definition" class="col-xs-2 col-form-label">Description:</label>
+                    <div class="col-xs-10">
+                        <input id="description" class="form-control form-control-sm" type="text" name="name" value="" aria-describedby="ctx_desc"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label id="ctx_url" for="code" class="col-xs-2 col-form-label">Location (URL):</label>
+                    <div class="col-xs-10">
+                       <input id="url" class="form-control form-control-sm" type="text" name="url" value="" aria-describedby="ctx_url"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-xs-2 col-xs-offset-10">
+                        <input class="btn btn-primary" type="submit" value="Save"/>
+                    </div>
+                </div>
+            </div>
+            <div id class="col-sm-12">
+                <h4 style="margin: 0;">Crosswalk Entries (<a href="#" id="showcwk" data-table="crosswalks">Add</a>)</h4>
+                <div id="crosswalk0" data-table="crosswalks" data-dbid="0" data-nnum="0" class="crosswalk input-group invisible collapse">
+                    <div class="input-group-prepend">
+                      <button id="index0" class="btn btn-sm btn-outline-secondary rmcwk" type="button" title="Remove Crosswalk" id="button-addon1">X</button>
+                    </div>
+                    <input id="tbl0" type="text" class="form-control form-control-sm updcwk" data-old="" title="DB Table" alt="DB Table" placeholder="DB Table..." value=""/>
+                    <input id="fld0" type="text" class="form-control form-control-sm updcwk" data-old="" title="DB Field" alt="DB Field" placeholder="DB Field..." value=""/>
+                    <select id="trm0" data-old="" class="form-control form-control-sm updcwk" title="Ont Term">
+                        <option value="">Select term...</option>
+                        {% for trm in trms %}
+                            <option value="{{ trm.id }}">{{ trm.title }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="sec0" data-old="" class="form-control form-control-sm updcwk" title="SciData Section">
+                        <option value="">SD section</option>
+                        <option value="methodology">Methodology</option>
+                        <option value="system">System</option>
+                        <option value="dataset">Dataset</option>
+                        <option value="metadata">Metadata (unusual)</option>
+                    </select>
+                    <input id="typ0" type="text" class="form-control form-control-sm updcwk" data-old="" title="Type" alt="Aspect or Facet Type" placeholder="Aspect/Facet Type" value=""/>
+                    <input id="cat0" type="text" class="form-control form-control-sm updcwk" data-old="" title="Category" alt="Category" placeholder="Category..." value=""/>
+                    <select id="dtp0" data-old="" class="form-control form-control-sm updcwk" title="Datatype">
+                        <option value="">XSD Datatype</option>
+                        <option value="string">String (most common)</option>
+                        <option value="dateTime">Date/Time</option>
+                        <option value="decimal">Decimal</option>
+                        <option value="float">Float (32 bit)</option>
+                        <option value="double">Float (64 bit)</option>
+                        <option value="integer">Integer</option>
+                        <option value="nonNegativeInteger">Non-Negative Integer</option>
+                        <option value="anyURI">URI</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% endblock %}
