@@ -16,9 +16,8 @@ tests/coverage_html/
 tests/.coverage
 build/
 tests/report/
-/.idea/
-/sciflow/settings_local.py
+.idea/
 venv/*
 venv/Lib/site-packages/MySQLdb/*
 venv/Lib/site-packages/mysqlclient-2.0.3.dist-info/*
-/sciflow/localsettings.py
+sciflow/localsettings.py
