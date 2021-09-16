@@ -16,7 +16,7 @@ $(document).ready(function() {
         let ont = $(this);
         let meta = ont.attr('data-ont').split("*");
         let nss = $('#aliases').html();
-        if (nss.includes(meta[1])) {
+        if (nss.includes(':' + meta[1].toLowerCase() + ':')) {
             alert('An ontology with this namespace is already in use');
         } else {
             $('#name').val(meta[0]);
@@ -27,8 +27,8 @@ $(document).ready(function() {
         return false;
     });
 
+    // for ols ont list in template ontterms/add.html
     $('#olsont').on('change', function() {
-        // for ols ont list in template ontterms/add.html
         let ontid = $('#olsont option:selected').val();
         $.ajax({
             type: 'POST',
@@ -42,7 +42,7 @@ $(document).ready(function() {
                 div.html('');
                 for(let i = 0; i<cnt; i++) {
                     let term = terms[i];
-                    let btn = '<input class="btn btn-sm btn-success term m-1" data-alias="' + ontid + '" data-code="' + term[3] + '" data-defn="' + term[2] + '" type="button" title="' + term[1] + '" value="' + term[1] + '">'
+                    let btn = '<input class="btn btn-sm btn-success terms m-1" data-alias="' + ontid + '" data-code="' + term[3] + '" data-defn="' + term[2] + '" type="button" title="' + term[1] + '" value="' + term[1] + '">'
                     div.append(btn);
                 }
                 return false;
@@ -54,7 +54,8 @@ $(document).ready(function() {
         });
     });
 
-    $('#ontterms').on('click','.term', function() {
+    // populate onto term from ontology button on
+    $('#ontterms').on('click','.terms', function() {
         // set event to fire on parent of dynamically added dom element ('.term')
         let term = $(this);
         let title = term.val();
@@ -64,7 +65,7 @@ $(document).ready(function() {
         $('#title').val(title);
         $('#definition').val(defn);
         $('#code').val(code);
-        $('#ns_id').val(nsid);
+        $('#nsid').val(nsid);
         return false;
     });
 
@@ -90,77 +91,138 @@ $(document).ready(function() {
     });
 
     // add/update a new crosswalk entry...
-    $(".updcwk").on('blur change', function () {
-        let ipt = $(this).parent();
-        let val = ipt.val();
-        if(val === ipt.attr('data-old')) {
-            return false;
-        }
-        alert(val);
-        return false;
-        let cwk = ipt.parent();
-        let nnum = cwk.attr('data-nnum')
-        let dbid = cwk.attr('data-dbid');
-        let tbl = cwk.find("#tbl" + nnum).val();
-        let fld = cwk.find("#fld" + nnum).val();
-        let trm = cwk.find("#trm" + nnum).val();
-        let sec = cwk.find("#sec" + nnum).val();
-        let typ = cwk.find("#typ" + nnum).val();
-        let cat = cwk.find("#cat" + nnum).val();
-        let dtp = cwk.find("#dtp" + nnum).val();
+    $(".updcwk").on('change', function () {
+        let input = $(this);
+        let field = input.attr('id');
+        let form = input.closest('form');
+        let cwkid = form.attr('cwkid')
+        let cxtid = form.attr('cxtid')
+        let value = input.val();
         // if dbid is empty create new entry in crosswalks table
-        let url = 'http://127.0.0.1:8000/xwalks/jscwkadd/' + dbid;
+        let url = 'http://127.0.0.1:8000/xwalks/add/';
         $.ajax({
             type: 'POST',
             dataType: "json",
             context: document.body,
             url: url,
-            data: {table: tbl, field: fld, term: trm, section: sec, sdtype: typ, category: cat, datatype: dtp },
+            data: {cwkid: cwkid, cxtid: cxtid, field: field, value: value },
             success: function (data) {
-                let terms = data['ontterms'];
-                let cnt = terms.length;
-                let div = $("#ontterms");
-                div.html('');
-                for(let i = 0; i<cnt; i++) {
-                    let term = terms[i];
-                    let btn = '<input class="btn btn-sm btn-success term m-1" data-alias="' + ontid + '" data-code="' + term[3] + '" data-defn="' + term[2] + '" type="button" title="' + term[1] + '" value="' + term[1] + '">'
-                    div.append(btn);
+                // note ontterm title and url put in temp field (title|url)
+                let html = '<b>' + data.table + ':' + data.field + ' -> </b>';
+                if(data.newname) {
+                    html += ' ' + data.newname;
+                } else {
+                    html += ' ' + data.field;
+                }
+                html += ' (' + data.datatype + ')';
+                if(data.temp) {
+                    let temp = data.temp.split('|');
+                    html += ' means <em>' + temp[0] + '</em> [' + temp[1] + ']';
+                }
+                if(!cwkid) {
+                    // set the crosswalk id if it was not set (new entry)
+                    $('#modalform').attr("cwkid",data.id);
+                    // add the new entry to the page
+                    let newitem = '<div class="col-11 pr-0">';
+                    newitem += '<a id="cwk' + data.id + '" class="editcwk list-group-item items py-1" cwkid="' + data.id + '" data-toggle="modal" data-target="#cwkmodal" style="cursor: pointer;">' + html + '</a>';
+                    newitem += '</div><div class="col-1 pl-0">';
+                    newitem += '<button class="btn btn-sm btn-danger delcwk col-12" cwkid="' + data.id + '" title="Delete">X</button>'
+                    newitem += '</div>';
+                    $("#cwks").append(newitem);
+                } else {
+                    $('#cwk' + cwkid).html(html);
                 }
                 return false;
-                },
+            },
             error: function () {
                 alert("Error");
                 return false;
             }
-        }).done(function() {
-            ipt.attr('data-old',val);
         });
         return false;
     });
 
     // remove a crosswalk entry
-    $(".rmcwk").on('click', function () {
-        let cwk = $(this).parent().parent();
-        let nnum = cwk.attr('data-nnum');
-        let tbl = cwk.find("#tbl" + nnum).val();
-        let fld = cwk.find("#fld" + nnum).val();
-        let trm = cwk.find("#trm" + nnum + " option:checked").val();
-        let sec = cwk.find("#sec" + nnum + " option:checked").val();
-        let typ = cwk.find("#typ" + nnum).val();
-        let cat = cwk.find("#cat" + nnum).val();
-        let dtp = cwk.find("#dtp" + nnum + " option:checked").val();
-        alert(tbl + ':' + fld + ':' + trm + ':' + sec + ':' + typ + ':' + cat + ':' + dtp);
+    $(".delcwk").on('click', function () {
+        let cwk = $(this);
+        let cwkid = cwk.attr('cwkid');
+        $.post('/xwalks/delete/', {cwkid: cwkid})
+            .done(function ( data ) {
+                // hide dom elements
+                if(data['response']==='success') {
+                    $(".editcwk[cwkid='" + cwkid + "']").hide();
+                    $(".delcwk[cwkid='" + cwkid + "']").hide();
+                    alert("Crosswalk deleted :)");
+                } else {
+                    alert("Deletion error :(");
+                }
+            });
         return false;
     });
 
     // search and show/hide terms in card
-    $("#cwksrc").on('keyup',function(){
+    $("#listsrc").on('keyup',function(){
         let val=$(this).val().toLowerCase().trim();
-        let cwks=$('#cwks li');
-        cwks.show();
+        let items=$('.items');
+        let terms=$('.terms');
+        let delbtns=$('.delcwk');
+        items.show(); // for html elements that have content inside the element
+        terms.show(); // for buttons (with attr 'value')
+        delbtns.show(); // for crosswalks to also hide delete buttons along with <a> links
+        console.log(val);
         if(val!=='') {
-            cwks.not('[title*="' + val + '"]').hide();
+            terms.not('[value*="' + val + '"]').hide();
+            let nomatch = items.not(':contains(' + val + ')')
+            nomatch.each(function (i, el) {
+                let item=$(el);
+                $(".delcwk[cwkid='" + item.attr('cwkid') + "']").hide();
+            });
+            nomatch.hide();
         }
+    });
+
+    // create context JSON-LD file
+    $("#createctx").on('click', function () {
+        let id = $("#createctx").attr('dbid');
+        $.get('/contexts/write/' + id).done(function() { alert( "Context file saved :)" ); });
+        return false;
+    });
+
+    // add a new crosswalk entry
+    $("#addcwk").on('click', function () {
+        // clear form
+        let form = $('#modalform');
+        form[0].reset();
+        form.attr('cwkid','');
+        form.attr('cxtid','');
+        // process
+        let btn = $(this);
+        let cxtid = btn.attr('cxtid');
+        form.attr("cxtid",cxtid);
+    });
+
+    // edit a crosswalk entry
+    $(".editcwk").on('click', function () {
+        let cwk = $(this);
+        let cwkid = cwk.attr('cwkid');
+        $.get('/xwalks/read/' + cwkid, function( data ) {
+            $('#modalform').attr("dbid",cwkid);
+            $('#table').val(data.table).attr('old',data.table);
+            $('#field').val(data.field).attr('old',data.field);
+            $('#ontterm_id').val(data.ontterm);
+            $('#sdsection').val(data.sdsection);
+            $('#sdsubsection').val(data.sdsubsection).attr('old',data.sdsubsection);
+            $('#sdsubsubsection').val(data.sdsubsubsection).attr('old',data.sdsubsubsection);
+            $('#newname').val(data.newname).attr('old',data.newname);
+            $('#category').val(data.category).attr('old',data.category);
+            $('#datatype').val(data.datatype);
+            return false;
+        });
+    });
+
+    // focus modal to first input field on open
+    $('#cwkmodal').on('shown.bs.modal', function () {
+        $('#table').trigger('focus')
     });
 
 });

@@ -24,7 +24,7 @@ if gh:
     test = '{"@context": [{"@vocab": "https://www.w3.org/2001/XMLSchema#",' \
            '"sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#",' \
            '"condition": {"@id": "sdo:condition"}}]}'
-    addcxtfile('contexts/test.jsonld', 'test commit via API', test)
+    addctxfile('contexts/test.jsonld', 'test commit via API', test)
     exit()
 
 # test matlab file import

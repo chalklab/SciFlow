@@ -95,6 +95,7 @@ class Crosswalks(models.Model):
     intlinks = models.CharField(max_length=1024, blank=True, null=True)
     meta = models.CharField(max_length=64, blank=True, null=True)
     ignore = models.CharField(max_length=32, blank=True, null=True)
+    temp = models.CharField(max_length=128, blank=True, null=True)
     comments = models.CharField(max_length=128, blank=True, null=True)
     updated = models.DateTimeField()
 

@@ -1,14 +1,28 @@
 {% extends 'base.html' %}
 {% block title %} Ontterm List {% endblock %}
-{% block header %} {{ facet }} {% endblock %}
 {% block content %}
-    <h3>Current Ontology Terms</h3>
-    <div class="panel-responsive-220">
-    <ul>
-    {% for term in ontterms %}
-        <li><a href="/ontterms/view/{{ term.id }}">{{ term.title }}</a></li>
-    {% endfor %}
-    </ul>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-10 offset-md-1">
+            <div class="card mt-2">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row">
+                        <div class="col-5">
+                            <h4>Defined Terms</h4>
+                        </div>
+                        <div class="col-5 px-0">
+                            <input id="listsrc" placeholder="Search terms (or scroll)" class="form-control form-control-sm float-right" data-search-override="true" type="text"/>
+                        </div>
+                        <div class="col-2 px-0">
+                            <a href="/ontterms/add/" type="button" class="btn btn-sm btn-primary float-right">Add Term</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="onts" class="card-body list-group list-group-flush panel-responsive-220 py-0 pr-0">
+                    {% for term in ontterms %}
+                        <a class="list-group-item items py-1" href="/ontterms/view/{{ term.id }}">{{ term.title }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
-    <a href="/ontterms/add/" type="button" class="btn btn-primary mt-3">Add Ontology Term</a>
 {% endblock %}

@@ -2,7 +2,7 @@ from github import Github
 from sciflow.localsettings import ghtoken
 
 
-def addcxtfile(path, message, file, repo="scidata", token=ghtoken):
+def addctxfile(path, message, file, repo="scidata", token=ghtoken):
     """
     Push file update to GitHub repo
 

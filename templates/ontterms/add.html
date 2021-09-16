@@ -1,86 +1,89 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="row mt-2">
-        <h3>Add Ontology Term</h3>
-    </div>
-    <div class="row row-cols-2">
-        <div>
-            <form id="addform" action="/ontterms/add/" method="post">
-                {% csrf_token %}
-                <div class="form-group row">
-                    <label id="ns_title" for="title" class="col-xs-2 col-form-label">Title:</label>
-                    <div class="col-xs-10">
-                         <input id="title" class="form-control form-control-sm" type="text" name="title" value="" aria-describedby="ns_title"/>
+        <div class="col-xs-12 col-sm-12 col-md-4 offset-md-1">
+            <div class="card mt-2">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4 class="mb-0">Add Ontology Term</h4>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label id="ns_defn" for="definition" class="col-xs-2 col-form-label">Definition:</label>
-                    <div class="col-xs-10">
-                        <input id="definition" class="form-control form-control-sm" type="text" name="definition" value="" aria-describedby="ns_defn"/>
-                    </div>
+                <div id="form" class="card-body panel-responsive-220">
+                    <form id="addform" action="/ontterms/add/" method="post">
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <label for="ns_title" class="col-form-label col-md-4" title="Name of the term">Title:</label>
+                            <input type="text" class="form-control col-md-7" name="title" id="title"/>
+                        </div>
+                        <div class="form-group row">
+                            <label for="ns_defn" class="col-form-label col-md-4" title="Define the term">Definition:</label>
+                            <input type="text" class="form-control col-md-7" name="definition" id="definition" value="" aria-describedby="ns_defn"/>
+                        </div>
+                        <div class="form-group row">
+                            <label for="ns_code" class="col-form-label col-md-4" title="Code for the term">Term Code:</label>
+                            <input type="text" class="form-control col-md-7" name="code" id="code" value="" aria-describedby="ns_code"/>
+                        </div>
+                        <div class="form-group row">
+                            <label for="ns_id" class="col-form-label col-md-4" title="Ontology namespace">Namespace:</label>
+                            <select class="form-control col-md-7" name="nsid" id="nsid" aria-describedby="ns_id">
+                                <option value="">Choose...</option>
+                                {% for id, name in nss %}
+                                    <option value="{{ id }}">{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group row">
+                            <label for="ns_sect" class="col-form-label col-md-4">SciData Section:</label>
+                            <select class="form-control col-md-7" name="sdsection" id="sdsection" aria-describedby="ns_sect">
+                                <option value="">Choose...</option>
+                                {% for val, name in sdsects %}
+                                    <option value="{{ val }}">{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group row">
+                            <label id="ns_subsect" class="col-form-label col-md-4">SciData Subsection:</label>
+                            <select class="form-control col-md-7" name="sdsubsection" id="sdsubsection" aria-describedby="ns_subsect">
+                                <option value="">Choose...</option>
+                                {% for sect, val, name in subsects %}
+                                    <option value="{{ val }}" class="{{ sect }}">{{ name }} ({{ sect }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="float-right">
+                                <input type="submit" value="Add"/>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group row">
-                    <label id="ns_code" for="code" class="col-xs-2 col-form-label">Term Code:</label>
-                    <div class="col-xs-10">
-                       <input id="code" class="form-control form-control-sm" type="text" name="code" value="" aria-describedby="ns_code"/>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label id="nspaces" for="nsids" class="col-xs-2 col-form-label">Namespace:</label>
-                    <div class="col-xs-10">
-                        <select id="ns_id" class="form-control form-control-sm" name="nsids" aria-describedby="nsids">
-                            <option value="">Choose...</option>
-                            {% for id, name in nss %}
-                                <option value="{{ id }}">{{ name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label id="ns_sect" for="nspace_id" class="col-xs-2 col-form-label">SciData Section:</label>
-                    <div class="col-xs-10">
-                        <select id="sdsection" class="form-control form-control-sm" name="sdsection" aria-describedby="ns_sect">
-                            <option value="">Choose...</option>
-                            {% for val, name in sdsects %}
-                                <option value="{{ val }}">{{ name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label id="ns_subsect" class="col-xs-2 col-form-label">SciData Subsection:</label>
-                    <div class="col-xs-10">
-                        <select id="sdsubsection" class="form-control form-control-sm" name="sdsubsection" aria-describedby="ns_subsect">
-                            <option value="">Choose...</option>
-                            {% for sect, val, name in subsects %}
-                                <option value="{{ val }}" class="{{ sect }}">{{ name }} ({{ sect }})</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-xs-2 col-xs-offset-10">
-                        <input class="btn btn-primary" type="submit" value="Save"/>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
-        <div>
-            <form method="post">
-                {% csrf_token %}
-                <div class="form-group row">
-                    <div class="col-xs-10">
-                        <select id="olsont" class="form-control form-control-sm" name="nspace_id" aria-describedby="ns_spaces">
+        <div class="col-xs-12 col-sm-12 col-md-6">
+            <div class="card mt-2">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row">
+                        <div class="col-4">
+                            <h4 class="mb-0">EBI-OLS Ontologies</h4>
+                        </div>
+                        <div class="col-4">
+                            <input id="listsrc" placeholder="Search terms (or scroll)" class="form-control form-control-sm float-right" data-search-override="true" type="text"/>
+                        </div>
+                        <div class="col-4">
+                            <select id="olsont" class="form-control form-control-sm" name="nspace_id" aria-describedby="ns_spaces">
                             <option value="">Show terms in ontology...</option>
                             {% for  alias, title, url, home in onts %}
                                 <option value="{{ alias }}">{{ title }} ({{ alias }})</option>
                             {% endfor %}
-                        </select>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </form>
-            <div id="ontterms" class="panel-responsive-220">
+                <div id="ontterms" class="card-body panel-responsive-220">
 
+                </div>
             </div>
         </div>
     </div>

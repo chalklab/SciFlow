@@ -1,13 +1,17 @@
 {% extends 'base.html' %}
 {% block title %} Context List {% endblock %}
-{% block header %} {{ facet }} {% endblock %}
 {% block content %}
-    <h3>Current Contexts</h3>
-    <ul>
-    {% for ctx in contexts %}
-        <li><a href="/contexts/view/{{ ctx.id }}">{{ ctx.name }}</a></li>
-    {% endfor %}
-    </ul>
-    <a href="/ontterms/" type="button" class="btn btn-outline-primary">View Ontology Terms</a>
-    <a href="/nspaces/" type="button" class="btn btn-outline-success">View Ontology Namespaces</a>
+    <div class="row">
+        <div class="col-12 col-md-10 offset-md-1 mt-2">
+            <h3>Current Contexts</h3>
+            <ul>
+                {% for ctx in contexts %}
+                    <li><a href="/contexts/view/{{ ctx.id }}">{{ ctx.name }}</a></li>
+                {% endfor %}
+            </ul>
+            <a href="/contexts/add/" type="button" class="btn btn-outline-warning">Add Context</a>
+            <a href="/ontterms/" type="button" class="btn btn-outline-primary">View Ontology Terms</a>
+            <a href="/nspaces/" type="button" class="btn btn-outline-success">View Ontology Namespaces</a>
+        </div>
+    </div>
 {% endblock %}

@@ -52,9 +52,9 @@
                 </ul>
             </div>
             </nav>
-    <div id="content" class="container" role="main">
+    <div id="content" class="container-fluid" role="main">
         <div class="row">
-            <div class="col-xs-10 col-xs-offset-1">
+            <div class="col col-12">
                 {% if 'Access denied' in request.path %}
                     <meta http-equiv="REFRESH" content="0;url=/error">
                 {% elif request.user.is_authenticated %}

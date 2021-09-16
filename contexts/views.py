@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from datasets.ds_functions import *
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.forms.models import model_to_dict
 from contexts.ctx_functions import *
 
 
@@ -17,7 +18,7 @@ def ctxview(request, ctxid):
     ctx = getctx(ctxid)
     ds = getset(ctx.dataset_id)
     cws = ctx.crosswalks_set.all().order_by('table', 'field')
-    onts = list[cws.values('ontterm_id', 'ontterm__url')]
+    onts = getonts()
     return render(request, "contexts/view.html",
                   {'context': ctx, 'dataset': ds, 'crosswalks': cws, 'onts': onts})
 
@@ -143,27 +144,70 @@ def ontterms(request, ontid):
 
 
 @csrf_exempt
-def jscwkadd(request, dbid=""):
+def jscwkadd(request):
     if request.method == "POST":
         data = request.POST
-        if dbid == "":
+        cwkid = data['cwkid']
+        cxtid = data['cxtid']
+        cwk = None
+        if cwkid == "" and cxtid != "":
             cwk = Crosswalks()
+            cxt = Contexts.objects.get(id=cxtid)
+            cwk.context_id = cxtid
+            cwk.dataset_id = cxt.dataset_id
+            if data['field'] != 'ontterm_id':
+                cwk.ontterm = None
+            cwk.datatype = 'string'  # default option
+
         else:
-            cwk = Crosswalks.objects.get(id=dbid)
-        if data['table'] != "":
-            cwk.table = data['table']
-        if data['field'] != "":
-            cwk.field = data['field']
-        if data['term'] != "":
-            cwk.field = data['term']
-        if data['section'] != "":
-            cwk.field = data['section']
-        if data['sdtype'] != "":
-            cwk.field = data['sdtype']
-        if data['category'] != "":
-            cwk.field = data['category']
-        if data['datatype'] != "":
-            cwk.field = data['datatype']
-        print(cwk)
-        exit()
+            cwk = Crosswalks.objects.get(id=cwkid)
+        cwk.__dict__[data['field']] = data['value']
         cwk.save()
+        if cwk.ontterm_id:
+            cwk.temp = cwk.ontterm.title + '|' + cwk.ontterm.url
+    return JsonResponse(model_to_dict(cwk), status=200)
+
+
+@csrf_exempt
+def jsdelcwk(request):
+    if request.method == "POST":
+        data = request.POST
+        cwkid = data['cwkid']
+        Crosswalks.objects.get(id=cwkid).delete()
+        response = {}
+        try:
+            Crosswalks.objects.get(id=cwkid)
+            response.update({"response": "failure"})
+        except Crosswalks.DoesNotExist as e:
+            response.update({"response": "success"})
+    return JsonResponse(response, status=200)
+
+
+@csrf_exempt
+def jscwkread(request, cwkid=""):
+    cwk = Crosswalks.objects.get(id=cwkid)
+    return JsonResponse(model_to_dict(cwk), status=200)
+
+
+@csrf_exempt
+def jswrtctx(request, ctxid: int):
+    ctx = Contexts.objects.get(id=ctxid)
+    tpl = '{"@vocab": "https://www.w3.org/2001/XMLSchema#",' \
+          '"sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#"}'
+    cdict = json.loads(tpl)
+    nss = {}
+    # add namespaces
+    for cwk in ctx.crosswalks_set.all():
+        nss.update({cwk.ontterm.nspace.ns: cwk.ontterm.nspace.path})
+    for key in nss:
+        cdict.update({key: nss[key]})
+    # add entries
+    for cwk in ctx.crosswalks_set.all():
+        tmp = {}
+        tmp.update({"@id": cwk.ontterm.url, "@type": cwk.datatype})
+        if cwk.newname:
+            cdict.update({cwk.newname: tmp})
+        else:
+            cdict.update({cwk.field: tmp})
+    out = {'@context': cdict}
+    return JsonResponse(out, status=200)
