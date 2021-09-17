@@ -4,12 +4,10 @@ import django
 import time
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
-from substances.views import *
 from datafiles.df_functions import *
 from substances.external import *
 from scyjava import config, jimport
 from workflow.gdb_functions import *
-from substances.views import *
 from django.http import *
 from django.core.exceptions import ObjectDoesNotExist
 from rdkit import Chem

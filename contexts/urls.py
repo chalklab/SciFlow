@@ -9,6 +9,7 @@ urlpatterns = [
     path("contexts/view/<ctxid>", views.ctxview, name='ctxview'),
     path("contexts/write/<ctxid>", views.jswrtctx, name='ctxwrite'),
     path("xwalks/", views.cwklist, name='cwklist'),
+    path("xwalks/<ctxid>", views.cwklist, name='cwklist'),
     path("xwalks/add/", views.jscwkadd, name='cwkadd'),
     path("xwalks/view/<cwkid>", views.cwkview, name='cwkview'),
     path("xwalks/read/<cwkid>", views.jscwkread, name='cwkread'),

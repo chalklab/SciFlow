@@ -1,8 +1,9 @@
 """ example code for the datafiles app"""
-import datetime
 import os
 import django
 import time
+import views
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
 
@@ -10,7 +11,7 @@ from datasets.serializer import *
 from datasets.views import *
 from datetime import datetime
 from workflow.gdb_functions import *
-import views
+
 
 f1 = False
 if f1:
@@ -45,7 +46,8 @@ if f6:
 f7 = True
 if f7:
     fids = JsonFiles.objects.filter(type='normalized', version=4,
-                                    file__contains='herg').order_by('json_lookup_id').values_list('json_lookup_id', flat=True)
+                                    file__contains='herg').order_by('json_lookup_id').\
+                                    values_list('json_lookup_id', flat=True)
     for fid in fids:
         file = JsonFiles.objects.filter(json_lookup_id=fid).order_by('-version')[0]
         if file.comments == 'done':

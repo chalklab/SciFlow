@@ -1,6 +1,4 @@
 """ django view file """
-import json
-
 from django.shortcuts import render, redirect
 from datasets.ds_functions import *
 from django.http import JsonResponse
@@ -42,13 +40,9 @@ def ctxadd(request):
     return render(request, "contexts/add.html", {'sets': sets, 'trms': trms})
 
 
-def ctxupdate(request):
-    return render(request, "contexts/update.html")
-
-
-def cwklist(request):
+def cwklist(request, cwkid=''):
     """view to generate list of namespaces"""
-    crosswalks = getcwks()
+    crosswalks = getcwks(cwkid)
     return render(request, "crosswalks/list.html", {'crosswalks': crosswalks})
 
 
@@ -119,7 +113,8 @@ def ontadd(request):
         ontterm.save()
         return redirect('/ontterms/')
 
-    sdsects = [('methodology', 'Methodology (the "how" section)'), ('system', 'System (the "what" section)'), ('dataset', 'Dataset (the "data" section)')]
+    sdsects = [('methodology', 'Methodology (the "how" section)'), ('system', 'System (the "what" section)'),
+               ('dataset', 'Dataset (the "data" section)')]
     subsects = [('procedure', 'methodology', 'Procedure'), ('chemical', 'system', 'Chemical'),
                 ('exptdata', 'dataset', 'Experimental data')]
 
@@ -149,7 +144,6 @@ def jscwkadd(request):
         data = request.POST
         cwkid = data['cwkid']
         cxtid = data['cxtid']
-        cwk = None
         if cwkid == "" and cxtid != "":
             cwk = Crosswalks()
             cxt = Contexts.objects.get(id=cxtid)
@@ -158,7 +152,6 @@ def jscwkadd(request):
             if data['field'] != 'ontterm_id':
                 cwk.ontterm = None
             cwk.datatype = 'string'  # default option
-
         else:
             cwk = Crosswalks.objects.get(id=cwkid)
         cwk.__dict__[data['field']] = data['value']
@@ -178,7 +171,7 @@ def jsdelcwk(request):
         try:
             Crosswalks.objects.get(id=cwkid)
             response.update({"response": "failure"})
-        except Crosswalks.DoesNotExist as e:
+        except Crosswalks.DoesNotExist:
             response.update({"response": "success"})
     return JsonResponse(response, status=200)
 

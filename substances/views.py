@@ -3,7 +3,6 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.core.paginator import Paginator
 from django.contrib import messages
-from django.views.static import serve
 from workflow.gdb_functions import *
 from substances.sub_functions import *
 from sciflow.settings import BASE_DIR

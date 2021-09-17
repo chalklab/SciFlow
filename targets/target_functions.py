@@ -1,5 +1,9 @@
 import django
 import os
+import json
+import re
+from django.core.exceptions import ObjectDoesNotExist
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
 
@@ -7,9 +11,9 @@ django.setup()
 """ functions for use with the targets and related tables..."""
 from targets.external import *
 from datetime import datetime
-import json
 from targets.template_target import tmpl
 from targets.models import *
+
 
 def getgenedata(identifier):
 
@@ -31,12 +35,11 @@ def addgene(identifier, output='meta'):
     """
 
     # assign chemblid to key
-    key=identifier
+    key = identifier
 
     # get gene data from sources
     meta, ids, descs, srcs = getgenedata(key)
     return [meta, ids, descs, srcs]
-
 
 
 def creategenejld(addedgene):
@@ -47,11 +50,12 @@ def creategenejld(addedgene):
 
     # get the substance template file from the database
     # tmpl = Templates.objects.get(type="compound")
-    meta, ids, descs, srcs = addedgene[0]['chembl'], addedgene[1]['chembl'], addedgene[2]['chembl'], addedgene[3]['chembl']
+    meta, ids, descs, srcs = addedgene[0]['chembl'], \
+        addedgene[1]['chembl'], addedgene[2]['chembl'], addedgene[3]['chembl']
     sd = json.loads(json.dumps(tmpl))
     # print(sd)
     gene = sd['@graph']['scidata']['system']['facets'][0]
-    gene_chembl_id = ids.get('chembl_id').replace('CHEMBL','')
+    gene_chembl_id = ids.get('chembl_id').replace('CHEMBL', '')
     # get the metadata fields from the DB that need to be included in the file
     # fields = Metadata.objects.filter(sdsubsection="compound")
 
@@ -74,14 +78,13 @@ def creategenejld(addedgene):
     gid = sd['@graph']['@id'].replace("<chemblid>", gene_chembl_id)
     sd['@graph']['@id'] = gid
 
-
     # add general gene metadata
     if ids.get('pref_name'):
         sd['@graph']['scidata']['system']['facets'][0]['name'] = ids.get('pref_name')
     if ids.get('organism'):
         sd['@graph']['scidata']['system']['facets'][0]['organism'] = ids.get('organism')
     if ids.get('tax_id'):
-        sd['@graph']['scidata']['system']['facets'][0]['organism#'] = "NCBI:txid"+str(ids.get('tax_id'))
+        sd['@graph']['scidata']['system']['facets'][0]['organism#'] = "NCBI:txid" + str(ids.get('tax_id'))
     if ids.get('target_type'):
         sd['@graph']['scidata']['system']['facets'][0]['target_type'] = ids.get('target_type')
     sd['@graph']['scidata']['system']['facets'][0]['accession_id'] = ids.get('accession_id')
@@ -98,13 +101,14 @@ def creategenejld(addedgene):
 # with open("scidata_gene_"+tid + '.jsonld', 'w') as f:
 #     final_output = json.dump(creategenejld(addgene(tid)), f)
 
-#might not be needed because no targ_id in identifier section
-def gettargid (identifier):
+# might not be needed because no targ_id in identifier section
+def gettargid(identifier):
     target = Targets.objects.all().filter(identifiers_values_exact=identifier)
     if target:
         return target[0].id
     else:
         return False
+
 
 def getidtype(identifier):
     p = re.search('^CHEMBL[0-9]+$', identifier)
@@ -123,10 +127,12 @@ def gettargdata(identifier):
 
     return meta, ids, descs, srcs
 
+
 def updatetarget(targid, field, value):
     target = Targets.objects.get(id=targid)
     setattr(target, field, value)
     target.save()
+
 
 def saveids(targid, ids):
     for source, e in ids.items():
@@ -137,6 +143,7 @@ def saveids(targid, ids):
                     ident.save()
             else:
                 print("not saved")
+
 
 def savedescs(targid, descs):
     for source, e in descs.items():
@@ -150,12 +157,14 @@ def savedescs(targid, descs):
                 desc = Descriptors(target_id=targid, type=k, value=v, source=source)
                 desc.save()
 
+
 def savesrcs(targid, srcs):
     for x, y in srcs.items():
         src = Sources(target_id=targid, source=x, result=y["result"], notes=y.get("notes", "Null"))
         src.save()
 
-def addtarget(identifier, output = 'meta'):
+
+def addtarget(identifier, output='meta'):
     found = Identifiers.objects.values().filter(value=identifier).\
         values_list('value', 'id')
     found = dict(found)
@@ -173,30 +182,31 @@ def addtarget(identifier, output = 'meta'):
     idtype = getidtype(identifier)
     if idtype != "chembl":
 
-        key = search_chembl2085_identifier() #temporary function
+        key = search_chembl2085_identifier()  # temporary function
 
     else:
         key = identifier
 
     meta, ids, descs, srcs = gettargdata(key)
 
+    nm, rtype, tax_id, chembl_id, organism = "", "", "", "", ""
     if "chembl" in meta:
         if meta['chembl']('pref_name'):
             nm = meta['chembl'].get['pref_name']
         if "type" in meta['chembl']:
-            type = meta['chembl']['relationship']
+            rtype = meta['chembl']['relationship']  # changed var to rtype so does not clash with 'type' SJC 091721
         if "tax_id" in meta['chembl']:
             tax_id = meta['chembl']['tax_id']
         if "chembl_id" in meta['chembl']:
             chembl_id = meta['chembl']['target_chembl_id']
         if "organism" in meta['chembl']:
             organism = meta['chembl']['organism']
-    target = Targets(name=nm, type=type, tax_id=tax_id, chembl_id=chembl_id, organism=organism)
+    target = Targets(name=nm, type=rtype, tax_id=tax_id, chembl_id=chembl_id, organism=organism)
 
     target.save()
     targid = target.id
 
-    #check sub version of functions
+    # check sub version of functions
     saveids(targid, ids)
     savedescs(targid, descs)
     savesrcs(targid, srcs)
@@ -208,9 +218,10 @@ def addtarget(identifier, output = 'meta'):
     else:
         return meta
 
+
 def tempcreatetargjld():
     with open('/Users/n01387071/Downloads/chembl_target_2085.jsonld', 'r') as chembl2085:
-        #function is specific to computer, insert where chembl_target_2085.jsonld is located
+        # function is specific to computer, insert where chembl_target_2085.jsonld is located
         chembl2085 = chembl2085.read()
         return chembl2085
 
@@ -235,23 +246,24 @@ def getaddtarg(section, meta):
                                 targid = Targets.objects.values('id').get(chembl_id=v)['id']
                                 break
             else:
-                    # cast all values to str (avoids error)
-                    if value.startswith('CHEMBL'):
-                        try:
-                            targid = Targets.objects.values('id').get(chembl_id=value)['id']
-                        except:
-                            targid = False
-                        break
+                # cast all values to str (avoids error)
+                if value.startswith('CHEMBL'):
+                    try:
+                        targid = Targets.objects.values('id').get(chembl_id=value)['id']
+                    except ObjectDoesNotExist:
+                        targid = False
+                    break
 
     if not targid:
-        target = addtarget("CHEMBL2085", 'target') #temporary identifier = "CHEMBL2085"
+        target = addtarget("CHEMBL2085", 'target')  # temporary identifier = "CHEMBL2085"
         targid = target.id
-        #TODO addtarget
+        # TODO addtarget
         # sub = addsubstance(identifier, 'sub')
         # subid = sub.id
         # print('target not found')
 
     return targid
+
 
 def targingraph(targid):
     """ whatever is in the graphdb field for a substance"""

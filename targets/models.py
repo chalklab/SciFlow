@@ -1,6 +1,7 @@
 """import models"""
 from django.db import models
 
+
 class Targets(models.Model):
     id = models.SmallAutoField(primary_key=True)
     name = models.CharField(max_length=1024)
@@ -26,14 +27,15 @@ class Identifiers(models.Model):
     target = models.ForeignKey(Targets, on_delete=models.CASCADE)
     type = models.CharField(max_length=10, choices=TYPE_CHOICES, default=CHEMBL)
     value = models.CharField(max_length=768, default='')
-    #iso might just be a way to make canonical SMILES format pseudo unique, might not be needed for targets
-    #iso = models.CharField(max_length=5, default=None)
+    # iso might just be a way to make canonical SMILES format pseudo unique, might not be needed for targets
+    # iso = models.CharField(max_length=5, default=None)
     source = models.CharField(max_length=64, default='')
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
         db_table = 'identifiers'
+
 
 class Descriptors(models.Model):
     """ accessing the descriptors DB table"""
@@ -46,6 +48,7 @@ class Descriptors(models.Model):
     class Meta:
         managed = False
         db_table = 'descriptors'
+
 
 class Sources(models.Model):
     """ get data from the sources DB table"""

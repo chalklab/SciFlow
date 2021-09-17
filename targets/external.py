@@ -1,14 +1,5 @@
 """functions to get metadata/identifiers/descriptors from external websites"""
-import re
-from qwikidata.sparql import *
-from qwikidata.entity import *
-from qwikidata.typedefs import *
-from qwikidata.linked_data_interface import *
-from chembl_webresource_client.new_client import new_client
-
-
 import requests
-import json
 
 # target_id = "CHEMBL240"
 
@@ -21,7 +12,6 @@ def search_chembl(identifier, meta, ids, descs, srcs):
     srcs.update({"chembl": {}})
 
     # check to see if compound is in database
-    other = None
     respnse = requests.get(apipath+identifier+".json")
     if respnse.status_code != 200:
         notes = "ChemblID not found"
@@ -67,9 +57,10 @@ def search_chembl(identifier, meta, ids, descs, srcs):
     # print(json.dumps(reqdata))
     return
 
-def search_chembl2085_identifier():
-        identifier = "CHEMBL2085"
-        return identifier
 
-#identifier, meta, ids, descs, srcs = "CHEMBL240", "",{},{},{}
-#search_chembl(identifier, meta, ids, descs, srcs)
+def search_chembl2085_identifier():
+    identifier = "CHEMBL2085"
+    return identifier
+
+# identifier, meta, ids, descs, srcs = "CHEMBL240", "",{},{},{}
+# search_chembl(identifier, meta, ids, descs, srcs)

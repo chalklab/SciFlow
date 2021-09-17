@@ -1,8 +1,6 @@
 """ functions file for the contexts app"""
 from contexts.models import *
 from contexts.ols_functions import *
-from sciflow.localsettings import ghtoken
-from contexts.git_functions import *
 
 
 def getctxs():
@@ -19,7 +17,12 @@ def getctx(ctxid):
 
 def getcwks(setid):
     """get a list of crosswalks for a dataset"""
-    return Crosswalks.objects.all().filter(dataset_id=setid).values_list('id', 'table', 'field', 'ontterm__title').order_by('field')
+    if setid == '':
+        cwks = Crosswalks.objects.all().values_list('id', 'table', 'field', 'ontterm__title').order_by('field')
+    else:
+        cwks = Crosswalks.objects.all().filter(dataset_id=setid).\
+                values_list('id', 'table', 'field', 'ontterm__title').order_by('field')
+    return cwks
 
 
 def getcwk(ctxid):

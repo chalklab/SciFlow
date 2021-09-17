@@ -20,7 +20,7 @@ def addgraph(ftype, fid, locale='local', replace=""):
     file.write(data + '\r\n')
     file.close()
 
-    locale = "local" # force saving to local machine (remove to direct to SDS)
+    # locale = "local"  # force saving to local machine (remove to direct to SDS)
     r = None
     if locale == "local":
         r = requests.post(graphlocalurl, data=data, headers=jsonhrs)
@@ -113,7 +113,8 @@ def graphstatementsget(graph, repo):  # TODO: ???
 def graphstatementedit(baseuri, update, repo):  # DONE??
     """ put /repositories/{repositoryID}/statements -> updates a statement in the repo """
     headers = {'Content-type': ' application/rdf+xml', 'Accept': 'text/plain'}
-    r = requests.get("http://localhost:7200/repositories/" + repo + "/statements?update=" + update + "&baseURI=" + baseuri, headers=headers)
+    r = requests.get("http://localhost:7200/repositories/" + repo + "/statements?update=" +
+                     update + "&baseURI=" + baseuri, headers=headers)
     print(r.text)
 
 

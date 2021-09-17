@@ -1,5 +1,4 @@
 """ example code for the datafiles app"""
-import json
 import os
 import django
 import requests
@@ -7,7 +6,6 @@ import requests
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
 
-from datafiles.views import *
 from pyld import jsonld
 from quads.qd_functions import *
 

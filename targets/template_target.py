@@ -3,9 +3,12 @@ tmpl = {
         "https://stuchalk.github.io/scidata/contexts/scidata.jsonld",
         {
             "sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#",
-            "obo": "http://purl.obolibrary.org/obo/",
-            "ss": "http://semanticscience.org/resource/",
-            "atc": "http://purl.bioontology.org/ontology/ATC/",
+            "iao": "http://purl.obolibrary.org/obo/iao.owl",
+            "chebi": "http://purl.obolibrary.org/obo/chebi.owl",
+            "ncit": "http://purl.obolibrary.org/obo/ncit.owl",
+            "ss": "https://semanticchemistry.github.io/semanticchemistry/ontology/cheminf.owl",
+            "sio": "https://semanticscience.org/ontology/sio.owl",
+            "atc": "https://purl.bioontology.org/ontology/ATC/",
             "w3i": "https://w3id.org/skgo/modsci#"
         },
         {"@base": "https://scidata.unf.edu/chalklab:gene:<chemblid>/"}
@@ -39,13 +42,13 @@ tmpl = {
             "dc:rights"
         ],
         "ids": [
-            # "obo:IAO_0000578",
+            # "iao:IAO_0000578",
             # "ss:CHEMINF_000123",
             "ss:CHEMINF_000022",
-            "obo:NCIT_C1940",
-            "obo:CHEBI_25555",
-            "ss:SIO_011118",
-            "ss:SIO_010035",
+            "ncit:NCIT_C1940",
+            "chebi:CHEBI_25555",
+            "sio:SIO_011118",
+            "sio:SIO_010035",
         ],
         "scidata": {
             "@id": "scidata",
@@ -57,11 +60,11 @@ tmpl = {
                 "facets": [
                     {
                         "@id": "targets/1/",
-                        "@type": ["ss:SIO_010035","obo:NCIT_C17021"],
+                        "@type": ["sio:SIO_010035", "ncit:NCIT_C17021"],
                         "name": "<prefname>",
                         # "identifiers": {
                         #     "@id": "identifier/",
-                        #     "@type": "obo:IAO_0000578"
+                        #     "@type": "iao:IAO_0000578"
                         # },
                         # "descriptors": {
                         #     "@id": "descriptor/",
