@@ -12,7 +12,7 @@ def search_chembl(identifier, meta, ids, descs, srcs):
     srcs.update({"chembl": {}})
 
     # check to see if compound is in database
-    respnse = requests.get(apipath+identifier+".json")
+    respnse = requests.get(apipath+identifier + ".json")
     if respnse.status_code != 200:
         notes = "ChemblID not found"
         srcs["chembl"].update({"result": 0, "notes": notes})
@@ -20,7 +20,7 @@ def search_chembl(identifier, meta, ids, descs, srcs):
 
     # OK compound has been found go get the data
 
-    reqdata = requests.get(apipath+identifier+".json").json()
+    reqdata = requests.get(apipath+identifier + ".json").json()
     target_components = reqdata['target_components']
     chembl_target_components = []
     for group in target_components:

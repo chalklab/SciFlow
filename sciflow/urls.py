@@ -22,7 +22,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import logout as auth_logout
 from rest_framework import routers, serializers, viewsets
-from contexts.models import *
 
 
 # Serializers define the API representation.

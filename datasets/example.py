@@ -45,9 +45,9 @@ if f6:
 
 f7 = True
 if f7:
-    fids = JsonFiles.objects.filter(type='normalized', version=4,
-                                    file__contains='herg').order_by('json_lookup_id').\
-                                    values_list('json_lookup_id', flat=True)
+    fids = JsonFiles.objects.filter(
+        type='normalized', version=4, file__contains='herg').\
+        order_by('json_lookup_id').values_list('json_lookup_id', flat=True)
     for fid in fids:
         file = JsonFiles.objects.filter(json_lookup_id=fid).order_by('-version')[0]
         if file.comments == 'done':

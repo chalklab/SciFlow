@@ -50,8 +50,10 @@ def creategenejld(addedgene):
 
     # get the substance template file from the database
     # tmpl = Templates.objects.get(type="compound")
-    meta, ids, descs, srcs = addedgene[0]['chembl'], \
-        addedgene[1]['chembl'], addedgene[2]['chembl'], addedgene[3]['chembl']
+    # meta = addedgene[0]['chembl']
+    ids = addedgene[1]['chembl']
+    # descs = addedgene[2]['chembl']
+    # srcs = addedgene[3]['chembl']
     sd = json.loads(json.dumps(tmpl))
     # print(sd)
     gene = sd['@graph']['scidata']['system']['facets'][0]

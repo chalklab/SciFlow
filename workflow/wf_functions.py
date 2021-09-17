@@ -94,7 +94,7 @@ def normalize(dfile, sections, user, jl):
                         ffile['@id'] = "https://scidata.unf.edu/facet/" + fid
                         ffileid = addfacetfile(ffile, user)
                         if not ffileid:
-                            errorlog("WF_E05: Compound file metadata for substance id " + str(subid) + " not added to facet_lookup")
+                            errorlog("WF_E05: Compd file metadata for sub" + str(subid) + " not added to facet_lookup")
                         if not updatefacetfile(ffile):
                             errorlog("WF_E06: Compound file id " + str(ffileid) + " was not added to facet_files")
                         # now that facet file has be added link to DB table
@@ -139,9 +139,9 @@ def normalize(dfile, sections, user, jl):
                     )
                     actlog("WF_A08: Compound found in DB: ( " + str(section) + ", file id " + str(ffileid) + " )")
                 else:
-                    errorlog("WF_E08: Compound not found in or added to DB ( " + str(section) + ", " + str(entry) + " )")
+                    errorlog("WF_E08: Compound not found in/added to DB ( " + str(section) + ", " + str(entry) + " )")
         if section == "target":
-            #pass
+            # pass
             for entry in entries:
                 targid = getaddtarg(section, entry)
                 if targid:
@@ -246,4 +246,3 @@ def getaspect(file, mettype):
             return False
     else:
         return False
-

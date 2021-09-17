@@ -21,7 +21,7 @@ def getcwks(setid):
         cwks = Crosswalks.objects.all().values_list('id', 'table', 'field', 'ontterm__title').order_by('field')
     else:
         cwks = Crosswalks.objects.all().filter(dataset_id=setid).\
-                values_list('id', 'table', 'field', 'ontterm__title').order_by('field')
+            values_list('id', 'table', 'field', 'ontterm__title').order_by('field')
     return cwks
 
 

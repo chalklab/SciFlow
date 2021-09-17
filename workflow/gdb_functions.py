@@ -113,8 +113,9 @@ def graphstatementsget(graph, repo):  # TODO: ???
 def graphstatementedit(baseuri, update, repo):  # DONE??
     """ put /repositories/{repositoryID}/statements -> updates a statement in the repo """
     headers = {'Content-type': ' application/rdf+xml', 'Accept': 'text/plain'}
-    r = requests.get("http://localhost:7200/repositories/" + repo + "/statements?update=" +
-                     update + "&baseURI=" + baseuri, headers=headers)
+    r = requests.get(
+        "http://localhost:7200/repositories/" + repo + "/statements?update=" + update + "&baseURI=" + baseuri,
+        headers=headers)
     print(r.text)
 
 
