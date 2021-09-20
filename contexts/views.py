@@ -1,10 +1,16 @@
 """ django view file """
+import json
+
 from django.shortcuts import render, redirect
 from datasets.ds_functions import *
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 from contexts.ctx_functions import *
+from contexts.git_functions import *
+from datetime import datetime
+
+# Contexts
 
 
 def ctxlist(request):
@@ -30,7 +36,7 @@ def ctxadd(request):
         ctx.dataset_id = data['dataset_id']
         ctx.name = data['name']
         ctx.description = data['description']
-        ctx.url = data['url']
+        ctx.filename = data['filename']
         ctx.save()
         # save crosswalk entries that have not been saved
         return redirect('/contexts/view/' + str(ctx.id))
@@ -38,6 +44,9 @@ def ctxadd(request):
     sets = setlist()
     trms = getonts()
     return render(request, "contexts/add.html", {'sets': sets, 'trms': trms})
+
+
+# Crosswalks
 
 
 def cwklist(request, cwkid=''):
@@ -50,6 +59,9 @@ def cwkview(request, cwkid):
     """view to show all data about a namespace"""
     crosswalk = getcwk(cwkid)
     return render(request, "crosswalks/view.html", {'crosswalk': crosswalk})
+
+
+# Namespaces
 
 
 def nsplist(request):
@@ -82,6 +94,9 @@ def nspadd(request):
     oonts = olsonts()  # list of tuples (four values)
     oonts.sort(key=lambda tup: tup[1])
     return render(request, "nspaces/add.html", {'aliases': aliases, 'onts': oonts})
+
+
+# Ontterms
 
 
 def ontlist(request):
@@ -132,6 +147,8 @@ def ontadd(request):
 
 
 # ajax functions (wrappers)
+
+
 @csrf_exempt
 def ontterms(request, ontid):
     oterms = olsont(ontid)
@@ -202,5 +219,7 @@ def jswrtctx(request, ctxid: int):
             cdict.update({cwk.newname: tmp})
         else:
             cdict.update({cwk.field: tmp})
-    out = {'@context': cdict}
-    return JsonResponse(out, status=200)
+    jld = {"@context": cdict}
+    text = json.dumps(jld, separators=(',', ':'))
+    resp = addctxfile('contexts/' + ctx.filename + '_test.jsonld', 'commit via API', text)
+    return JsonResponse({"response": resp}, status=200)

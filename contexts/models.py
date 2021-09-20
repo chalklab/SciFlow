@@ -15,7 +15,7 @@ class Contexts(models.Model):
     dataset = models.ForeignKey(Datasets, on_delete=models.DO_NOTHING, db_column='dataset_id')
     name = models.CharField(max_length=64)
     description = models.CharField(max_length=128)
-    url = models.CharField(max_length=128)
+    filename = models.CharField(max_length=128)
     updated = models.DateTimeField()
 
     class Meta:

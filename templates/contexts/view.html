@@ -8,7 +8,11 @@
             <ul>
                 <li>Dataset: {{ dataset.name }}</li>
                 <li>Description: {{ context.description }} </li>
-                <li>URL: <a href="{{ context.url }}" target="_blank">{{ context.url }}</a></li>
+                <li>URL:
+                    {% with url="https://stuchalk.github.io/scidata/contexts/"|add:context.filename|add:".jsonld" %}
+                    <a href="{{ url }}" target="_blank">{{ url }}</a>
+                    {% endwith %}
+                </li>
             </ul>
          </div>
         <div class="col-12 col-md-10 offset-md-1 mt-2">
