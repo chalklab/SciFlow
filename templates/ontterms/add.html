@@ -47,7 +47,7 @@
                             <label id="ns_subsect" class="col-form-label col-md-4">SciData Subsection:</label>
                             <select class="form-control col-md-7" name="sdsubsection" id="sdsubsection" aria-describedby="ns_subsect">
                                 <option value="">Choose...</option>
-                                {% for sect, val, name in subsects %}
+                                {% for  val, sect, name in subsects %}
                                     <option value="{{ val }}" class="{{ sect }}">{{ name }} ({{ sect }})</option>
                                 {% endfor %}
                             </select>

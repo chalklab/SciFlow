@@ -206,7 +206,9 @@ $(document).ready(function() {
         let cwk = $(this);
         let cwkid = cwk.attr('cwkid');
         $.get('/xwalks/read/' + cwkid, function( data ) {
-            $('#modalform').attr("dbid",cwkid);
+            let form = $('#modalform');
+            form.attr("cwkid",cwkid);
+            form.attr("cxtid",data.context);
             $('#table').val(data.table).attr('old',data.table);
             $('#field').val(data.field).attr('old',data.field);
             $('#ontterm_id').val(data.ontterm);

@@ -120,9 +120,11 @@ def ontadd(request):
         data = request.POST
         ontterm = Ontterms()
         ontterm.title = data['title']
-        ontterm.definition = data['alias']
+        ontterm.definition = data['definition']
         ontterm.code = data['code']
-        ontterm.nspace_id = data['nspace_id']
+        ontterm.nspace_id = data['nsid']
+        ns = Nspaces.objects.get(id=data['nsid'])
+        ontterm.url = ns.ns + ':' + data['code']
         ontterm.sdsection = data['sdsubsection']
         ontterm.sdsubsection = data['sdsubsection']
         ontterm.save()
@@ -133,7 +135,7 @@ def ontadd(request):
     subsects = [('procedure', 'methodology', 'Procedure'), ('chemical', 'system', 'Chemical'),
                 ('exptdata', 'dataset', 'Experimental data')]
 
-    nss = Nspaces.objects.all().values_list('ns', 'name').order_by('name')
+    nss = Nspaces.objects.all().values_list('id', 'name').order_by('name')
     aliases = nsaliases()
     onts = olsonts()  # list of tuples (four elements)
     kept = []
@@ -221,5 +223,5 @@ def jswrtctx(request, ctxid: int):
             cdict.update({cwk.field: tmp})
     jld = {"@context": cdict}
     text = json.dumps(jld, separators=(',', ':'))
-    resp = addctxfile('contexts/' + ctx.filename + '_test.jsonld', 'commit via API', text)
+    resp = addctxfile('contexts/' + ctx.filename + '.jsonld', 'commit via API', text)
     return JsonResponse({"response": resp}, status=200)
