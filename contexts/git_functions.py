@@ -1,4 +1,3 @@
-import github
 from github import Github
 from github.GithubException import *
 from sciflow.localsettings import ghtoken

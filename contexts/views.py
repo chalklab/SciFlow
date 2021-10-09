@@ -223,5 +223,5 @@ def jswrtctx(request, ctxid: int):
             cdict.update({cwk.field: tmp})
     jld = {"@context": cdict}
     text = json.dumps(jld, separators=(',', ':'))
-    resp = addctxfile('contexts/' + ctx.filename + '.jsonld', 'commit via API', text)
+    resp = addctxfile('contexts/' + ctx.filename + '.jsonld', 'commit via API ' + str(datetime.now()), text)
     return JsonResponse({"response": resp}, status=200)
