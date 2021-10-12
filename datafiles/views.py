@@ -1,5 +1,6 @@
 """ django views file for the datafiles app """
 from django.shortcuts import render
+from django.shortcuts import redirect
 from django.core.paginator import Paginator
 from datafiles.df_serializers import *
 from datafiles.forms import UploadFileForm
@@ -36,7 +37,7 @@ def viewfile(request, fileid):
 def clean(request, fileid):
     """remove (clean) a datafile and its related data from the system"""
     # delete datafile record => json_lookup (others deleted on cascade)
-    # TODO: current default in modesl is model.PROTECT not CASCADE
+    # TODO: current default in models is model.PROTECT not CASCADE
     JsonLookup.objects.filter(id=fileid).delete()
     return render(request, "datafiles/cleaned.html", {'fileid': fileid})
 
@@ -47,8 +48,9 @@ def jsonld(request, fileid):
     return HttpResponse(data.file, content_type="application/ld+json")
 
 
+# references related
 def getrefs(request):
-    refs = References.objects.all()
+    refs = References.objects.all().order_by('title')
     paginator = Paginator(refs, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -58,3 +60,13 @@ def getrefs(request):
 def viewref(request, refid):
     ref = References.objects.get(id=refid)
     return render(request, "references/view.html", {'ref': ref})
+
+
+def search(request, query):
+    """ search for a reference """
+    if request.method == "POST":
+        query = request.POST.get('q')
+        return redirect('/references/search/' + str(query))
+
+    refs = References.objects.filter(title__icontains=query).values_list('id', 'title').order_by('title')
+    return render(request, "references/search.html", {"refs": refs})

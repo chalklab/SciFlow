@@ -37,10 +37,14 @@ def index(request):
 def view(request, setid):
     """view a dataset list of files (by reference)"""
     refids = JsonLookup.objects.filter(dataset_id=setid).values('reference_id').distinct()
+    # refidtitle = JsonLookup.objects.filter(dataset_id=setid).values('reference_id__title').distinct()
+    # print(refidtitle)
+    # graphids = JsonLookup.objects.filter(dataset_id=setid).values('graphname').distinct()
+    # print(graphids)
     refs = References.objects.filter(id__in=refids)
     # data = JsonLookupSerializer(refs)
-    print(json.dumps(serialize('json', refs)))
-    exit()
+    # print(json.dumps(serialize('json', refs)))
+    # exit()
 
     # titles = JsonLookup.objects.filter(dataset_id=setid).order_by('title').values_list('title', flat=True).distinct()
     # papers = {}
@@ -53,5 +57,4 @@ def view(request, setid):
     page_obj = paginator.get_page(page_number)
     dataset = Datasets.objects.get(id=setid)
 
-    return render(request, "datasets/view.html",
-                  {'page_obj': page_obj, 'dataset': dataset})
+    return render(request, "datasets/view.html", {'page_obj': page_obj, 'dataset': dataset})

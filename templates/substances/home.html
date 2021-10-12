@@ -1,22 +1,19 @@
 {% extends 'base.html' %}
-
 {% block title %} Substances Dashboard {% endblock %}
-{% block header %} Substances Dashboard {% endblock %}
-
 {% block content %}
-<div>
-    The SciFlow system currently contains:
-    <ul>
-        <li> {{ subcount }} Substances</li>
-        <li> {{ idcount }} Identifiers</li>
-        <li> {{ descount }} Descriptors</li>
-    </ul>
-
-    <div class="d-flex flex-wrap justify-content-center">
-        <br>
-            <button type="button"  class="m-4 btn btn-success" style="width: 300px" onclick="document.location.href = '/substances/list'">View Substance List</button>
-            <button type="button"  class="m-4 btn btn-success" style="width: 300px" onclick="document.location.href = '/substances/ingest'">Ingest New Substance</button>
-        </br>
+    <div class="row">
+        <div class="col-12 col-md-10 offset-md-1 mt-2">
+            <h3>Substance Inventory</h3>
+            <p>The SciFlow system currently contains:</p>
+            <ul>
+                <li> {{ subcount }} Substances</li>
+                <li> {{ idcount }} Identifiers</li>
+                <li> {{ descount }} Descriptors</li>
+            </ul>
+            <div class="btn-group" role="group" aria-label="Navigation buttons for substances">
+                <a href="/substances/list/" type="button" class="btn btn-primary">View Substances</a>
+                <a href="/substances/add/" type="button" class="btn btn-primary">Add New Substance</a>
+            </div>
+        </div>
     </div>
-</div>
 {% endblock %}

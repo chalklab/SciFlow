@@ -9,9 +9,13 @@
                     <li><a href="/contexts/view/{{ ctx.id }}">{{ ctx.name }}</a></li>
                 {% endfor %}
             </ul>
-            <a href="/contexts/add/" type="button" class="btn btn-outline-warning">Add Context</a>
-            <a href="/ontterms/" type="button" class="btn btn-outline-primary">View Ontology Terms</a>
-            <a href="/nspaces/" type="button" class="btn btn-outline-success">View Ontology Namespaces</a>
+            <div class="btn-group" role="group" aria-label="Navigation buttons for contexts">
+                <a href="/contexts/add/" type="button" class="btn btn-primary">Add Context</a>
+                <a href="/ontterms/add/" type="button" class="btn btn-primary">Add Term</a>
+                <a href="/ontterms/" type="button" class="btn btn-primary">View Terms</a>
+                <a href="/nspaces/add/" type="button" class="btn btn-primary">Add Namespaces</a>
+                <a href="/nspaces/" type="button" class="btn btn-primary">View Namespaces</a>
+            </div>
         </div>
     </div>
 {% endblock %}

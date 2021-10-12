@@ -1,29 +1,43 @@
 {% extends 'base.html' %}
-
 {% block title %} Reference List {% endblock %}
-{% block header %} References {% endblock %}
 {% block content %}
-    <ul>
-    {% for ref in page_obj %}
-        <li><a href="/references/view/{{ ref.id }}">{{ ref.title }}</a></li>
-    {% endfor %}
-    </ul>
-
-    <div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </span>
+    <div class="row">
+        <div class="col-12 col-md-10 offset-md-1 mt-2">
+            <div class="row">
+                <div class="col-6">
+                    <h3>Papers with Data</h3>
+                </div>
+                <div class="col-6 mt-1">
+                    <form class="float-right" action="/references/search/<query>" method="post">
+                        {% csrf_token %}
+                        <h4 class="d-inline-block">Search:</h4>
+                        <input name="q" type="text" placeholder="Search for a paper">
+                        <button name="action" type="submit" class="btn btn-sm btn-success mt-n1">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-10 offset-md-1 mt-2">
+            <ul>
+                {% for ref in page_obj %}
+                    <li><a href="/references/view/{{ ref.id }}">{{ ref.title }}</a></li>
+                {% endfor %}
+            </ul>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
     </div>
 {% endblock %}

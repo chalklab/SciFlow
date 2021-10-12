@@ -69,8 +69,8 @@ class JsonFacetsSerializer(serializers.ModelSerializer):
 
 class JsonLookupSerializer(serializers.ModelSerializer):
     """serializer for the json_lookups table"""
-    json_aspects = JsonAspectsSerializer(source="jsonaspects_set", many=True)
-    json_facets = JsonFacetsSerializer(source="jsonfacets_set", many=True)
+    json_aspects = JsonAspectsSerializer(source="jsonaspects_set", many=True, required=False)
+    json_facets = JsonFacetsSerializer(source="jsonfacets_set", many=True, required=False)
 
     class Meta:
         """meta settings"""

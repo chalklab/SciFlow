@@ -517,13 +517,8 @@ def subsearch(query):
     """search based on value field in identifiers and returns all substances"""
     if query is not None:
         lookups = Q(value__icontains=query)
-        j = Identifiers.objects.filter(lookups).distinct()
-        results = []
-        for i in j:
-            subid = i.substance_id
-            sub = Substances.objects.get(id=subid)
-            if sub not in results:
-                results.append(sub)
+        subids = Identifiers.objects.filter(lookups).values_list('substance_id').distinct()
+        results = Substances.objects.filter(id__in=subids).order_by('name')
         context = {'results': results, "query": query}
         return context
 

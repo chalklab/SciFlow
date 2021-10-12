@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %} Substance Search {% endblock %}
+{% block title %} Reference Search {% endblock %}
 {% block content %}
     <div class="row">
         <div class="col-12 col-md-10 offset-md-1 mt-2">
@@ -8,10 +8,10 @@
                     <h3>Search Results</h3>
                 </div>
                 <div class="col-6 mt-1">
-                    <form class="float-right" action="/substances/search/<query>/" method="post">
+                    <form class="float-right" action="/references/search/<query>" method="post">
                         {% csrf_token %}
                         <h4 class="d-inline-block">New Search:</h4>
-                        <input name="q" type="text" placeholder="Search for a substance">
+                        <input name="q" type="text" placeholder="Search for a paper">
                         <button name="action" type="submit" class="btn btn-sm btn-success mt-n1">Search</button>
                     </form>
                 </div>
@@ -20,8 +20,8 @@
         </div>
         <div class="col-12 col-md-10 offset-md-1 mt-2 panel-responsive-220">
             <ul>
-                {% for substance in results %}
-                    <li><a href="/substances/view/{{ substance.id }}">{{ substance.name }}</a></li>
+                {% for id,title in refs %}
+                    <li><a href="/references/view/{{ id }}">{{ title }}</a></li>
                 {% endfor %}
             </ul>
         </div>

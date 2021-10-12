@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-{% block title %} Context View {% endblock %}
+{% block title %} Reference View {% endblock %}
 {% block content %}
-    <div class="row">
-        <div class="col-12">
+     <div class="row">
+        <div class="col-12 col-md-10 offset-md-1 mt-2">
             <h3>Reference</h3>
             <ul>
                 <li>Title: {{ ref.title }}</li>
@@ -10,10 +10,10 @@
                 <li>Authors: {{ ref.aulist }} </li>
                 <li>DOI: <a href="https://doi.org/{{ ref.doi }}" target="_blank">{{ ref.doi }}</a></li>
             </ul>
-            <h4>Datasets</h4>
+            <h4>Data Files</h4>
             <ul>
                 {% for set in ref.jsonlookup_set.all %}
-                    <li>{{ set.uniqueid }}</li>
+                    <li><a href="/files/view/{{ set.id }}">{{ set.uniqueid }}</a></li>
                 {% endfor %}
             </ul>
         </div>
