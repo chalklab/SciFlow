@@ -4,7 +4,7 @@ from substances.models import *
 
 
 class SubstancesSerializer(serializers.ModelSerializer):
-    """serailizer for the substances table"""
+    """serializer for the substances table"""
 
     class Meta:
         """meta fields"""

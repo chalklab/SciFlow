@@ -1,6 +1,4 @@
 """ django views file for the datasets app """
-
-
 from datasets.ds_functions import *
 from django.shortcuts import render
 from django.core.paginator import Paginator
@@ -32,18 +30,21 @@ def index(request):
     return render(request, "datasets/index.html", {'datasets': datasets})
 
 
-def viewdataset(request, setid):
-    """view a dataset list of files"""
-    titles = JsonLookup.objects.filter(dataset_id=setid).order_by('title').values_list('title', flat=True).distinct()
-    papers = {}
-    for title in titles:
-        ids = list(JsonLookup.objects.filter(dataset_id=setid, title=title).values_list('id', flat=True)).__str__()
-        papers.update({title: ids})
-    papers_items = [(title, ids.strip("[]{},")) for title, ids in papers.items()]
-    paginator = Paginator(papers_items, 20)
+def view(request, setid):
+    """view a dataset list of files (by reference)"""
+    refids = JsonLookup.objects.filter(dataset_id=setid).values('reference_id').distinct()
+    refs = References.objects.filter(id__in=refids)
+
+    # titles = JsonLookup.objects.filter(dataset_id=setid).order_by('title').values_list('title', flat=True).distinct()
+    # papers = {}
+    # for title in titles:
+    #     ids = list(JsonLookup.objects.filter(dataset_id=setid, title=title).values_list('id', flat=True)).__str__()
+    #     papers.update({title: ids})
+    # papers_items = [(title, ids.strip("[]{},")) for title, ids in papers.items()]
+    paginator = Paginator(refs, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     dataset = Datasets.objects.get(id=setid)
 
-    return render(request, "datasets/viewdataset.html",
+    return render(request, "datasets/view.html",
                   {'page_obj': page_obj, 'dataset': dataset})
