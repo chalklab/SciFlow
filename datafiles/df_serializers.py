@@ -98,3 +98,25 @@ class JsonFilesSerializer(serializers.ModelSerializer):
         model = JsonFiles
         fields = '__all__'
         depth = 2
+
+
+class DatasetSerializer(serializers.ModelSerializer):
+    """ datasets serializer """
+    files = JsonLookupSerializer(source='jsonlookup_set', many=True, required=False)
+
+    class Meta:
+        """ settings """
+        model = Datasets
+        fields = '__all__'
+        depth = 1
+
+
+class ReferencesSerializer(serializers.ModelSerializer):
+    """ references serializer """
+    files = JsonLookupSerializer(source='jsonlookup_set', many=True, required=False)
+
+    class Meta:
+        """ settings """
+        model = References
+        fields = '__all__'
+        depth = 1

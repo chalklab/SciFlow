@@ -11,7 +11,7 @@ from datafiles.models import *
 from crossref.restful import Works
 
 
-f1 = False
+f1 = True
 if f1:
     fid = 8095
     viewfile(None, fid)
@@ -76,7 +76,7 @@ if f2:
             print(keepidstr)
 
 
-f3 = True
+f3 = False
 if f3:
     ref = References.objects.get(id=1)
     works = Works()

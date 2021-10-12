@@ -1,7 +1,7 @@
 """ django views file for the datafiles app """
 from django.shortcuts import render
 from django.core.paginator import Paginator
-from datasets.serializer import *
+from datafiles.df_serializers import *
 from datafiles.forms import UploadFileForm
 from workflow.wf_functions import ingest
 from datetime import datetime

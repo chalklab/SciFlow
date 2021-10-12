@@ -3,13 +3,14 @@
 {% block content %}
     <div class="row">
         <div class="col-12 col-md-10 offset-md-1 mt-2">
-            <h3>{{ context.name }}</h3>
+            <h3>{{ dataset.name }}</h3>
             <ul>
                 {% for ref in page_obj %}
-                    <li>{{ ref.title }}</li>
-                    {% for set in ref.dataset %}
-                        <a href="/files/view/{{ set.id }}">&nbsp;{{ set.id }}</a>
+                    <li>{{ ref.title }}
+                    {% for file in ref.files %}
+                        <p><a href="/files/view/{{ file.id }}">&nbsp;{{ file.id }}</a></p>
                     {% endfor %}
+                    </li>
                 {% endfor %}
             </ul>
             <div class="pagination">

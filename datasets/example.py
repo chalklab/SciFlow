@@ -2,13 +2,13 @@
 import os
 import django
 import time
-import views
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
 
-from datasets.serializer import *
+# from datasets.serializer import *
 from datasets.views import *
+from datafiles.df_serializers import *
 from datetime import datetime
 from workflow.gdb_functions import *
 
@@ -20,12 +20,13 @@ if f1:
 
 f2 = False
 if f2:
-    file = JsonFileSerializer(JsonFiles.objects.get(id=2))
+    file = JsonFilesSerializer(JsonFiles.objects.get(id=2))
     print(json.dumps(file.data, indent=2))
 
 f3 = False
 if f3:
-    views.home(False)
+    home(False)
+    exit()
 
 f4 = False
 if f4:
@@ -38,12 +39,14 @@ if f4:
 f5 = False
 if f5:
     updatestats()
+    exit()
 
-f6 = False
+f6 = True
 if f6:
-    viewdataset(None, 3)
+    view(None, 3)
+    exit()
 
-f7 = True
+f7 = False
 if f7:
     fids = JsonFiles.objects.filter(
         type='normalized', version=4, file__contains='herg').\

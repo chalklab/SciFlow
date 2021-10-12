@@ -1,7 +1,11 @@
 """ django views file for the datasets app """
+import json
+
 from datasets.ds_functions import *
+from datafiles.df_serializers import *
 from django.shortcuts import render
 from django.core.paginator import Paginator
+from django.core.serializers import serialize
 from sciflow.settings import authorized_users
 
 
@@ -34,6 +38,9 @@ def view(request, setid):
     """view a dataset list of files (by reference)"""
     refids = JsonLookup.objects.filter(dataset_id=setid).values('reference_id').distinct()
     refs = References.objects.filter(id__in=refids)
+    # data = JsonLookupSerializer(refs)
+    print(json.dumps(serialize('json', refs)))
+    exit()
 
     # titles = JsonLookup.objects.filter(dataset_id=setid).order_by('title').values_list('title', flat=True).distinct()
     # papers = {}
