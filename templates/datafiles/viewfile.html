@@ -1,14 +1,22 @@
 {% extends 'base.html' %}
-
 {% block title %} SciFlow Files {% endblock %}
-{% block header %} {{ file.title }} {% endblock %}
 {% block content %}
-    <h4>Data File: {{ file.graphname }}</h4>
-    <ul>
-        {% for ver in file.vers %}
-            {% if ver.type == 'normalized' %}
-                <li><a href="/files/jsonld/{{ ver.id }}">Version: {{ ver.version }} ({{ ver.updated }})</a></li>
-            {% endif %}
-        {% endfor %}
-    </ul>
+    <div class="row">
+        <div class="col-12 col-md-10 offset-md-1 mt-2">
+            <h3>Data File</h3>
+            <ul>
+                <li>Paper: <a href="/references/view/{{ file.reference.id }}">{{ file.title }}</a></li>
+                <li>Unique ID: {{ file.uniqueid }}</li>
+                <li>Graph name: {{ file.graphname }}</li>
+            </ul>
+            <h4>Normalized Versions</h4>
+            <ul>
+                {% for ver in file.vers %}
+                    {% if ver.type == 'normalized' %}
+                        <li><a href="/files/jsonld/{{ ver.id }}">Version: {{ ver.version }} ({{ ver.updated }})</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 {% endblock %}

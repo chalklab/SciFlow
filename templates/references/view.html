@@ -13,7 +13,7 @@
             <h4>Data Files</h4>
             <ul>
                 {% for set in ref.jsonlookup_set.all %}
-                    <li><a href="/files/view/{{ set.id }}">{{ set.uniqueid }}</a></li>
+                    <li>Graph Name: <a href="/files/view/{{ set.id }}">{{ set.graphname }}</a> ({{ set.currentversion }} versions)</li>
                 {% endfor %}
             </ul>
         </div>

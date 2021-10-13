@@ -6,10 +6,13 @@
             <h3>{{ dataset.name }}</h3>
             <ul>
                 {% for ref in page_obj %}
-                    <li>{{ ref.title }}
-                    {% for file in ref.files %}
-                        <p><a href="/files/view/{{ file.id }}">&nbsp;{{ file.id }}</a></p>
-                    {% endfor %}
+                    <li><a href="/references/view/{{ ref.id }}">{{ ref.title }}</a>
+                    <span>&nbsp;(Datasets:
+                        {% for file in ref.jsonlookup_set.all %}
+                            {% if forloop.counter > 1 %},{% endif %}
+                            <a href="/files/view/{{ file.id }}">{{ forloop.counter }}</a>
+                        {% endfor %}
+                    )</span>
                     </li>
                 {% endfor %}
             </ul>

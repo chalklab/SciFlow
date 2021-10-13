@@ -67,10 +67,21 @@ class JsonFacetsSerializer(serializers.ModelSerializer):
         depth = 1
 
 
+class JsonFilesSerializer(serializers.ModelSerializer):
+    """serializer for the json_files table"""
+
+    class Meta:
+        """meta settings"""
+        model = JsonFiles
+        fields = '__all__'
+        depth = 2
+
+
 class JsonLookupSerializer(serializers.ModelSerializer):
     """serializer for the json_lookups table"""
     json_aspects = JsonAspectsSerializer(source="jsonaspects_set", many=True, required=False)
     json_facets = JsonFacetsSerializer(source="jsonfacets_set", many=True, required=False)
+    vers = JsonFilesSerializer(source='jsonfiles_set', many=True, required=False)
 
     class Meta:
         """meta settings"""
@@ -87,17 +98,6 @@ class JsonLookupSerializer(serializers.ModelSerializer):
             return expanded_fields + self.Meta.extra_fields
         else:
             return expanded_fields
-
-
-class JsonFilesSerializer(serializers.ModelSerializer):
-    """serializer for the json_files table"""
-    json_lookup = JsonLookupSerializer()
-
-    class Meta:
-        """meta settings"""
-        model = JsonFiles
-        fields = '__all__'
-        depth = 2
 
 
 class DatasetSerializer(serializers.ModelSerializer):
