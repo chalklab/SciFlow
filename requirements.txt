@@ -6,7 +6,7 @@ chardet==4.0.0
 chembl-webresource-client>=0.10.3
 cryptography>=3.4
 defusedxml==0.7.1
-Django>=3.2.4
+Django>=3.2
 django-allauth>=0.44
 django-crispy-forms>=1.11
 django-debug-toolbar>=3.2.1
@@ -24,7 +24,7 @@ lxml>=4.7
 mypy-extensions==0.4.3
 mysqlclient==2.0.3
 oauthlib>=3.1
-psutil==5.8.0
+psutil>=5.8.0
 pyasn1==0.4.8
 pycparser>=2.20
 PyJWT>=2.1.0

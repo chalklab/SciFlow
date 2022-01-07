@@ -13,6 +13,11 @@
                     <a href="{{ url }}" target="_blank">{{ url }}</a>
                     {% endwith %}
                 </li>
+                <li>Sub-Contexts:
+                        {% for id, name in ctxs %}
+                            <a href="contexts/view/{{ subid }}" target="_blank">{{ name }}</a>
+                        {%  endfor %}
+                </li>
             </ul>
          </div>
         <div class="col-12 col-md-10 offset-md-1 mt-2">

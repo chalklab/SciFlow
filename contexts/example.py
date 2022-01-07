@@ -13,7 +13,7 @@ import pandas as pd
 
 
 # test GitHub access
-gh = True
+gh = False
 if gh:
     test = '{"@context": {"@vocab": "https://www.w3.org/2001/XMLSchema#",' \
            '"sdo2": "https://stuchalk.github.io/scidata/ontology/scidata.owl#",' \
@@ -24,7 +24,7 @@ if gh:
     exit()
 
 # test matlab file import
-mlab = False
+mlab = True
 if mlab:
     file = loadmat(
         '/Users/n00002621/Dropbox/Grants/Funded/NIST KnowLedger 2021 - 2022/Data/AmBench 2018/sam_0_output.mat')

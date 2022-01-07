@@ -299,13 +299,13 @@ def chembl(identifier, meta, ids, descs, srcs):
 
 
 def comchem(identifier, meta, ids, srcs):
-    """ retreive data from the commonchemistry API"""
+    """ retrieve data from the commonchemistry API"""
     srcs.update({"comchem": {}})
 
     # check identifier for inchikey pattern
     if re.search('[A-Z]{14}-[A-Z]{10}-[A-Z]', identifier) is None:
         srcs["comchem"].update({"result": 0, "notes": "Not a CAS-RN"})
-        return
+        return False
 
     # search for entries and retrieve casrn for compound if present
     apipath = "https://commonchemistry.cas.org/"

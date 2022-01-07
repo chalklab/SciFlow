@@ -13,6 +13,9 @@
             <div class="btn-group" role="group" aria-label="Navigation buttons for substances">
                 <a href="/substances/list/" type="button" class="btn btn-primary">View Substances</a>
                 <a href="/substances/add/" type="button" class="btn btn-primary">Add New Substance</a>
+                {% if user.get_username == 'stuart' %}
+                    <a href="/substances/check/view" type="button" class="btn btn-success">Check Substances</a>
+                {% endif %}
             </div>
         </div>
     </div>

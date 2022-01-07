@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %} Substances Dashboard {% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-12 col-md-10 offset-md-1 mt-2">
+            <h3>Substance Checks </h3>
+            <p>Click the actions below to get a report on the state of the DB</p>
+            <ul>
+                <li><a href="/substances/check/cascheck">Check CASRN with Identifiers table</a></li>
+                <li><a href="/substances/check/inkcheck">Check InChIKeys with Identifiers table</a></li>
+            </ul>
+            <div class="panel-responsive-220">
+                <h5>Errors</h5>
+                <ul>
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% empty %}
+                        <li>No errors found.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+       </div>
+    </div>
+{% endblock %}

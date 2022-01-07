@@ -2,23 +2,36 @@
 import os
 import django
 import time
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
 from datafiles.df_functions import *
+from substances.sub_functions import *
 from substances.external import *
 from scyjava import config, jimport
 from workflow.gdb_functions import *
-from django.http import *
 from django.core.exceptions import ObjectDoesNotExist
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
 
+# check casrns in substances using inchikeys
+runkey = True
+if runkey:
+    meta, ids, srcs = {}, {}, {}
+    nocas = Substances.objects.filter(casrn__isnull=True).values_list('inchikey', flat=True).order_by('id')
+    for key in nocas:
+        comchem(key, meta, ids, srcs)
+        if meta:
+            print(meta)
+            exit()
+
 # add rdkit molfiles for substances
-runmol = True
+runmol = False
 if runmol:
     done = Structures.objects.all().values_list('substance_id', flat=True)
-    subs = Identifiers.objects.all().filter(type='csmiles').exclude(substance_id__in=done).values_list('substance_id', flat=True)
+    subs = Identifiers.objects.all().filter(type='csmiles').\
+        exclude(substance_id__in=done).values_list('substance_id', flat=True)
     for sub in subs:
         if sub not in done:
             smiles = Identifiers.objects.all().filter(type='csmiles', substance_id=sub)
@@ -31,7 +44,6 @@ if runmol:
                 struc = Structures(substance_id=sub, molfile=mf)
                 struc.save()
                 print("Saved structure " + smile.value)
-
 
 # update pubchem csmiles where not available
 runpcs = False
@@ -47,9 +59,9 @@ if runpcs:
             for prop in props:
                 if prop["urn"]["label"] == "SMILES" and prop["urn"]["name"] == "Canonical":
                     smiles = prop["value"]["sval"]
-                    id = Identifiers(substance_id=subid, type='csmiles', value=smiles, source='pubchem')
-                    id.save()
-                    print(id)
+                    idid = Identifiers(substance_id=subid, type='csmiles', value=smiles, source='pubchem')
+                    idid.save()
+                    print(idid)
                     break
         if 'ismiles' not in ids:
             key = Identifiers.objects.get(substance_id=subid, type='inchikey', source='pubchem')
@@ -59,13 +71,12 @@ if runpcs:
             for prop in props:
                 if prop["urn"]["label"] == "SMILES" and prop["urn"]["name"] == "Isomeric":
                     smiles = prop["value"]["sval"]
-                    id = Identifiers(substance_id=subid, type='ismiles', value=smiles, source='pubchem')
-                    id.save()
-                    print(id)
+                    idid = Identifiers(substance_id=subid, type='ismiles', value=smiles, source='pubchem')
+                    idid.save()
+                    print(idid)
                     break
         else:
             print(subid)
-
 
 # update pubchem ids where not available
 runpci = False
@@ -78,9 +89,9 @@ if runpci:
             apipath = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/"
             respnse = requests.get(apipath + 'inchikey/' + key.value + '/json').json()
             cid = respnse["PC_Compounds"][0]["id"]["id"]["cid"]
-            id = Identifiers(substance_id=subid, type='pubchem', value=cid, source='pubchem')
-            id.save()
-            print(id)
+            idid = Identifiers(substance_id=subid, type='pubchem', value=cid, source='pubchem')
+            idid.save()
+            print(idid)
         else:
             print(subid)
 
@@ -280,7 +291,3 @@ if runsj:
     cdk = cdkClass(workspaceRoot)
 
     print(cdk.fromSMILES("CCC"))
-
-runls = None
-if runls:
-    subview(None, 5044)

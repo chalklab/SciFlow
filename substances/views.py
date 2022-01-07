@@ -281,3 +281,36 @@ def search(request, query):
         return redirect('/substances/search/' + str(query))
 
     return render(request, "substances/search.html", context)
+
+
+def subcheck(request, action="view"):
+    errors = []
+    if action == "inkcheck":  # checks identifiers table for the presence of CASRN and InChIKey
+        subs = Substances.objects.all().values_list('id', 'inchikey')
+        for subid, key in subs:
+            gotkey = Identifiers.objects.filter(substance_id=subid, type='inchikey').exclude(source='comchem').values_list('value', flat=True).distinct()
+            if gotkey:
+                if len(gotkey) == 1:
+                    if str(gotkey[0]) != key:
+                        errors.append('InChIKey ' + key + ' (substance ' + str(subid) + ') does not match')
+                else:
+                    errors.append('Multiple InChIKeys found for ' + key + ' (substance ' + str(subid) + ')')
+            else:
+                errors.append('InChIKey ' + key + ' (substance ' + str(subid) + ') not found in Identifiers table')
+    elif action == "cascheck":
+        subs = Substances.objects.all().values_list('id', 'casrn')
+        for subid, casrn in subs:
+            if casrn:
+                gotcas = Identifiers.objects.filter(substance_id=subid, type='casrn').values_list('value', flat=True).distinct()
+                if gotcas:
+                    if len(gotcas) == 1:
+                        if str(gotcas[0]) != casrn:
+                            errors.append('CASRN ' + casrn + ' (substance ' + str(subid) + ') does not match')
+                    else:
+                        errors.append('Multiple CASRNs found for ' + casrn + ' (substance ' + str(subid) + ')')
+                else:
+                    errors.append('CASRN ' + casrn + ' (substance ' + str(subid) + ') not found in Identifiers table')
+            else:
+                errors.append('No CASRN for substance ' + str(subid))
+
+    return render(request, "substances/check.html", {"errors": errors})

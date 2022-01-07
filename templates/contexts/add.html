@@ -34,6 +34,15 @@
                             <label for="ctx_filename" class="col-form-label col-3 col-md-3" title="What url location?">Filename (no extension):</label>
                             <input type="text" class="form-control col-8 col-md-8" name="filename" id="filename" value="" aria-describedby="ctx_filename"/>
                         </div>
+                        <div class="form-group row">
+                            <label for="ctx_subctxs" class="col-form-label col-3 col-md-3" title="Contexts to be referenced in the context file">Sub-Contexts:</label>
+                            <select multiple size="10" class="form-control col-8 col-md-8" name="subctxs" id="subctxs" aria-describedby="ctx_subctxs">
+                                <option value="">Choose...</option>
+                                {% for id, name in ctxs %}
+                                    <option value="{{ id }}">{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                         <div class="form-group">
                             <div class="float-right">
                                 <input type="submit" value="Add"/>

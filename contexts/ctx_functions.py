@@ -9,6 +9,15 @@ def getctxs():
     return ctxs
 
 
+def lstctxs(idlist=[]):
+    """get a list of contexts"""
+    if idlist:
+        clist = Contexts.objects.filter(id__in=idlist).values_list('id', 'name').order_by('name')
+    else:
+        clist = Contexts.objects.values_list('id', 'name').order_by('name')
+    return clist
+
+
 def getctx(ctxid):
     """get a context"""
     ctx = Contexts.objects.get(id=ctxid)

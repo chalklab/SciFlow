@@ -10,21 +10,28 @@ from contexts.ctx_functions import *
 from contexts.git_functions import *
 from datetime import datetime
 
+
 # Contexts
 
 
 def ctxlist(request):
-    ctxs = getctxs()
-    return render(request, "contexts/list.html", {'contexts': ctxs})
+    ctxs = lstctxs()
+    return render(request, "contexts/list.html", {'ctxlist': ctxs})
 
 
 def ctxview(request, ctxid):
     ctx = getctx(ctxid)
+    if ctx.subcontexts is not None:
+        subids = ctx.subcontexts.split(',')
+        ctxs = lstctxs(subids)
+    else:
+        subids = None
+        ctxs = None
     ds = getset(ctx.dataset_id)
     cws = ctx.crosswalks_set.all().order_by('table', 'field')
     onts = getonts()
     return render(request, "contexts/view.html",
-                  {'context': ctx, 'dataset': ds, 'crosswalks': cws, 'onts': onts})
+                  {'context': ctx, 'dataset': ds, 'crosswalks': cws, 'onts': onts, 'ctxs': ctxs, 'subids': subids})
 
 
 def ctxadd(request):
@@ -37,13 +44,15 @@ def ctxadd(request):
         ctx.name = data['name']
         ctx.description = data['description']
         ctx.filename = data['filename']
+        temp = list(request.POST.getlist('subctxs'))
+        ctx.subcontexts = ','.join(temp)  # bizarre syntax, but it works!
         ctx.save()
         # save crosswalk entries that have not been saved
         return redirect('/contexts/view/' + str(ctx.id))
 
     sets = setlist()
-    trms = getonts()
-    return render(request, "contexts/add.html", {'sets': sets, 'trms': trms})
+    ctxs = lstctxs()
+    return render(request, "contexts/add.html", {'sets': sets, 'ctxs': ctxs})
 
 
 # Crosswalks
@@ -125,7 +134,7 @@ def ontadd(request):
         ontterm.nspace_id = data['nsid']
         ns = Nspaces.objects.get(id=data['nsid'])
         ontterm.url = ns.ns + ':' + data['code']
-        ontterm.sdsection = data['sdsubsection']
+        ontterm.sdsection = data['sdsection']
         ontterm.sdsubsection = data['sdsubsection']
         ontterm.save()
         return redirect('/ontterms/')
