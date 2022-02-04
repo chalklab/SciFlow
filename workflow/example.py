@@ -2,9 +2,16 @@
 import os
 import django
 import requests
+import jena_functions
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
+
+# if I run either of these I get a <Response [400]> :(
+# resp = jena_functions.addgraph("https://sds.coas.unf.edu/sciflow/files/facet/2")
+resp = jena_functions.addgraph("chemtwin2_GZKLJWGUPQBVJQ-UHFFFAOYSA-N.jsonld")
+print(resp)
+exit()
 
 
 data = open('/Users/n00002621/Desktop/trc070121/je034134e_2.jsonld').read()

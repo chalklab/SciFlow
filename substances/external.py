@@ -309,7 +309,7 @@ def comchem(identifier, meta, ids, srcs):
 
     # search for entries and retrieve casrn for compound if present
     apipath = "https://commonchemistry.cas.org/"
-    respnse = requests.get(apipath + 'api/search?q=' + identifier).json()
+    respnse = requests.get(apipath + 'api/search?q=InChIKey' + identifier).json()
     if respnse['count'] == 0:
         srcs["comchem"].update({"result": 0, "notes": "InChIKey not found"})
         return False
