@@ -1,11 +1,8 @@
 """ django views file for the datasets app """
-import json
-
 from datasets.ds_functions import *
 from datafiles.df_serializers import *
 from django.shortcuts import render
 from django.core.paginator import Paginator
-from django.core.serializers import serialize
 from sciflow.settings import authorized_users
 
 
