@@ -1,4 +1,3 @@
-import json
 import requests
 import urllib3
 from sciflow import localsettings
@@ -8,6 +7,7 @@ dset = "SciData"
 hdrs = {'Content-type': 'application/json'}
 hdrsld = {'Content-type': 'application/ld+json'}
 fpath = localsettings.ppath + "/static/files/"
+
 
 def server():
     """get the server info from the fuseki endpoint"""
@@ -39,7 +39,6 @@ def addgraph(file):
     else:
         """ assumes file is in <prjroot>/static/files/ """
         with open(fpath + file) as fp:
-            jsn = json.load(fp)
             data = fp.read()
     endpoint = path + dset + "/upload"
     response = requests.post(endpoint, data=data, headers=hdrsld, auth=(localsettings.fuser, localsettings.fpass))

@@ -7,20 +7,23 @@ import jena_functions
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
 
-# if I run either of these I get a <Response [400]> :(
-# resp = jena_functions.addgraph("https://sds.coas.unf.edu/sciflow/files/facet/2")
-resp = jena_functions.addgraph("chemtwin2_GZKLJWGUPQBVJQ-UHFFFAOYSA-N.jsonld")
+resp = jena_functions.sparql()
 print(resp)
 exit()
 
 
-data = open('/Users/n00002621/Desktop/trc070121/je034134e_2.jsonld').read()
+resp = jena_functions.addgraph("/Users/n00002621/Desktop/chemtwins/facet00000001.jsonld")
+print(resp)
+exit()
+
+
+data = open('/Users/n00002621/Desktop/chemtwins/facet00000001.jsonld').read()
 
 # Set path to file to be posted
 headers = {'Content-Type': 'application/ld+json'}
 
 # Modify header to match content type (see below)
-response = requests.post('http://139.62.166.57:3030/TRC_TBD2/data?default', data=data, headers=headers)
+response = requests.post('http://jena1.unfcsd.unf.edu:3030/SciData/data?default', data=data, headers=headers)
 
 # Point request to Fuseki "data" endpoint; append graph name (currently default)
 current_url = response.text
