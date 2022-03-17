@@ -14,7 +14,8 @@ from quads.qd_functions import *
 # dlist 1 (herg), 3 (trc)
 f1 = True
 if f1:
-    setobjs = requests.get('https://sds.coas.unf.edu/trc/datasets/sddslist/5')
+    # setobjs = requests.get('https://sds.coas.unf.edu/trc/datasets/sddslist/1')
+    setobjs = requests.get('https://sds.coas.unf.edu/sciflow/files/twinlist/1')
     setlist = setobjs.json()
     done = Quads.objects.order_by('obj').values_list('obj', flat=True).distinct()
     cnt = 1
