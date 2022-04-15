@@ -8,6 +8,7 @@ cryptography>=3.4
 defusedxml>=0.7
 Django>=4.0
 django-allauth>=0.44
+django-cors-headers>=3.11
 django-crispy-forms>=1.11
 django-debug-toolbar>=3.2.1
 djangorestframework>=3.12.4
