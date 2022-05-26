@@ -127,12 +127,14 @@ def subview(request, subid):
             dlist[desc].update({value: []})
         dlist[desc][value].append(src)
 
+    # related data files
+    files = substance.jsonlookupsubstances_set.all()
     # print(json.dumps(dlist, indent=4))
     # print(descs)
     # print(srcs)
     # exit()
     return render(request, "substances/subview.html",
-                  {'substance': substance, "ids": idlist, "descs": dlist, "srcs": srcs,
+                  {'substance': substance, "ids": idlist, "descs": dlist, "srcs": srcs, "files": files,
                    "image_url": image_url, "image_found": image_found, "inchikey": inchikey})
 
 
@@ -314,3 +316,13 @@ def subcheck(request, action="view"):
                 errors.append('No CASRN for substance ' + str(subid))
 
     return render(request, "substances/check.html", {"errors": errors})
+
+
+def showfacet(request, facetid):
+    latest = FacetFiles.objects.filter(facet_lookup_id=facetid).latest('updated')
+    return HttpResponse(latest.file, content_type="application/ld+json")
+
+
+def showdata(request, dataid):
+    latest = JsonFiles.objects.filter(json_lookup_id=dataid, type='normalized').latest('updated')
+    return HttpResponse(latest.file, content_type="application/ld+json")

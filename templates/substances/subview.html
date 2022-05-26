@@ -9,8 +9,11 @@
                 </div>
                 <div class="col-6">
                     {% if user.get_username == 'stuart' %}
-                        <button type="button" class="btn btn-sm btn-success" onclick="document.location.href = '/substances/newjld/{{ substance.id }}'">Add new twin</button>
+                        {% if substance.facet_lookup_id == 0 %}
+                            <button type="button" class="btn btn-sm btn-danger" onclick="document.location.href = '/substances/newjld/{{ substance.id }}'">Add ChemTwin</button>
+                        {% endif %}
                     {% endif %}
+                    <button type="button" class="btn btn-sm btn-success" onclick="window.open('/substances/showfacet/{{ substance.facet_lookup_id }}','_blank')">View ChemTwin</button>
                 </div>
                 {% if messages %}
                     <ul class="messages">
@@ -26,9 +29,18 @@
                         <li> Molecular Weight: {{ substance.molweight }} g/mol</li>
                         <li> CAS Registry #: {{ substance.casrn }}</li>
                     </ul>
+                    {% if files|length > 1 %}
+                        <h5>Data files</h5>
+                        <ul>
+                        {% for file in files %}
+                            <li><a href="/substances/showdata/{{ file.json_lookup_id }}">File {{ file.json_lookup_id }}</a>
+                        </li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
             </div>
-            <div class="panel-responsive-320">
+            <div class="panel-responsive-370">
                 <h5>Descriptors</h5>
                 <ul style="font-size: 14px;">
                 {% for desc, vdict in descs.items %}

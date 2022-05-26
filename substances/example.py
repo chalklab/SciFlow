@@ -13,10 +13,17 @@ from workflow.gdb_functions import *
 from django.core.exceptions import ObjectDoesNotExist
 from rdkit import Chem
 from rdkit.Chem import AllChem
+from substances.views import *
+
+
+# get latest substance facet_lookup file
+runfl = True
+if runfl:
+    subview(None, 7860)
 
 
 # check casrns in substances using inchikeys
-runkey = True
+runkey = False
 if runkey:
     meta, ids, srcs = {}, {}, {}
     nocas = Substances.objects.filter(casrn__isnull=True).values_list('inchikey', flat=True).order_by('id')

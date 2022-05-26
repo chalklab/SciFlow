@@ -1,6 +1,7 @@
 """import models"""
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from substances.models import Substances
 
 
 class References(models.Model):
@@ -159,6 +160,16 @@ class FacetErrors(models.Model):
         db_table = 'facet_errors'
 
 
+class JsonLookupSubstances(models.Model):
+    json_lookup = models.ForeignKey(JsonLookup, on_delete=models.PROTECT)
+    substance = models.ForeignKey(Substances, on_delete=models.PROTECT)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'json_lookup_substances'
+
+
 # aspect files
 class AspectLookup(models.Model):
     """ model for the aspect_lookup DB table """
@@ -235,3 +246,6 @@ class JsonFacets(models.Model):
     class Meta:
         managed = False
         db_table = 'json_facets'
+
+
+
