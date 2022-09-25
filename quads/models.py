@@ -13,8 +13,10 @@ class Quads(models.Model):
     prd = models.CharField(max_length=256)
     obj = models.CharField(max_length=256)
     gph = models.CharField(max_length=256)
+    tmp = models.CharField(max_length=32)
     updated = models.DateTimeField()
 
     class Meta:
         managed = False
         db_table = 'quads'
+

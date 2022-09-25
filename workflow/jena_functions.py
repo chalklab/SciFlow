@@ -31,7 +31,7 @@ def status():
     return response['ds.state']
 
 
-def addgraph(file):
+def jenaadd(file, replace=""):
     """ add a file to Jena """
     if "http" in file:
         http = urllib3.PoolManager()
@@ -45,11 +45,15 @@ def addgraph(file):
         """ assumes file is in <prjroot>/static/files/ """
         with open(fpath + file) as fp:
             data = fp.read()
+    # remove existing version of graph if presente
+    if replace != "":
+        print("TODO: Add code to replace graph")
+        exit()
     # create endpoint URL
     endpoint = path + dset + "/data"
     response = requests.post(endpoint, data=data, headers=hdrsld, auth=(localsettings.fuser, localsettings.fpass))
     if response.status_code == 200:
-        return "success"
+        return True
     else:
         return response.text
 

@@ -64,7 +64,7 @@ class Identifiers(models.Model):
 class Sources(models.Model):
     """ get data from the sources DB table"""
     id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
-    substance = models.ForeignKey('Substances', models.DO_NOTHING)
+    substance = models.ForeignKey(Substances, models.DO_NOTHING)
     source = models.CharField(max_length=32)
     result = models.CharField(max_length=1)
     notes = models.CharField(max_length=2000, blank=True, null=True)

@@ -1,5 +1,6 @@
 """import models"""
 from django.db import models
+from datafiles.models import FacetLookup
 
 
 class Targets(models.Model):
@@ -10,7 +11,7 @@ class Targets(models.Model):
     tax_id = models.CharField(max_length=8, blank=True, null=True)
     chembl_id = models.CharField(max_length=16, blank=True, null=True)
     graphdb = models.CharField(max_length=256, blank=True, null=True)
-    facet_lookup_id = models.IntegerField(blank=True, null=True)
+    facetlookup = models.ForeignKey(FacetLookup, on_delete=models.DO_NOTHING, db_column='facet_lookup_id')
     comments = models.CharField(max_length=256, blank=True, null=True)
     updated = models.DateTimeField()
 
@@ -19,46 +20,39 @@ class Targets(models.Model):
         db_table = 'targets'
 
 
-class Identifiers(models.Model):
-    CHEMBL = 'chembl'
-    TYPE_CHOICES = [
-        (CHEMBL, 'ChEMBL ID')
-    ]
-    target = models.ForeignKey(Targets, on_delete=models.CASCADE)
-    type = models.CharField(max_length=10, choices=TYPE_CHOICES, default=CHEMBL)
-    value = models.CharField(max_length=768, default='')
-    # iso might just be a way to make canonical SMILES format pseudo unique, might not be needed for targets
-    # iso = models.CharField(max_length=5, default=None)
-    source = models.CharField(max_length=64, default='')
-    updated = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        managed = False
-        db_table = 'identifiers'
-
-
-class Descriptors(models.Model):
-    """ accessing the descriptors DB table"""
-    target = models.ForeignKey(Targets, on_delete=models.CASCADE)
-    type = models.CharField(max_length=128, default='')
-    value = models.CharField(max_length=768, default='')
-    source = models.CharField(max_length=64, default='')
-    updated = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        managed = False
-        db_table = 'descriptors'
-
-
-class Sources(models.Model):
-    """ get data from the sources DB table"""
-    id = models.AutoField(db_column='Id', primary_key=True)  # Field name made lowercase.
-    substance = models.ForeignKey('Targets', models.DO_NOTHING)
-    source = models.CharField(max_length=32)
-    result = models.CharField(max_length=1)
-    notes = models.CharField(max_length=2000, blank=True, null=True)
+class Targids(models.Model):
+    target = models.ForeignKey(Targets, models.DO_NOTHING, db_column='target_id')
+    type = models.CharField(max_length=128)
+    value = models.CharField(max_length=750)
+    source = models.CharField(max_length=16, blank=True, null=True)
+    comment = models.CharField(max_length=128, blank=True, null=True)
     updated = models.DateTimeField()
 
     class Meta:
         managed = False
-        db_table = 'sources'
+        db_table = 'targids'
+
+
+class Targdescs(models.Model):
+    target = models.ForeignKey(Targets, models.DO_NOTHING, db_column='target_id')
+    type = models.CharField(max_length=128)
+    value = models.CharField(max_length=500)
+    source = models.CharField(max_length=16, blank=True, null=True)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'targdescs'
+        unique_together = (('target_id', 'type', 'value', 'source'),)
+
+
+class Targsrcs(models.Model):
+    target = models.ForeignKey(Targets, models.DO_NOTHING, db_column='target_id')
+    source = models.CharField(max_length=32)
+    result = models.CharField(max_length=1)
+    notes = models.TextField(blank=True, null=True)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'targsrcs'

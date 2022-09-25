@@ -198,8 +198,8 @@ def createsubjld(subid):
     ingest in graph and update DB with graphname
     """
 
-    # get the substance template file from the database
-    tmpl = Templates.objects.filter(type="compound").order_by('-version')[0]
+    # get the latest version of the substance template file from the database
+    tmpl = Templates.objects.filter(type="substance").order_by('-version')[0]
     sd = json.loads(tmpl.json)
     cmpd = sd['@graph']['scidata']['system']['facets'][0]
 

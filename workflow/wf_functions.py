@@ -1,5 +1,6 @@
 """workflow functions"""
 from workflow.gdb_functions import *
+from workflow.jena_functions import *
 from datafiles.df_functions import *
 from substances.sub_functions import *
 from targets.target_functions import *
@@ -104,7 +105,10 @@ def normalize(dfile, sections, user, jl):
                         namedgraph = 'https://scidata.unf.edu/facet/' + str(ffileid)
                         # has the jsonld file been saved in the DB but not
                         # added to the graph?
-                        if addgraph('facet', ffileid, 'remote', namedgraph):
+                        # if addgraph('facet', ffileid, 'remote', namedgraph):
+                        fileurl = "https://sds.coas.unf.edu/sciflow/files/facet/" + str(ffileid).zfill(8)
+                        added = jenaadd(fileurl)
+                        if added is True:
                             # update ftype table with id
                             sub = Substances.objects.get(id=subid)
                             sub.graphdb = namedgraph
@@ -133,10 +137,7 @@ def normalize(dfile, sections, user, jl):
                             break
 
                     # add entry into json_facets
-                    JsonFacets.objects.get_or_create(
-                        json_lookup_id=jl,
-                        facet_lookup_id=ffileid
-                    )
+                    JsonFacets.objects.get_or_create(json_lookup_id=jl, facet_lookup_id=ffileid)
                     actlog("WF_A08: Compound found in DB: ( " + str(section) + ", file id " + str(ffileid) + " )")
                 else:
                     errorlog("WF_E08: Compound not found in/added to DB ( " + str(section) + ", " + str(entry) + " )")
@@ -149,7 +150,7 @@ def normalize(dfile, sections, user, jl):
                     graphid = targingraph(targid)
 
                     if not ffileid:
-                        ffile = tempcreatetargjld()
+                        ffile = createtargjld(targid)
                         maxid = FacetLookup.objects.all().aggregate(Max('id'))['id__max']
                         nextid = maxid + 1 if maxid else 1
                         fid = str(nextid).rjust(8, '0')  # creates id with the right length

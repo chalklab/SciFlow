@@ -21,11 +21,15 @@ def adddatafile(dfile, uploading_user=None):
     else:
         m = JsonLookup()
         uid = dfile['@graph']['uid']
-        parts = None
-        if ':' in uid:
-            parts = uid.split(":")
-        elif '_' in uid:
-            parts = uid.split("_")
+        parts = []
+        try:
+            if ':' in uid:
+                parts = uid.split(":")
+            elif '_' in uid:
+                parts = uid.split("_")
+        except TypeError as terr:
+            print(f"uid is not a string! {terr=}")
+            exit()
 
         # get dataset_id
         dset = Datasets.objects.get(
@@ -127,7 +131,7 @@ def addfacetfile(ffile=None, uploading_user=None):
     else:
         m = FacetLookup()
 
-        # for facet uids they are of format <datasetname>_<inchikey>
+        # for facet uids they are of format <sourcecode>_<datasetname>_<inchikey>
         uid = ffile['@graph']['uid']
         parts = None
         if ':' in uid:
@@ -136,7 +140,7 @@ def addfacetfile(ffile=None, uploading_user=None):
             parts = uid.split("_")
 
         # get dataset_id
-        dset = Datasets.objects.get(datasetname=parts[0])
+        dset = Datasets.objects.get(datasetname=parts[1])
 
         if dset.id:
             m.dataset_id = dset.id

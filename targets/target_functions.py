@@ -1,18 +1,9 @@
-import django
-import os
-import json
 import re
 from django.core.exceptions import ObjectDoesNotExist
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
-django.setup()
-
-
-""" functions for use with the targets and related tables..."""
 from targets.external import *
 from datetime import datetime
-from targets.template_target import tmpl
 from targets.models import *
+from substances.models import *
 
 
 def getgenedata(identifier):
@@ -39,32 +30,30 @@ def addgene(identifier, output='meta'):
 
     # get gene data from sources
     meta, ids, descs, srcs = getgenedata(key)
-    return [meta, ids, descs, srcs]
+    if output == "all":
+        return [meta, ids, descs, srcs]
+    else:
+        return meta
 
 
-def creategenejld(addedgene):
+def createtargjld(addedtarg):
     """
-    create SciData JSON-LD file for cmpd,
-    ingest in graph and update DB with graphname
+    create SciData JSON-LD file for a target
     """
 
     # get the substance template file from the database
-    # tmpl = Templates.objects.get(type="compound")
-    # meta = addedgene[0]['chembl']
-    ids = addedgene[1]['chembl']
-    # descs = addedgene[2]['chembl']
-    # srcs = addedgene[3]['chembl']
+    tmpl = Templates.objects.get(type="target")
+    meta = addedtarg[0]['chembl']
+    ids = addedtarg[1]['chembl']
+    descs = addedtarg[2]['chembl']
+    srcs = addedtarg[3]['chembl']
     sd = json.loads(json.dumps(tmpl))
     # print(sd)
+
     gene = sd['@graph']['scidata']['system']['facets'][0]
     gene_chembl_id = ids.get('chembl_id').replace('CHEMBL', '')
     # get the metadata fields from the DB that need to be included in the file
     # fields = Metadata.objects.filter(sdsubsection="compound")
-
-    # get the substance info (metadata, identifiers, descriptors)
-    # substance = Substances.objects.get(id=subid)
-    # ids = dict(substance.identifiers_set.all().values_list('type', 'value'))
-    # descs = substance.descriptors_set.all().values_list('type', 'value')
 
     # add general metadata
     sd['generatedAt'] = str(datetime.now())
@@ -120,12 +109,16 @@ def getidtype(identifier):
 
 
 def gettargdata(identifier):
-
+    """ from ChEMBL, UniProt, and Wikidata """
+    # ChEMBL
     meta, ids, descs, srcs, = {}, {}, {}, {}
     try:
         search_chembl(identifier, meta, ids, descs, srcs)
     except Exception as exception:
         srcs.update({"chembl": {"result": 0, "notes": exception}})
+    # UniProt TODO
+
+    # Wikidata TODO
 
     return meta, ids, descs, srcs
 
@@ -167,56 +160,94 @@ def savesrcs(targid, srcs):
 
 
 def addtarget(identifier, output='meta'):
-    found = Identifiers.objects.values().filter(value=identifier).\
-        values_list('value', 'id')
-    found = dict(found)
+    found = dict(Identifiers.objects.values().filter(value=identifier).values_list('value', 'id'))
     if found:
         meta = Targets.objects.get(id=found[identifier])
-        ids = Identifiers.objects.values().\
-            filter(target_id=found[identifier])
-        descs = Descriptors.objects.values().\
-            filter(target_id=found[identifier])
-        srcs = Sources.objects.values().filter(target_id=found[identifier])
+        ids = Targids.objects.values().filter(target_id=found[identifier])
+        descs = Targdescs.objects.values().filter(target_id=found[identifier])
+        srcs = Targsrcs.objects.values().filter(target_id=found[identifier])
         if output == 'all':
             return meta, ids, descs, srcs
         else:
             return meta
     idtype = getidtype(identifier)
-    if idtype != "chembl":
+    if idtype != "chemblid":
+        print('Not a ChEMBL ID!')
+        exit()
 
-        key = search_chembl2085_identifier()  # temporary function
+    # no existing data for this target so find and add it
+    meta, ids, descs, srcs = gettargdata(identifier)
 
+    # add meta
+    try:
+        indb = Targets.objects.get(chembl_id=identifier)
+    except Targets.DoesNotExist:
+        indb = None
+    if not indb:
+        nm, ttype, taxid, chemblid, organism = "", "", "", "", ""
+        if "chembl" in meta:
+            if meta['chembl']['prefname']:
+                nm = meta['chembl']['prefname']
+            if meta['chembl']['targettype']:
+                ttype = meta['chembl']['targettype']
+            if meta['chembl']['taxid']:
+                taxid = meta['chembl']['taxid']
+            if meta['chembl']['chemblid']:
+                chemblid = meta['chembl']['chemblid']
+            if meta['chembl']['organism']:
+                organism = meta['chembl']['organism']
+        target = Targets(name=nm, type=ttype, tax_id=taxid, chembl_id=chemblid, organism=organism)
+        target.save()
+        targid = target.id
     else:
-        key = identifier
+        targid = indb.id
 
-    meta, ids, descs, srcs = gettargdata(key)
+    # add ids if not present
+    for src, entries in ids.items():
+        found = Targids.objects.filter(source=src, target_id=targid)
+        if not found:
+            for itype, vals in entries.items():
+                try:
+                    indb = Targids.objects.get(target_id=targid, type=itype)
+                except Targids.DoesNotExist:
+                    indb = None
+                if not indb:
+                    if isinstance(vals, (str, int)):
+                        tid = Targids(target_id=targid, type=itype, value=vals, source=src)
+                        tid.save()
+                    else:
+                        for val in vals:
+                            tid = Targids(target_id=targid, type=itype, value=val, source=src)
+                            tid.save()
+            print('Added identifiers')
+        else:
+            print('IDs already ingested')
 
-    nm, rtype, tax_id, chembl_id, organism = "", "", "", "", ""
-    if "chembl" in meta:
-        if meta['chembl']('pref_name'):
-            nm = meta['chembl'].get['pref_name']
-        if "type" in meta['chembl']:
-            rtype = meta['chembl']['relationship']  # changed var to rtype so does not clash with 'type' SJC 091721
-        if "tax_id" in meta['chembl']:
-            tax_id = meta['chembl']['tax_id']
-        if "chembl_id" in meta['chembl']:
-            chembl_id = meta['chembl']['target_chembl_id']
-        if "organism" in meta['chembl']:
-            organism = meta['chembl']['organism']
-    target = Targets(name=nm, type=rtype, tax_id=tax_id, chembl_id=chembl_id, organism=organism)
-
-    target.save()
-    targid = target.id
-
-    # check sub version of functions
-    saveids(targid, ids)
-    savedescs(targid, descs)
-    savesrcs(targid, srcs)
+    # add descs if not present
+    for src, entries in descs.items():
+        found = Targdescs.objects.filter(source=src, target_id=targid)
+        if not found:
+            for itype, vals in entries.items():
+                try:
+                    indb = Targdescs.objects.get(target_id=targid, type=itype)
+                except Targdescs.DoesNotExist:
+                    indb = None
+                if not indb:
+                    if isinstance(vals, (str, int)):
+                        tid = Targdescs(target_id=targid, type=itype, value=vals, source=src)
+                        tid.save()
+                    else:
+                        for val in vals:
+                            tid = Targdescs(target_id=targid, type=itype, value=val, source=src)
+                            tid.save()
+            print('Added descriptors')
+        else:
+            print('Descriptors already ingested')
 
     if output == 'all':
         return meta, ids, descs, srcs
-    elif output == 'target':
-        return target
+    elif output == 'meta':
+        return meta
     else:
         return meta
 
@@ -249,7 +280,7 @@ def getaddtarg(section, meta):
                                 break
             else:
                 # cast all values to str (avoids error)
-                if value.startswith('CHEMBL'):
+                if str(value).startswith('CHEMBL'):
                     try:
                         targid = Targets.objects.values('id').get(chembl_id=value)['id']
                     except ObjectDoesNotExist:

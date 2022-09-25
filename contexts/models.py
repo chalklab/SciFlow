@@ -93,7 +93,7 @@ class Crosswalks(models.Model):
     category = models.CharField(max_length=64, blank=True, null=True)
     unit = models.CharField(max_length=32, blank=True, null=True)
     datatype = models.CharField(max_length=8)
-    intlinks = models.CharField(max_length=1024, blank=True, null=True)
+    # intlinks = models.CharField(max_length=1024, blank=True, null=True)
     meta = models.CharField(max_length=64, blank=True, null=True)
     ignore = models.CharField(max_length=32, blank=True, null=True)
     temp = models.CharField(max_length=128, blank=True, null=True)

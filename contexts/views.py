@@ -1,6 +1,4 @@
 """ django view file """
-import json
-
 from django.shortcuts import render, redirect
 from datasets.ds_functions import *
 from django.http import JsonResponse
@@ -123,7 +121,7 @@ def ontview(request, ontid):
 
 
 def ontadd(request):
-    """view to show all data about a ontterms"""
+    """view to show all data about an ontterm"""
     if request.method == "POST":
         # save new namespace
         data = request.POST
@@ -168,6 +166,7 @@ def ontterms(request, ontid):
 
 @csrf_exempt
 def jscwkadd(request):
+    cwk = None
     if request.method == "POST":
         data = request.POST
         cwkid = data['cwkid']
@@ -185,17 +184,17 @@ def jscwkadd(request):
         cwk.__dict__[data['field']] = data['value']
         cwk.save()
         if cwk.ontterm_id:
-            cwk.temp = cwk.ontterm.title + '|' + cwk.ontterm.url
+            cwk.temp = cwk.ontterm.title + '|' + cwk.ontterm.url  # TODO Why related field access not working?
     return JsonResponse(model_to_dict(cwk), status=200)
 
 
 @csrf_exempt
 def jsdelcwk(request):
+    response = {}
     if request.method == "POST":
         data = request.POST
         cwkid = data['cwkid']
         Crosswalks.objects.get(id=cwkid).delete()
-        response = {}
         try:
             Crosswalks.objects.get(id=cwkid)
             response.update({"response": "failure"})
@@ -225,7 +224,10 @@ def jswrtctx(request, ctxid: int):
     # add entries
     for cwk in ctx.crosswalks_set.all():
         tmp = {}
-        tmp.update({"@id": cwk.ontterm.url, "@type": cwk.datatype})
+        if cwk.datatype == '@list':
+            tmp.update({"@id": cwk.ontterm.url, "@type": "string", "@container": "@list"})
+        else:
+            tmp.update({"@id": cwk.ontterm.url, "@type": cwk.datatype})
         if cwk.newname:
             cdict.update({cwk.newname: tmp})
         else:

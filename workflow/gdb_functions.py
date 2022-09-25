@@ -207,7 +207,7 @@ def graph_link_b(group):
                         'graphdb').get(id=line[tablematch[category][2]]))
                     # Post(y)
             else:
-                # compound/crystal/etc not found in database
+                # compound/crystal/etc. not found in database
                 # Needs to be added first in order to link
                 # then GraphLinkB(group)
                 pass
