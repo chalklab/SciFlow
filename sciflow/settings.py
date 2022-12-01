@@ -188,7 +188,8 @@ authorized_users = [
     'jaredracicot@gmail.com',
     'stuartjchalk@gmail.com',
     'n01448636@gmail.com',
-    'markaidestine@gmail.com'
+    'markaidestine@gmail.com',
+    'abdurazikd1@gmail.com'
 ]
 
 # Debug toolbar settings
