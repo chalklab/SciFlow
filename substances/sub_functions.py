@@ -23,22 +23,19 @@ def addsubstance(identifier, output='meta'):
     """
 
     # check for substance in the database
-    found = Identifiers.objects.values().filter(value=identifier).\
-        values_list('value', 'substance_id')
+    found = Identifiers.objects.values().filter(value=identifier).values_list('value', 'substance_id')
     found = dict(found)
     if found:
         meta = Substances.objects.get(id=found[identifier])
-        ids = Identifiers.objects.values().\
-            filter(substance_id=found[identifier])
-        descs = Descriptors.objects.values().\
-            filter(substance_id=found[identifier])
+        ids = Identifiers.objects.values().filter(substance_id=found[identifier])
+        descs = Descriptors.objects.values().filter(substance_id=found[identifier])
         srcs = Sources.objects.values().filter(substance_id=found[identifier])
         if output == 'all':
             return meta, ids, descs, srcs
         else:
             return meta
 
-    # check if the identifier is a inchikey and if not find one from pubchem
+    # check if the identifier is an inchikey and if not find one from pubchem
     idtype = getidtype(identifier)
     if idtype != "inchikey":
         # Modified to call this definition directly. Deleted pubchemkey
@@ -204,7 +201,8 @@ def createsubjld(subid):
     cmpd = sd['@graph']['scidata']['system']['facets'][0]
 
     # get the metadata fields from the DB that need to be included in the file
-    fields = Metadata.objects.filter(sdsubsection="compound")
+    # fields = Metadata.objects.filter(sdsubsection="compound") [old]
+    fields = Metadata.objects.filter(sdsubsection="substance")
 
     # get the substance info (metadata, identifiers, descriptors)
     substance = Substances.objects.get(id=subid)

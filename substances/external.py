@@ -1,9 +1,10 @@
 """functions to get metadata/identifiers/descriptors from external websites"""
 import re
-from qwikidata.sparql import *
-from qwikidata.entity import *
-from qwikidata.typedefs import *
-from qwikidata.linked_data_interface import *
+import requests
+from qwikidata.sparql import return_sparql_query_results
+from qwikidata.entity import WikidataItem
+from qwikidata.typedefs import ItemId
+from qwikidata.linked_data_interface import get_entity_dict_from_api
 from chembl_webresource_client.new_client import new_client
 
 
@@ -65,9 +66,9 @@ def pubchem(identifier, meta, ids, descs, srcs):
         elif prop['urn']['label'] == "Molecular Formula":
             meta["pubchem"]["formula"] = prop["value"]["sval"]
         elif prop['urn']['label'] == "Molecular Weight":
-            meta["pubchem"]["mw"] = prop["value"]["fval"]
+            meta["pubchem"]["mw"] = prop["value"]["sval"]
         elif prop['urn']['label'] == "Weight":
-            meta["pubchem"]["mim"] = prop["value"]["fval"]
+            meta["pubchem"]["mim"] = prop["value"]["sval"]
         elif prop['urn']['label'] == "Count" and \
                 prop['urn']['name'] == "Hydrogen Bond Acceptor":
             descs["pubchem"]["h_bond_acceptor"] = prop["value"]["ival"]
@@ -170,18 +171,18 @@ def wikidata(identifier, ids, srcs):
 
     # OK compound has been found go get the data
     eurl = res['results']['bindings'][0]['compound']['value']
-    wdid = str(eurl).replace("http://www.wikidata.org/entity/", "")
-    mwurl = w + wdid  # 'w' is defined (above) outside of this function
+    wdid = str(eurl).replace("http://www.wikidata.org/entity/", "")  # keep no SSL
+    mwurl = w + wdid  # 'w' is defined (above)
     respnse = requests.get(mwurl)
     if respnse.status_code == 200:
         # response contains many props from which we get specific chemical ones
         ids['wikidata'] = {}
         json = requests.get(mwurl).json()
         claims = json['claims']
-        propids = {'casrn': 'P231', 'atc': 'P267', 'inchi': 'P234',
-                   'inchikey': 'P235', 'chemspider': 'P661', 'pubchem': 'P662',
-                   'reaxys': 'P1579', 'gmelin': 'P1578', 'chebi': 'P683',
-                   'chembl': 'P592', 'rtecs': 'P657', 'dsstox': 'P3117'}
+        propids = {'casrn': 'P231', 'atc': 'P267', 'inchi': 'P234', 'inchikey': 'P235', 'chemspider': 'P661',
+                   'pubchem': 'P662', 'reaxys': 'P1579', 'gmelin': 'P1578', 'chebi': 'P683', 'chembl': 'P592',
+                   'rtecs': 'P657', 'dsstox': 'P3117', 'unii': 'P562', 'drugbank': 'P715', 'csmiles': 'P233',
+                   'ismiles': 'P2017', 'mlights': 'P3890', 'mesh': 'P6680', 'massbank': 'P6689', 'ccdc': 'P6852'}
         vals = list(propids.values())
         keys = list(propids.keys())
         for propid, prop in claims.items():
@@ -213,6 +214,7 @@ def chembl(identifier, meta, ids, descs, srcs):
     print(identifier)
     cmpds = molecule.search(identifier)
     found = {}
+
     for cmpd in cmpds:
         if cmpd['molecule_structures']['standard_inchi_key'] == identifier:
             found = cmpd
@@ -309,7 +311,7 @@ def comchem(identifier, meta, ids, srcs):
 
     # search for entries and retrieve casrn for compound if present
     apipath = "https://commonchemistry.cas.org/"
-    respnse = requests.get(apipath + 'api/search?q=InChIKey' + identifier).json()
+    respnse = requests.get(apipath + 'api/search?q=InChIKey=' + identifier).json()
     if respnse['count'] == 0:
         srcs["comchem"].update({"result": 0, "notes": "InChIKey not found"})
         return False

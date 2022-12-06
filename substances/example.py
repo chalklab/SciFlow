@@ -17,7 +17,7 @@ from substances.views import *
 
 
 # get latest substance facet_lookup file
-runfl = True
+runfl = False
 if runfl:
     subview(None, 7860)
 
@@ -151,7 +151,7 @@ if runjld:
             print("Already updated '" + sub.graphdb + "'")
 
 # add a new substance to the database
-add = None
+add = False
 if add:
     # example substance that is not found online...
     meta = {
@@ -188,7 +188,7 @@ if add:
         print("Error: something happened on the way to the DB!")
 
 # check output of pubchem request
-runpc = None
+runpc = False
 if runpc:
     key = 'VWNMWKSURFWKAL-HXOBKFHXSA-N'
     meta, ids, descs, srcs = {}, {}, {}, {}
@@ -197,9 +197,9 @@ if runpc:
     print(json.dumps(srcs, indent=4))
 
 # check output of chembl request
-runcb = None
+runcb = False
 if runcb:
-    key = 'REEUVFCVXKWOFE-UHFFFAOYSA-K'
+    key = 'DXDHALJBYXNDKW-UHFFFAOYSA-N'
     # key = 'aspirin'
     meta, ids, descs, srcs = {}, {}, {}, {}
     chembl(key, meta, ids, descs, srcs)
@@ -207,40 +207,33 @@ if runcb:
     print(json.dumps(srcs, indent=4))
 
 # check output of classyfire request
-runcf = None
+runcf = False
 if runcf:
-    key = 'VWNMWKSURFWKAL-HXOBKFZXSA-N'  # (bad inchikey)
+    # key = 'VWNMWKSURFWKAL-HXOBKFZXSA-N'  # (bad inchikey)
+    key = 'SIEHZFPZQUNSAS-UHFFFAOYSA-N'
     descs, srcs = {}, {}
     classyfire(key, descs, srcs)
     print(descs)
     print(json.dumps(srcs, indent=4))
 
 # check output of wikidata request
-runwd = None
+runwd = False
 if runwd:
-    key = 'BSYNRYMUTXBXSQ-CHALKCHALK-N'  # (bad inchikey for aspirin)
+    # key = 'BSYNRYMUTXBXSQ-CHALKCHALK-N'  # (bad inchikey for aspirin)
+    key = 'SBPBAQFWLVIOKP-UHFFFAOYSA-N'
     ids, srcs = {}, {}
     wikidata(key, ids, srcs)
     print(ids)
     print(json.dumps(srcs, indent=4))
 
 # Get data from commonchemistry using CASRNs
-runcc1 = None
+runcc1 = True
 if runcc1:
-    subs = Substances.objects.all().values_list(
-        'id', 'casrn').filter(
-        casrn__isnull=False)  # produces tuples
-    for sub in subs:
-        found = Sources.objects.filter(
-            substance_id__exact=sub[0],
-            source__exact='comchem')
-        if not found:
-            meta, ids, srcs = {}, {}, {}
-            comchem(sub[1], meta, ids, srcs)
-            saveids(sub[0], ids)
-            savesrcs(sub[0], srcs)
-            print(sub)
-            print(json.dumps(srcs, indent=4))
+    key = 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'
+    meta, ids, srcs = {}, {}, {}
+    comchem(key, meta, ids, srcs)
+    print(ids)
+    print(json.dumps(srcs, indent=4))
 
 runcc2 = None
 if runcc2:

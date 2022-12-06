@@ -37,7 +37,7 @@ def ingest(upload, user):
         mettypes = ['procedure']
         # this would be expanded as we get me code written for other unique
         # types...
-        systypes = ['compound', 'target']
+        systypes = ['substance', 'compound', 'target']
 
         for mettype in mettypes:
             found = getaspect(file, mettype)

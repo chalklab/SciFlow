@@ -14,12 +14,12 @@ from quads.qd_functions import *
 # dlist 1 (herg), 3 (trc)
 f1 = True
 if f1:
-    # setobjs = requests.get('https://sds.coas.unf.edu/trc/datasets/sddslist/1')
-    setobjs = requests.get('https://sds.coas.unf.edu/sciflow/files/twinlist')
+    setobjs = requests.get('https://sds.coas.unf.edu/trc/datasets/sddslist/1')
+    # setobjs = requests.get('https://sds.coas.unf.edu/sciflow/files/twinlist')
     setlist = setobjs.json()
     done = Quads.objects.order_by('obj').values_list('obj', flat=True).distinct()
     cnt = 1
-    offset = 5917
+    offset = 0
     for fname, url in setlist.items():
         if cnt > offset:
             opts = {'algorithm': 'URDNA2015', 'format': 'application/n-quads', 'processingMode': 'json-ld-1.1'}
