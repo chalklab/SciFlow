@@ -3,12 +3,16 @@ from django.db.models import Q
 from substances.external import *
 from substances.models import *
 from contexts.models import *
-from datetime import datetime
+from datetime import datetime, date
 from workflow.log_functions import *
+from inspect import currentframe, getframeinfo
 import json
 import os
 import random
 import string
+import re
+
+dt = date.today()
 
 
 def addsubstance(identifier, output='meta'):
@@ -43,6 +47,9 @@ def addsubstance(identifier, output='meta'):
     else:
         key = identifier
 
+    frameinfo = getframeinfo(currentframe())
+    print("adding substance " + key + " (" + frameinfo.filename + ":" + str(frameinfo.lineno) + ")")
+
     # get substance data from sources
     meta, ids, descs, srcs = getsubdata(key)
 
@@ -75,19 +82,171 @@ def addsubstance(identifier, output='meta'):
     if "wikidata" in ids:
         if "casrn" in ids['wikidata']:
             casrn = ids['wikidata']['casrn']
-    sub = Substances(name=nm, formula=fm, molweight=mw,
-                     monomass=mm, casrn=casrn)
+
+    frameinfo = getframeinfo(currentframe())
+    print("saving substance " + key + " (" + frameinfo.filename + ":" + str(frameinfo.lineno) + ")")
+    sub = Substances(name=nm, formula=fm, molweight=mw, monomass=mm, casrn=casrn, inchikey=key)
     sub.save()
     subid = sub.id
 
+    frameinfo = getframeinfo(currentframe())
+    print("saving identifiers " + key + " (" + frameinfo.filename + ":" + str(frameinfo.lineno) + ")")
     # save ids to the identifiers table
     saveids(subid, ids)
 
+    frameinfo = getframeinfo(currentframe())
+    print("saving descriptors " + key + " (" + frameinfo.filename + ":" + str(frameinfo.lineno) + ")")
     # save descs to the descriptors table
     savedescs(subid, descs)
 
     # savesrcs to sources table
+    frameinfo = getframeinfo(currentframe())
+    print("saving sources " + key + " (" + frameinfo.filename + ":" + str(frameinfo.lineno) + ")")
     savesrcs(subid, srcs)
+
+    if output == 'all':
+        return meta, ids, descs, srcs
+    elif output == 'sub':
+        return sub
+    else:
+        return meta
+
+
+def updsubstance(identifier, output='meta'):
+    # check for inchikey
+    match = re.search('^[A-Z]{14}-[A-Z]{10}-[A-Z]$', identifier)
+    if match:
+        key = identifier
+        sub = Substances.objects.get(inchikey__exact=key)
+        subid = sub.id
+    else:
+        # find subid from identifier
+        subid = getsubid(identifier)
+        # get inchikey for substance
+        key = getinchikey(subid)
+
+    # get substance data from sources
+    meta, ids, descs, srcs = getsubdata(key)
+
+    # update metadata in the substances table
+    sub = Substances.objects.get(id=subid)
+
+    # prep for fields to update
+    updates = {}
+
+    # META
+
+    # check for name update
+    pcname, cbname, ccname = None, None, None
+    if 'pubchem' in meta and 'iupacname' in meta['pubchem'] and meta['pubchem']['iupacname'] != '':
+        pcname = meta['pubchem']['iupacname']
+    elif 'chembl' in meta and 'prefname' in meta['chembl'] and meta['chembl']['prefname'] != '' and meta['chembl']['prefname'] is not None:
+        cbname = meta['chembl']['prefname'].lower()
+    elif 'comchem' in meta and 'name' in meta['comchem'] and meta['comchem']['name'] != '':
+        ccname = meta['comchem']['name'].lower()
+    # print(meta)
+    # exit()
+
+    if (cbname is not None and cbname != pcname and pcname == sub.name) or (sub.name == 'unknown' and cbname is not None):
+        updates.update({'name': cbname})
+    elif (ccname is not None and ccname != pcname and pcname == sub.name) or (sub.name == 'unknown' and ccname is not None):
+        updates.update({'name': ccname})
+
+    # check for formula update
+    if sub.formula is None:
+        if meta['pubchem']['formula']:
+            updates.update({'formula': meta['pubchem']['formula']})
+        elif meta['chembl']['full_molformula']:
+            updates.update({'formula': meta['chembl']['full_molformula']})
+        elif meta['comchem']['formula']:
+            updates.update({'formula': meta['comchem']['formula']})
+
+    # check for molweight update
+    if sub.molweight is None:
+        if meta['pubchem']['mw']:
+            updates.update({'molweight': meta['pubchem']['mw']})
+        elif meta['chembl']['full_mwt']:
+            updates.update({'molweight': meta['chembl']['full_mwt']})
+        elif meta['comchem']['mw']:
+            updates.update({'molweight': meta['comchem']['mw']})
+
+    # check for monomass update
+    if sub.monomass is None:
+        if 'pubchem' in meta and meta['pubchem']['mim']:
+            updates.update({'monomass': meta['pubchem']['mim']})
+        elif 'chembl' in meta and meta['chembl']['mw_monoisotopic']:
+            updates.update({'monomass': meta['chembl']['mw_monoisotopic']})
+
+    # check for casrn update
+    if 'comchem' in meta:
+        if sub.casrn is None:
+            updates.update({'casrn': meta['comchem']['casrn']})
+
+    # OK update meta
+    for k, v in updates.items():
+        if k == 'name':
+            sub.name = v
+        elif k == 'formula':
+            sub.formula = v
+        elif k == 'molweight':
+            sub.molweight = v
+        elif k == 'monomass':
+            sub.monomass = v
+        elif k == 'casrn':
+            sub.casrn = v
+
+    # resave data
+    sub.lastcheck = date.today()
+    sub.save()
+
+    # IDENTIFIERS
+    print(ids)
+    for s, idents in ids.items():
+        for t, v in idents.items():
+            if v is None or v == []:
+                continue
+            if isinstance(v, list):
+                for x in v:
+                    hit, created = Identifiers.objects.update_or_create(substance_id=subid, type=t, value=x, source=s)
+                    hit.lastcheck = dt
+                    hit.save()
+            else:
+                hit, created = Identifiers.objects.update_or_create(substance_id=subid, type=t, value=v, source=s)
+                hit.lastcheck = dt
+                hit.save()
+                print(s + ":" + t + ":" + str(v))
+
+    # DESCRIPTORS
+    for s, desc in descs.items():
+        for t, v in desc.items():
+            if v is None or v == []:
+                continue
+            if isinstance(v, list):
+                for x in v:
+                    hit, created = Descriptors.objects.update_or_create(substance_id=subid, type=t, value=x, source=s)
+                    hit.lastcheck = dt
+                    hit.save()
+            else:
+                hit, created = Descriptors.objects.update_or_create(substance_id=subid, type=t, value=v, source=s)
+                hit.lastcheck = dt
+                hit.save()
+                print(s + ":" + t + ":" + str(v))
+
+    # SOURCES (where the data was obtained from)
+    print(srcs)
+    for s, src in srcs.items():
+        result, notes = '', ''
+        for t, v in src.items():
+            if t == 'result':
+                result = v
+            elif t == 'notes':
+                notes = v
+        hit, created = Sources.objects.update_or_create(substance_id=subid, source=s)
+        hit.result = result
+        hit.notes = notes
+        hit.lastcheck = dt
+        hit.save()
+        print(s + ":" + str(result) + ":" + notes)
 
     if output == 'all':
         return meta, ids, descs, srcs
@@ -164,7 +323,7 @@ def getsubdata(identifier):
     except Exception as exception:
         srcs.update({"pubchem": {"result": 0, "notes": exception}})
     try:
-        classyfire(identifier, descs, srcs)
+        classyfire(identifier, ids, descs, srcs)
     except Exception as exception:
         srcs.update({"classyfire": {"result": 0, "notes": exception}})
     try:
@@ -191,13 +350,15 @@ def getmeta(subid):
 
 def createsubjld(subid):
     """
-    create SciData JSON-LD file for cmpd,
+    create SciData JSON-LD file for substance,
     ingest in graph and update DB with graphname
     """
 
     # get the latest version of the substance template file from the database
     tmpl = Templates.objects.filter(type="substance").order_by('-version')[0]
     sd = json.loads(tmpl.json)
+    print(sd)
+
     cmpd = sd['@graph']['scidata']['system']['facets'][0]
 
     # get the metadata fields from the DB that need to be included in the file
@@ -213,9 +374,19 @@ def createsubjld(subid):
     sd['generatedAt'] = str(datetime.now())
     title = sd['@graph']['title'].replace("<iupacname>", substance.name)
     sd['@graph']['title'] = title
+    print(ids)
 
     # add general compound metadata
-    cmpd['name'] = substance.name
+    if 'iupacname' not in ids:
+        cmpd['name'] = substance.name
+        del cmpd['iupacname']
+    else:
+        if ids['iupacname'] != substance.name:
+            cmpd['name'] = substance.name
+            cmpd['iupacname'] = ids['iupacname']
+        else:
+            cmpd['name'] = ids['iupacname']
+            cmpd['iupacname'] = ids['iupacname']
     cmpd['formula'] = substance.formula
     cmpd['molweight'] = substance.molweight
     cmpd['monoisotopicmass'] = substance.monomass
@@ -261,9 +432,9 @@ def createsubjld(subid):
                                     field.datatype == "xsd:nonNegativeInteger":
                                 value.append(int(val))
         # add field to cmpd
-        if field.output == "datum":
+        if field.output == "datum" and value is not None and value is not []:
             cmpd[section].update({label: value})
-        elif field.output == "array":
+        elif field.output == "array" and value is not None and value is not []:
             cmpd[section][label] = value
 
     # add molecular graph
@@ -362,7 +533,6 @@ def createsubjld(subid):
 
     # add compound data into sd template file
     sd['@graph']['scidata']['system']['facets'][0] = cmpd
-
     return sd
 
 
@@ -387,19 +557,17 @@ def saveids(subid, ids):
             # check if value is list or string
             if isinstance(v, list):
                 for x in v:
-                    ident = Identifiers(substance_id=subid, type=k, value=x,
-                                        source=source)
+                    ident = Identifiers(substance_id=subid, type=k, value=x, source=source)
                     ident.save()
             else:
                 # add random str in iso field to make csmiles pseudo 'unique'
                 if k == 'csmiles':
                     chars = string.ascii_uppercase + string.digits
                     rstr = ''.join(random.choice(chars) for _ in range(5))
-                    ident = Identifiers(substance_id=subid, type=k, value=v,
-                                        iso=rstr, source=source)
+                    ident = Identifiers(substance_id=subid, type=k, value=v, iso=rstr, source=source)
                 else:
-                    ident = Identifiers(substance_id=subid, type=k, value=v,
-                                        source=source)
+                    ident = Identifiers(substance_id=subid, type=k, value=v, source=source)
+                ident.lastcheck = dt
                 ident.save()
 
 
@@ -413,8 +581,7 @@ def getsubids(identifier):
         # get substance table id
         subid = getsubid(identifier)
     # get all entries in the identifiers table for this substance_id
-    ids = Identifiers.objects.values().\
-        filter(substance_id__exact=subid).values_list('type', 'value')
+    ids = Identifiers.objects.values().filter(substance_id__exact=subid).values_list('type', 'value')
     return dict(ids)
 
 
@@ -456,6 +623,8 @@ def savedescs(subid, descs):
             if isinstance(v, list):
                 for x in v:
                     desc = Descriptors(substance_id=subid, type=k, value=x, source=source)
+                    desc.lastcheck = dt
+
                     desc.save()
             else:
                 desc = Descriptors(substance_id=subid, type=k, value=v, source=source)
@@ -467,6 +636,7 @@ def savesrcs(subid, srcs):
     # srcs = {"pubchem": {"result":1, "notes":None}
     for x, y in srcs.items():
         src = Sources(substance_id=subid, source=x, result=y["result"], notes=y.get("notes", "Null"))
+        src.lastcheck = dt
         src.save()
 
 

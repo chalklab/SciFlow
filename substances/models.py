@@ -14,6 +14,7 @@ class Substances(models.Model):
     graphdb = models.CharField(max_length=256, null=True)
     facet_lookup_id = models.IntegerField(blank=True, null=True)
     comments = models.CharField(max_length=256, null=True)
+    lastcheck = models.DateField(null=True)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -51,9 +52,10 @@ class Identifiers(models.Model):
 
     substance = models.ForeignKey(Substances, on_delete=models.CASCADE)
     type = models.CharField(max_length=10, choices=TYPE_CHOICES, default=CASRN)
-    value = models.CharField(max_length=768, default='')
+    value = models.CharField(max_length=750, default='')
     iso = models.CharField(max_length=5, default=None)
     source = models.CharField(max_length=64, default='')
+    lastcheck = models.DateField(null=True)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -68,6 +70,7 @@ class Sources(models.Model):
     source = models.CharField(max_length=32)
     result = models.CharField(max_length=1)
     notes = models.CharField(max_length=2000, blank=True, null=True)
+    lastcheck = models.DateField(null=True)
     updated = models.DateTimeField()
 
     class Meta:
@@ -118,6 +121,7 @@ class Descriptors(models.Model):
     type = models.CharField(max_length=128, default='')
     value = models.CharField(max_length=768, default='')
     source = models.CharField(max_length=64, default='')
+    lastcheck = models.DateField(null=True)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:

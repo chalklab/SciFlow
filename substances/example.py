@@ -10,17 +10,83 @@ from substances.sub_functions import *
 from substances.external import *
 from scyjava import config, jimport
 from workflow.gdb_functions import *
+from workflow.admin_functions import *
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Count
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from substances.views import *
+from external import wikidata
+from django.test import RequestFactory
+from django.db.models import Q
 
+
+chkrt = True
+if chkrt:
+    getremottwins()
+
+chkcf = False
+if chkcf:
+    key = 'ZMRUPTIKESYGQW-UHFFFAOYSA-N'
+    classyfire(key, {}, {}, {})
+
+chkwd = False
+if chkwd:
+    key = 'UHOVQNZJYSORNB-UHFFFAOYSA-N'
+    ids, srcs = {}, {}
+    wikidata(key, ids, srcs)
+    print(srcs)
+
+# remove duplicate substances by inchikey
+temp = False
+if temp:
+    keys = Substances.objects.distinct().values_list('inchikey', flat=True).\
+        annotate(keycnt=Count('inchikey')).filter(keycnt__gt=1)
+    for key in keys:
+        print(key)
+        dupes = Substances.objects.filter(inchikey=key).values_list('id', flat=True)
+        delid = max(dupes)
+        facid = Substances.objects.values_list('facet_lookup_id', flat=True).get(id=delid)
+        # delete entries in identifiers
+        delcnt = Identifiers.objects.filter(substance_id=delid).delete()
+        print("deleted " + str(delcnt) + " in identifiers")
+        # delete entries in descriptors
+        delcnt = Descriptors.objects.filter(substance_id=delid).delete()
+        print("deleted " + str(delcnt) + " in descriptors")
+        # delete entries in sources
+        delcnt = Sources.objects.filter(substance_id=delid).delete()
+        print("deleted " + str(delcnt) + " in sources")
+        # delete entries in structures
+        delcnt = Structures.objects.filter(substance_id=delid).delete()
+        print("deleted " + str(delcnt) + " in structures")
+        # delete entries in facet_files
+        delcnt = FacetFiles.objects.filter(facet_lookup_id=facid).delete()
+        print("deleted " + str(delcnt) + " in facet files")
+        # delete entries in json_facets
+        delcnt = JsonFacets.objects.filter(facet_lookup_id=facid).delete()
+        print("deleted " + str(delcnt) + " in json facets")
+        # delete substance entry
+        delcnt = Substances.objects.get(id=delid).delete()
+        print("deleted " + str(delcnt) + " in substances")
+        # delete entry in facet_lookup
+        delcnt = FacetLookup.objects.get(id=facid).delete()
+        print("deleted " + str(delcnt) + " in facet lookup")
 
 # get latest substance facet_lookup file
 runfl = False
 if runfl:
-    subview(None, 7860)
+    newjld(RequestFactory().request(), 10715)
 
+runas = False
+if runas:
+    subids = Identifiers.objects.filter(lastcheck__isnull=True).values_list('substance_id', flat=True).distinct()
+    keys = Substances.objects.filter(id__in=subids).values_list('inchikey', flat=True).order_by('facet_lookup_id')
+    for key in keys:
+        subid = add(RequestFactory().request(), key, 'update')
+        saved = newjld(RequestFactory().request(), subid)
+        rpath = 'https://sds.coas.unf.edu/sciflow/files/facet/'
+        lpath = 'uploads/tranche/chalklab/chemtwin/' + key + '.jsonld'
+        uploadfile(rpath, lpath, subid)
 
 # check casrns in substances using inchikeys
 runkey = False
@@ -199,8 +265,7 @@ if runpc:
 # check output of chembl request
 runcb = False
 if runcb:
-    key = 'DXDHALJBYXNDKW-UHFFFAOYSA-N'
-    # key = 'aspirin'
+    key = 'SBPBAQFWLVIOKP-UHFFFAOYSA-N'
     meta, ids, descs, srcs = {}, {}, {}, {}
     chembl(key, meta, ids, descs, srcs)
     print(meta, ids, descs)
@@ -211,8 +276,8 @@ runcf = False
 if runcf:
     # key = 'VWNMWKSURFWKAL-HXOBKFZXSA-N'  # (bad inchikey)
     key = 'SIEHZFPZQUNSAS-UHFFFAOYSA-N'
-    descs, srcs = {}, {}
-    classyfire(key, descs, srcs)
+    ids, descs, srcs = {}, {}, {}
+    classyfire(key, ids, descs, srcs)
     print(descs)
     print(json.dumps(srcs, indent=4))
 
@@ -227,7 +292,7 @@ if runwd:
     print(json.dumps(srcs, indent=4))
 
 # Get data from commonchemistry using CASRNs
-runcc1 = True
+runcc1 = False
 if runcc1:
     key = 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'
     meta, ids, srcs = {}, {}, {}
@@ -238,13 +303,9 @@ if runcc1:
 runcc2 = None
 if runcc2:
     # process compounds with no casrn in substances table
-    subs = Substances.objects.all().values_list(
-        'id', flat=True).filter(
-        casrn__isnull=True)
+    subs = Substances.objects.all().values_list('id', flat=True).filter(casrn__isnull=True)
     for sub in subs:
-        found = Sources.objects.filter(
-            substance_id__exact=sub,
-            source__exact='comchem')
+        found = Sources.objects.filter(substance_id__exact=sub, source__exact='comchem')
         if not found:
             key = getinchikey(sub)
             if key:

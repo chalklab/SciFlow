@@ -4,7 +4,7 @@ from sciflow import localsettings
 
 
 path = "http://jena1.unfcsd.unf.edu:3030/"
-dset = "SciData"
+dataset = "SciData"
 hdrs = {'Content-Type': 'application/json'}
 hdrsld = {'Content-Type': 'application/ld+json'}
 fpath = localsettings.ppath + "/static/files/"
@@ -17,21 +17,21 @@ def server():
     return response
 
 
-def stats():
+def stats(dset=dataset):
     """get the status of the SciData dataset from the fuseki endpoint"""
     endpoint = path + "$/stats/" + dset
     response = requests.get(endpoint, headers=hdrs, auth=(localsettings.fuser, localsettings.fpass)).json()
     return response
 
 
-def status():
+def status(dset=dataset):
     """get the stats of the SciData dataset from the fuseki endpoint"""
     endpoint = path + "$/datasets/" + dset
     response = requests.get(endpoint, headers=hdrs, auth=(localsettings.fuser, localsettings.fpass)).json()
     return response['ds.state']
 
 
-def jenaadd(file, replace=""):
+def jenaadd(file, replace="", dset=dataset):
     """ add a file to Jena """
     if "http" in file:
         http = urllib3.PoolManager()
@@ -47,8 +47,10 @@ def jenaadd(file, replace=""):
             data = fp.read()
     # remove existing version of graph if presente
     if replace != "":
-        print("TODO: Add code to replace graph")
-        exit()
+        sparql = "CLEAR GRAPH <" + replace + ">"
+        print(sparql)
+        result = update(sparql)
+        print(result)
     # create endpoint URL
     endpoint = path + dset + "/data"
     response = requests.post(endpoint, data=data, headers=hdrsld, auth=(localsettings.fuser, localsettings.fpass))
@@ -58,14 +60,14 @@ def jenaadd(file, replace=""):
         return response.text
 
 
-def query(sparql):
+def query(sparql, dset=dataset):
     """ executes a SPARQL query """
     endpoint = path + dset + "/sparql"
     response = requests.post(endpoint, data={'query': sparql}, auth=(localsettings.fuser, localsettings.fpass))
     return response.json()
 
 
-def update(sparql):
+def update(sparql, dset=dataset):
     """ executes a SPARQL query """
     endpoint = path + dset + "/update"
     response = requests.post(endpoint, data={'update': sparql}, auth=(localsettings.fuser, localsettings.fpass))

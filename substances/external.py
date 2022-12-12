@@ -1,4 +1,5 @@
 """functions to get metadata/identifiers/descriptors from external websites"""
+import json
 import re
 import requests
 from qwikidata.sparql import return_sparql_query_results
@@ -48,20 +49,20 @@ def pubchem(identifier, meta, ids, descs, srcs):
     meta["pubchem"] = {}
     ids["pubchem"]["pubchem"] = pcid
     if other:
-        ids["pubchem"]["other"] = other  # original inchikey if made generic
+        ids["pubchem"]["othername"] = other  # original inchikey if made generic
     for prop in props:
-        if prop['urn']['label'] == "IUPAC Name" and \
-                prop['urn']['name'] == "Preferred":
+        # 'name' not added to meta as common name not available in CID download
+        # iupacname in meta used as a check for entry in DB
+        if prop['urn']['label'] == "IUPAC Name" and prop['urn']['name'] == "Preferred":
             ids["pubchem"]["iupacname"] = prop["value"]["sval"]
+            meta["pubchem"]["iupacname"] = prop["value"]["sval"]
         elif prop['urn']['label'] == "InChI":
             ids["pubchem"]["inchi"] = prop["value"]["sval"]
         elif prop['urn']['label'] == "InChIKey":
             ids["pubchem"]["inchikey"] = prop["value"]["sval"]
-        elif prop['urn']['label'] == "SMILES" and \
-                prop['urn']['name'] == "Canonical":
+        elif prop['urn']['label'] == "SMILES" and prop['urn']['name'] == "Canonical":
             ids["pubchem"]["csmiles"] = prop["value"]["sval"]
-        elif prop['urn']['label'] == "SMILES" and \
-                prop['urn']['name'] == "Isomeric":
+        elif prop['urn']['label'] == "SMILES" and prop['urn']['name'] == "Isomeric":
             ids["pubchem"]["ismiles"] = prop["value"]["sval"]
         elif prop['urn']['label'] == "Molecular Formula":
             meta["pubchem"]["formula"] = prop["value"]["sval"]
@@ -69,19 +70,16 @@ def pubchem(identifier, meta, ids, descs, srcs):
             meta["pubchem"]["mw"] = prop["value"]["sval"]
         elif prop['urn']['label'] == "Weight":
             meta["pubchem"]["mim"] = prop["value"]["sval"]
-        elif prop['urn']['label'] == "Count" and \
-                prop['urn']['name'] == "Hydrogen Bond Acceptor":
+        elif prop['urn']['label'] == "Count" and prop['urn']['name'] == "Hydrogen Bond Acceptor":
             descs["pubchem"]["h_bond_acceptor"] = prop["value"]["ival"]
-        elif prop['urn']['label'] == "Count" and \
-                prop['urn']['name'] == "Hydrogen Bond Donor":
+        elif prop['urn']['label'] == "Count" and prop['urn']['name'] == "Hydrogen Bond Donor":
             descs["pubchem"]["h_bond_donor"] = prop["value"]["ival"]
-        elif prop['urn']['label'] == "Count" and \
-                prop['urn']['name'] == "Rotatable Bond":
+        elif prop['urn']['label'] == "Count" and prop['urn']['name'] == "Rotatable Bond":
             descs["pubchem"]["rotatable_bond"] = prop["value"]["ival"]
         srcs["pubchem"].update({"result": 1})
 
 
-def classyfire(identifier, descs, srcs):
+def classyfire(identifier, ids, descs, srcs):
     """ get classyfire classification for a specific compound """
     # best to use InChIKey to get the data
     apipath = "http://classyfire.wishartlab.com/entities/"
@@ -110,26 +108,39 @@ def classyfire(identifier, descs, srcs):
         return
 
     # OK compound has been found go get the data
+    ids["classyfire"] = {}
     descs["classyfire"] = {}
     respnse = requests.get(apipath + identifier + '.json').json()
-    descs["classyfire"]["kingdom"] = \
-        str(respnse['kingdom']["chemont_id"])
-    descs["classyfire"]["superclass"] = \
-        str(respnse['superclass']["chemont_id"])
-    descs["classyfire"]["class"] = str(respnse['class']["chemont_id"])
-    if respnse["subclass"] is not None:
-        descs["classyfire"]["subclass"] = \
-            str(respnse['subclass']["chemont_id"])
-    if "node" in respnse.keys():
-        if respnse["node"] is not None:
-            descs["classyfire"]["node"] = []
-            for node in respnse['intermediate_nodes']:
-                descs["classyfire"]["node"].append(node["chemont_id"])
-    descs["classyfire"]["direct_parent"] = \
-        str(respnse['direct_parent']["chemont_id"])
-    descs["classyfire"]["alternative_parent"] = []
-    for alt in respnse['alternative_parents']:
-        descs["classyfire"]["alternative_parent"].append(alt["chemont_id"])
+
+    if 'inchikey' not in respnse.keys():
+        # not in classyfire
+        notes = "Compound not classified"
+        srcs["classyfire"].update({"result": 0, "notes": notes})
+        return
+    else:
+        ids["classyfire"]['inchikey'] = str(respnse['inchikey']).replace("InChIKey=", "")
+
+    if 'smiles' in respnse.keys():
+        ids["classyfire"]['csmiles'] = str(respnse['smiles'])
+
+    if 'kingdom' in respnse.keys() and respnse['kingdom'] is not None:
+        descs["classyfire"]["kingdom"] = str(respnse['kingdom']["chemont_id"])
+    if 'superclass' in respnse.keys() and respnse['superclass'] is not None:
+        descs["classyfire"]["superclass"] = str(respnse['superclass']["chemont_id"])
+    if 'class' in respnse.keys() and respnse['class'] is not None:
+        descs["classyfire"]["class"] = str(respnse['class']["chemont_id"])
+    if 'subclass' in respnse.keys() and respnse['subclass'] is not None:
+        descs["classyfire"]["subclass"] = str(respnse['subclass']["chemont_id"])
+    if 'intermediate_nodes' in respnse.keys():
+        descs["classyfire"]["node"] = []
+        for node in respnse['intermediate_nodes']:
+            descs["classyfire"]["node"].append(node["chemont_id"])
+    if 'direct_parent' in respnse.keys() and respnse['direct_parent'] is not None:
+        descs["classyfire"]["direct_parent"] = str(respnse['direct_parent']["chemont_id"])
+    if 'alternative_parents' in respnse.keys():
+        descs["classyfire"]["alternative_parent"] = []
+        for alt in respnse['alternative_parents']:
+            descs["classyfire"]["alternative_parent"].append(alt["chemont_id"])
     srcs["classyfire"].update({"result": 1})
 
 
@@ -143,7 +154,7 @@ def wikidata(identifier, ids, srcs):
 
     # check identifier for inchikey pattern
     if re.search('[A-Z]{14}-[A-Z]{10}-[A-Z]', identifier) is None:
-        srcs["classyfire"].update({"result": 0, "notes": "Not an InChIKey"})
+        srcs["wikidata"].update({"result": 0, "notes": "Not an InChIKey"})
         return
 
     # setup SPARQL query
@@ -152,15 +163,14 @@ def wikidata(identifier, ids, srcs):
     q3 = 'SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }}'
     query = q1 + q2 + q3
     res = return_sparql_query_results(query)
-    if not res['results']['bindings']:
+    if 'bindings' in res['results'].keys() and not res['results']['bindings']:
         uhff = '-UHFFFAOYSA-N'
         identifier = str(re.search('^[A-Z]{14}', identifier).group(0)) + uhff
         q2 = "WHERE { ?compound wdt:P235 \"" + identifier + "\" ."
         query = q1 + q2 + q3
         res = return_sparql_query_results(query)
-        if res['results']['bindings']:
-            # TODO: why was this here? request.session['originalkey']
-            notes = "InChiKey generalized by change to block1-UHFFFAOYSA-N"
+        if 'bindings' in res['results'].keys() and res['results']['bindings']:
+            notes = "InChiKey found by changing to block1-UHFFFAOYSA-N"
             srcs["wikidata"].update({"result": 0, "notes": notes})
 
     # have we found the compound?
@@ -168,6 +178,8 @@ def wikidata(identifier, ids, srcs):
         notes = "InChIKey not found, including generic"
         srcs["wikidata"].update({"result": 0, "notes": notes})
         return
+    else:
+        srcs["wikidata"].update({"result": 1})
 
     # OK compound has been found go get the data
     eurl = res['results']['bindings'][0]['compound']['value']
@@ -177,8 +189,15 @@ def wikidata(identifier, ids, srcs):
     if respnse.status_code == 200:
         # response contains many props from which we get specific chemical ones
         ids['wikidata'] = {}
-        json = requests.get(mwurl).json()
-        claims = json['claims']
+        jsn = None
+        try:
+            jsn = requests.get(mwurl).json()
+        except ValueError:
+            # https://stackoverflow.com/questions/8381193/handle-json-decode-error-when-nothing-returned
+            print('JSONDecodeError!')
+            print(mwurl)
+            exit()
+        claims = jsn['claims']
         propids = {'casrn': 'P231', 'atc': 'P267', 'inchi': 'P234', 'inchikey': 'P235', 'chemspider': 'P661',
                    'pubchem': 'P662', 'reaxys': 'P1579', 'gmelin': 'P1578', 'chebi': 'P683', 'chembl': 'P592',
                    'rtecs': 'P657', 'dsstox': 'P3117', 'unii': 'P562', 'drugbank': 'P715', 'csmiles': 'P233',
@@ -187,7 +206,7 @@ def wikidata(identifier, ids, srcs):
         keys = list(propids.keys())
         for propid, prop in claims.items():
             if propid in vals:
-                if 'datavalue' in prop[0]['mainsnak']:
+                if 'datavalue' in prop[0]['mainsnak'].keys():
                     value = prop[0]['mainsnak']['datavalue']['value']
                     key = keys[vals.index(propid)]
                     ids['wikidata'].update({key: value})
@@ -210,33 +229,29 @@ def wikidata(identifier, ids, srcs):
 def chembl(identifier, meta, ids, descs, srcs):
     """ retrieve data from the ChEMBL repository"""
     molecule = new_client.molecule
-    srcs.update({"chembl": {"result": None, "notes": None}})
-    print(identifier)
-    cmpds = molecule.search(identifier)
-    found = {}
-
-    for cmpd in cmpds:
-        if cmpd['molecule_structures']['standard_inchi_key'] == identifier:
-            found = cmpd
-            break
+    srcs.update({"chembl": {}})
+    found = molecule.filter(molecule_structures__standard_inchi_key=identifier)
+    notes = None
+    result = 0
     if not found:
         uhff = '-UHFFFAOYSA-N'
         genericid = str(re.search('^[A-Z]{14}', identifier).group(0)) + uhff
-        cmpds = molecule.search(genericid)
-        found = {}
-        for cmpd in cmpds:
-            if cmpd['molecule_structures']['standard_inchi_key'] == identifier:
-                found = cmpd
-                break
+        found = molecule.filter(molecule_structures__standard_inchi_key=genericid)
         if found:
-            notes = "InChiKey generalized by change to block1-UHFFFAOYSA-N"
-            srcs['chembl'].update({"notes": notes})
+            notes = "InChiKey generalized by change to <block1>-UHFFFAOYSA-N"
 
     if not found:
+        notes = "InChiKey " + identifier + " not found"
+        srcs['chembl'].update({'result': 0})
+        srcs['chembl'].update({"notes": notes})
         return
+    else:
+        srcs['chembl'].update({'result': 1})
+        srcs['chembl'].update({"notes": notes})
+
+    cmpd = found[0]
 
     # general metadata
-    cmpd = found
     meta['chembl'] = {}
     mprops = ['full_molformula', 'full_mwt', 'mw_freebase', 'mw_monoisotopic']
     for k, v in cmpd['molecule_properties'].items():
@@ -269,7 +284,7 @@ def chembl(identifier, meta, ids, descs, srcs):
     # descriptors
     descs['chembl'] = {}
     # - atc
-    if cmpd['atc_classifications']:
+    if 'atc_classifications' in cmpd.keys():
         descs['chembl'].update(atclvl1=[], atclvl2=[],
                                atclvl3=[], atclvl4=[], atclvl5=[])
         for c in cmpd['atc_classifications']:
@@ -297,7 +312,7 @@ def chembl(identifier, meta, ids, descs, srcs):
             descs['chembl'].update({fld: cmpd[fld]})
 
     # sources
-    srcs.update({"chembl": {"result": 1, "notes": None}})
+    srcs.update({"chembl": {"result": 1}})
 
 
 def comchem(identifier, meta, ids, srcs):
@@ -324,14 +339,16 @@ def comchem(identifier, meta, ids, srcs):
     ids["comchem"] = {}
     ids["comchem"]["casrn"] = casrn
     ids["comchem"]["inchi"] = res["inchi"]
-    ids["comchem"]["inchikey"] = res["inchiKey"]
+    ids["comchem"]["inchikey"] = res["inchiKey"].replace('InChIKey=', '')
     ids["comchem"]["csmiles"] = res["canonicalSmile"]
     ids["comchem"]["othername"] = res["synonyms"]
     ids["comchem"]["replacedcasrn"] = res["replacedRns"]
 
     meta["comchem"] = {}
-    meta["comchem"]["formula"] = res["molecularFormula"]
+    meta["comchem"]["name"] = res["name"]
+    meta["comchem"]["formula"] = res["molecularFormula"].replace('<sub>', '').replace('</sub>', '')
     meta["comchem"]["mw"] = res["molecularMass"]
+    meta["comchem"]["casrn"] = casrn
 
     srcs["comchem"].update({"result": 1})
     return True

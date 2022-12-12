@@ -2,13 +2,13 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.core.paginator import Paginator
-from django.contrib import messages
-from workflow.gdb_functions import *
+from workflow.jena_functions import *
 from substances.sub_functions import *
 from sciflow.settings import BASE_DIR
 from zipfile import ZipFile
 from django.http import HttpResponse
 from os import path
+from inspect import currentframe, getframeinfo
 import requests
 
 
@@ -20,9 +20,13 @@ def molfile(request, subid):
 def newjld(request, subid):
     """create a new version of the substance json_ld file"""
     sub = Substances.objects.get(id=subid)
+    print(sub)
     if sub.inchikey is not None:
+        print(sub.inchikey)
         # generate new json-ld file (as python dictionary)
         jld = createsubjld(subid)
+        print(jld)
+
         # add entry in facet_lookup if no graphdb
         if sub.graphdb is None:
             title = jld["@graph"]["title"]
@@ -36,6 +40,7 @@ def newjld(request, subid):
             sub.save()
         # update new file @id
         jld["@id"] = sub.graphdb
+
         # get the latest version of this file from facet_files
         found = FacetFiles.objects.filter(facet_lookup_id=sub.facet_lookup_id)
         if not found:
@@ -43,28 +48,43 @@ def newjld(request, subid):
         else:
             lastver = FacetFiles.objects.filter(facet_lookup_id=sub.facet_lookup_id).order_by('-version')[0]
             newver = lastver.version + 1
+
         # load into facet_files
         file = FacetFiles(facet_lookup_id=sub.facet_lookup_id,
                           file=json.dumps(jld, separators=(',', ':')), type='raw', version=newver)
         file.save()
+        print(sub.graphdb)
+
         # add json-ld to the graph replacing the old version if present
-        addgraph('facet', sub.facet_lookup_id, 'remote', sub.graphdb)
+        # addgraph('facet', sub.facet_lookup_id, 'remote', sub.graphdb)
+        luid = str(sub.facet_lookup_id).zfill(8)
+        fileurl = "https://sds.coas.unf.edu/sciflow/files/facet/" + luid
+        print(fileurl)
+        # jenaadd(fileurl, "https://scidata.unf.edu/facet/" + luid)
+        jenaadd(fileurl, '', 'chemtwin')
+
         # update facet_lookup
         lookup = FacetLookup.objects.get(id=sub.facet_lookup_id)
         lookup.currentversion = newver
         lookup.save()
+
         # session message
-        messages.add_message(request, messages.INFO, 'Compound twin added')
+        msg = 'Compound twin (' + sub.inchikey + ') added'
     else:
-        messages.add_message(request, messages.INFO, 'Compound twin could not be added (no inchikey)')
-    return subview(request, subid)
+        msg = 'Compound twin could not be added (no inchikey)'
+    # messages.add_message(request, messages.INFO, msg)
+    print(msg)
+    if request.path == '/':
+        return
+    else:
+        return subview(request, subid)
 
 
 def sublist(request):
     """view to generate list of substances on homepage"""
     if request.method == "POST":
-        query = request.POST.get('q')
-        return redirect('/substances/search/' + str(query))
+        squery = request.POST.get('q')
+        return redirect('/substances/search/' + str(squery))
 
     substances = Substances.objects.all().order_by('name')
     return render(request, "substances/list.html", {'substances': substances})
@@ -162,14 +182,17 @@ def subdescs(request, subid):
                   {'substance': substance, "descs": descs})
 
 
-def add(request, identifier):
+def add(request, identifier, mode='add'):
     """ check identifier to see if compound already in system and if not add """
     # id the compound in the database?
-    hits = Substances.objects.all().filter(
-        identifiers__value__exact=identifier).count()
+    hits = Substances.objects.all().filter(identifiers__value=identifier).count()
     if hits == 0:
         meta, ids, descs, srcs = addsubstance(identifier, 'all')
     else:
+        if mode == 'update':
+            print('update substance!')
+            sub = updsubstance(identifier, 'sub')
+            return sub.id
         subid = getsubid(identifier)
         return redirect("/substances/view/" + str(subid))
 
@@ -181,15 +204,22 @@ def ingest(request):
     """ingest a new substance"""
     if request.method == "POST":
         if 'ingest' in request.POST:
+            frameinfo = getframeinfo(currentframe())
+            print("uploading single substance (" + frameinfo.filename + ":" + str(frameinfo.lineno) + ")")
             inchikey = request.POST.get('ingest')
             matchgroup = re.findall('[A-Z]{14}-[A-Z]{10}-[A-Z]', inchikey)
             for match in matchgroup:
                 hits = Substances.objects.all().filter(identifiers__value__exact=match).count()
                 if hits == 0:
-                    meta, ids, descs, srcs = addsubstance(match, 'all')
+                    frameinfo = getframeinfo(currentframe())
+                    print("new substance (" + frameinfo.filename + ":" + str(frameinfo.lineno) + ")")
+                    addsubstance(match, 'all')
                 else:
-                    subid = getsubid(match)
+                    frameinfo = getframeinfo(currentframe())
+                    print("found substance (" + frameinfo.filename + ":" + str(frameinfo.lineno) + ")")
         elif 'upload' in request.FILES.keys():
+            frameinfo = getframeinfo(currentframe())
+            print("uploading multiple substances (" + frameinfo.filename + ":" + str(frameinfo.lineno) + ")")
             file = request.FILES['upload']
             fname = file.name
             subs = []
@@ -197,17 +227,13 @@ def ingest(request):
                 jdict = json.loads(file.read())
                 for key in jdict['keys']:
                     subid = getsubid(key)
-                    status = None
+                    stat = 'present'
                     if not subid:
-                        status = 'new'
+                        stat = 'new'
                         sub = addsubstance(key, 'sub')
                         subid = sub.id
-                    else:
-                        status = 'present'
                     meta = getmeta(subid)
-                    subs.append(
-                        {'id': meta['id'], 'name': meta['name'],
-                         'status': status})
+                    subs.append({'id': meta['id'], 'name': meta['name'], 'status': stat})
                     request.session['subs'] = subs
                 return redirect("/substances/list/")
             elif fname.endswith('.zip'):
@@ -228,8 +254,8 @@ def ingest(request):
 
 def ingestlist(request):
     """ add many compounds from a text file list of identifiers """
-    path = BASE_DIR + "/json/herg_chemblids.txt"
-    file = open(path)
+    hpath = BASE_DIR + "/json/herg_chemblids.txt"
+    file = open(hpath)
     lines = file.readlines()
     # get a list of all chemblids currently in the DB
     qset = Identifiers.objects.all().filter(
@@ -273,14 +299,12 @@ def list(request):
     return render(request, "substances/list.html", {"page_obj": page_obj, "facet": "Substances"})
 
 
-def search(request, query):
+def search(request, qry):
     """ search for a substance """
     context = subsearch(query)
-
     if request.method == "POST":
-        query = request.POST.get('q')
-
-        return redirect('/substances/search/' + str(query))
+        qry = request.POST.get('q')
+        return redirect('/substances/search/' + str(qry))
 
     return render(request, "substances/search.html", context)
 
@@ -290,7 +314,8 @@ def subcheck(request, action="view"):
     if action == "inkcheck":  # checks identifiers table for the presence of CASRN and InChIKey
         subs = Substances.objects.all().values_list('id', 'inchikey')
         for subid, key in subs:
-            gotkey = Identifiers.objects.filter(substance_id=subid, type='inchikey').exclude(source='comchem').values_list('value', flat=True).distinct()
+            gotkey = Identifiers.objects.filter(substance_id=subid, type='inchikey').exclude(source='comchem').\
+                values_list('value', flat=True).distinct()
             if gotkey:
                 if len(gotkey) == 1:
                     if str(gotkey[0]) != key:
@@ -303,7 +328,8 @@ def subcheck(request, action="view"):
         subs = Substances.objects.all().values_list('id', 'casrn')
         for subid, casrn in subs:
             if casrn:
-                gotcas = Identifiers.objects.filter(substance_id=subid, type='casrn').values_list('value', flat=True).distinct()
+                gotcas = Identifiers.objects.filter(substance_id=subid, type='casrn').\
+                    values_list('value', flat=True).distinct()
                 if gotcas:
                     if len(gotcas) == 1:
                         if str(gotcas[0]) != casrn:
