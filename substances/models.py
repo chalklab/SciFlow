@@ -15,6 +15,7 @@ class Substances(models.Model):
     facet_lookup_id = models.IntegerField(blank=True, null=True)
     comments = models.CharField(max_length=256, null=True)
     lastcheck = models.DateField(null=True)
+    available = models.CharField(max_length=3, default='yes')
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:

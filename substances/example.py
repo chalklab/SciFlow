@@ -2,6 +2,7 @@
 import os
 import django
 import time
+import requests
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
@@ -21,9 +22,9 @@ from django.test import RequestFactory
 from django.db.models import Q
 
 
-chkrt = True
+chkrt = False
 if chkrt:
-    getremottwins()
+    getremotetwins()
 
 chkcf = False
 if chkcf:
@@ -77,16 +78,28 @@ runfl = False
 if runfl:
     newjld(RequestFactory().request(), 10715)
 
-runas = False
+runas = True
 if runas:
-    subids = Identifiers.objects.filter(lastcheck__isnull=True).values_list('substance_id', flat=True).distinct()
-    keys = Substances.objects.filter(id__in=subids).values_list('inchikey', flat=True).order_by('facet_lookup_id')
+    tmp = requests.get('https://sds.coas.unf.edu/trc/admin/keylist')
+    keys = json.loads(tmp.content)
+    ctkeys = Identifiers.objects.values_list('value', flat=True).filter(type='inchikey', lastcheck__isnull=False).distinct()
+    # add compounds not found in substances
+    nfsubs = Substances.objects.filter(available='no').values_list('inchikey', flat=True)
+    other = ['YIMQCDZDWXUDCA-UHFFFAOYSA-N','XUBIKAGPOFXYNH-UHFFFAOYSA-M','AHUNJJIFFINZDV-OLQVQODUSA-N']
     for key in keys:
-        subid = add(RequestFactory().request(), key, 'update')
-        saved = newjld(RequestFactory().request(), subid)
-        rpath = 'https://sds.coas.unf.edu/sciflow/files/facet/'
-        lpath = 'uploads/tranche/chalklab/chemtwin/' + key + '.jsonld'
-        uploadfile(rpath, lpath, subid)
+        if key in ctkeys or key in nfsubs or key in other:
+            continue
+        print(key)
+        subid = add(RequestFactory().request(), key, 'addoffline')
+        if subid:
+            saved = newjld(RequestFactory().request(), subid)
+            rpath = 'https://sds.coas.unf.edu/sciflow/files/facet/'
+            lpath = 'uploads/tranche/chalklab/chemtwin/' + key + '.jsonld'
+            uploadfile(rpath, lpath, subid)
+        else:
+            print('InChIKey ' + key + ' not found anywhere')
+        # exit()
+
 
 # check casrns in substances using inchikeys
 runkey = False

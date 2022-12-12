@@ -20,7 +20,6 @@ def molfile(request, subid):
 def newjld(request, subid):
     """create a new version of the substance json_ld file"""
     sub = Substances.objects.get(id=subid)
-    print(sub)
     if sub.inchikey is not None:
         print(sub.inchikey)
         # generate new json-ld file (as python dictionary)
@@ -188,6 +187,9 @@ def add(request, identifier, mode='add'):
     hits = Substances.objects.all().filter(identifiers__value=identifier).count()
     if hits == 0:
         meta, ids, descs, srcs = addsubstance(identifier, 'all')
+        if mode == 'addoffline' or not meta:
+            subid = getsubid(identifier)
+            return subid
     else:
         if mode == 'update':
             print('update substance!')

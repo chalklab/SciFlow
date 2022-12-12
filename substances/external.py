@@ -103,7 +103,7 @@ def classyfire(identifier, ids, descs, srcs):
 
     # have we found the compound?
     if respnse.status_code != 200:
-        notes = "InChIKey Not Found, including generic"
+        notes = "InChIKey not found, including generic"
         srcs["classyfire"].update({"result": 0, "notes": notes})
         return
 

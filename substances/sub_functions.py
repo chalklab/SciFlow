@@ -39,6 +39,7 @@ def addsubstance(identifier, output='meta'):
         else:
             return meta
 
+
     # check if the identifier is an inchikey and if not find one from pubchem
     idtype = getidtype(identifier)
     if idtype != "inchikey":
@@ -85,7 +86,7 @@ def addsubstance(identifier, output='meta'):
 
     frameinfo = getframeinfo(currentframe())
     print("saving substance " + key + " (" + frameinfo.filename + ":" + str(frameinfo.lineno) + ")")
-    sub = Substances(name=nm, formula=fm, molweight=mw, monomass=mm, casrn=casrn, inchikey=key)
+    sub = Substances(name=nm, formula=fm, molweight=mw, monomass=mm, casrn=casrn, inchikey=key, lastcheck=date.today())
     sub.save()
     subid = sub.id
 
@@ -103,6 +104,13 @@ def addsubstance(identifier, output='meta'):
     frameinfo = getframeinfo(currentframe())
     print("saving sources " + key + " (" + frameinfo.filename + ":" + str(frameinfo.lineno) + ")")
     savesrcs(subid, srcs)
+
+    print(meta)
+
+    if not meta:
+        sub.available = 'no'
+        sub.save()
+        meta = False
 
     if output == 'all':
         return meta, ids, descs, srcs

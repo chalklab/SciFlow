@@ -1,7 +1,7 @@
 from sciflow.localsettings import *
-from substances.models import *
 from datafiles.models import *
 import paramiko
+import re
 
 
 def remotelogin():
@@ -40,20 +40,19 @@ def uploadfile(lpath, rpath, subid=0):
     return
 
 
-def getremottwins():
+def getremotetwins():
     """
-    this function uploads a file to a remote server using paramiko
-    users are advised to store server authentication (and other data as appropriate)
-    in a localsettings file that does not get store on any code hosting service
+    get a list of remote chemtiwn files to grab their inchikeys
     """
     client = remotelogin()
     cmd = "ls -al /var/uploads/tranche/chalklab/chemtwin/"
     _stdin, _stdout, _stderr = client.exec_command(cmd)
-    print(_stdout.read().decode())
+    files = _stdout.read().decode()
     client.close()
     twins = []
-    for line in _stdout:
-        print(line)
-        exit()
+    lines = files.split('\n')
+    for line in lines:
+        hit = re.search('([A-Z]{14}-[A-Z]{10}-[A-Z])', line)
+        if hit:
+            twins.append(hit.group())
     return twins
-
