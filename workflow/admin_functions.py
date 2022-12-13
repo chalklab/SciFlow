@@ -37,7 +37,7 @@ def uploadfile(lpath, rpath, subid=0):
         print("complete my code!")
 
     client.close()
-    return
+    return True
 
 
 def getremotetwins():
