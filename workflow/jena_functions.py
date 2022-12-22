@@ -60,11 +60,14 @@ def jenaadd(file, replace="", dset=dataset):
         return response.text
 
 
-def query(sparql, dset=dataset):
+def query(sparql, dset=dataset, fixes=None):
     """ executes a SPARQL query """
+    stdfixes = "PREFIX wdt: <http://www.wikidata.org/prop/direct/>"
+    sparql = stdfixes + " " + sparql
+    if fixes:
+        sparql = fixes + " " + sparql
     endpoint = path + dset + "/sparql"
-    response = requests.post(endpoint, data={'query': sparql}, auth=(localsettings.fuser, localsettings.fpass))
-    return response.json()
+    return requests.post(endpoint, data={'query': sparql}, auth=(localsettings.fuser, localsettings.fpass))
 
 
 def update(sparql, dset=dataset):
@@ -91,3 +94,9 @@ def tcount():
     # all triples
     acount = dcount + ncount
     return acount
+
+
+def delgraph(graph, dset=dataset):
+    qry = "DROP GRAPH <" + graph + ">"
+    output = update(qry, dset)
+    return output

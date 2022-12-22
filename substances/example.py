@@ -1,4 +1,5 @@
 """example functions for development"""
+import json
 import os
 import django
 import time
@@ -21,36 +22,122 @@ from external import wikidata
 from django.test import RequestFactory
 from django.db.models import Q
 
+# clean duplicate chemtwins from Jena
+if True:
+    qry = """
+    JSON { "graph" : ?g, "key" : ?obj } WHERE {
+        GRAPH ?g {
+            ?sub wdt:P235 ?obj .
+            {
+                SELECT ?obj WHERE {
+                    GRAPH ?g {
+                        ?sub wdt:P235 ?obj .
+                    }
+                }
+                group by ?obj
+                having (count(?obj) > 1)
+            }
+        }
+    }
+    """
+    out = query(qry, 'chemtwin')
+    if out.status_code == 200:
+        jsn = out.content.decode('utf-8')
+        hits = json.loads(jsn)
+        for hit in hits:
+            facid = int(hit['g'].replace('https://scidata.unf.edu/facet/', ''))
+            sub = Substances.objects.filter(facet_lookup_id=facid)
+            if sub:
+                print("found: " + sub[0].inchikey)
+            else:
+                print("not found: " + str(facid))
+                resp = delgraph(hit['g'], 'chemtwin')
+                print(resp)
+    else:
+        print(out.content)
 
-chkrt = True
-if chkrt:
-    subs = Substances.objects.values_list('id', 'inchikey').all().order_by('inchikey')
+
+# add missing facet_lookp entries (and files)
+if True:
+    facetids = FacetLookup.objects.all().values_list('id', flat=True)
+    subids = Substances.objects.exclude(facet_lookup_id__in=facetids).values_list('id', flat=True)
+    for subid in subids:
+        sub = Substances.objects.get(id=subid)
+        newjld(RequestFactory().request(), sub.id, sub.facet_lookup_id)
+        print("Saved chemtwin of " + sub.inchikey)
+        rpath = 'https://sds.coas.unf.edu/sciflow/files/facet/'
+        lpath = 'uploads/tranche/chalklab/chemtwin/' + sub.inchikey + '.jsonld'
+        uploaded = uploadfile(rpath, lpath, sub.id)
+        if uploaded:
+            print("ChemTwin uploaded to scidata")
+        exit()
+
+# add data from 671 substances that are not available anywhere else...
+if False:
+    tmps = Substances.objects.values_list('inchikey', flat=True).filter(available='no').order_by('inchikey')
+    nakeys = []
+    for tmp in tmps:
+        nakeys.append(tmp)
+    subs = TRCSubstances.objects.using('trc').filter(inchikey__in=nakeys)
     for sub in subs:
-        found = Identifiers.objects.filter(substance__id=sub[0], value=sub[1])
-        if not found:
-            # if not found what is source? TRC?
-            print(sub[1] + " not found")
-            exit()
+        # find sub in sciflow
+        sfsub = Substances.objects.get(inchikey=sub.inchikey)
+        # update sub
+        sfsub.name = sub.name
+        sfsub.formula = sub.formula
+        sfsub.molweight = sub.mw
+        if sfsub.comments is None:
+            sfsub.comments = 'trc data only'
         else:
-            print(sub[1])
-    exit()
+            sfsub.comments = sfsub.comments + '; trc data added'
+        sfsub.available = 'yes'
+        sfsub.save()
+        print("updated " + str(sfsub.id))
+        trcids = sub.trcidentifiers_set.all()
+        # add identifiers
+        for trcid in trcids:
+            ident = Identifiers(substance_id=sfsub.id, type=trcid.type, value=trcid.value, source=trcid.source)
+            ident.save()
+            print("added " + trcid.value)
+        # add chemtwin
+        saved = newjld(RequestFactory().request(), sfsub.id)
+        print("saved chemtwin of " + sfsub.inchikey)
+        rpath = 'https://sds.coas.unf.edu/sciflow/files/facet/'
+        lpath = 'uploads/tranche/chalklab/chemtwin/' + sfsub.inchikey + '.jsonld'
+        uploaded = uploadfile(rpath, lpath, sfsub.id)
+        if uploaded:
+            print("chemtwin uploaded to scidata")
 
-chkcf = False
-if chkcf:
+# remove incorrect inchikeys (most generic) from identifiers
+if False:
+    subs = Substances.objects.values('id', 'inchikey').all().order_by('id')
+    total = 0
+    for sub in subs:
+        keys = Identifiers.objects.filter(substance_id=sub['id'], type='inchikey').values('id', 'value')
+        cleaned = 0
+        for key in keys:
+            if key['value'] != sub['inchikey']:
+                Identifiers.objects.filter(id=key['id']).delete()
+                cleaned += 1
+        total += cleaned
+        print(str(sub['id']) + ": " + str(cleaned) + " cleaned")
+    print(str(total) + " cleaned")
+
+# check classyfire code
+if False:
     key = 'ZMRUPTIKESYGQW-UHFFFAOYSA-N'
     classyfire(key, {}, {}, {})
 
-chkwd = False
-if chkwd:
+# check wikidata code
+if False:
     key = 'UHOVQNZJYSORNB-UHFFFAOYSA-N'
     ids, srcs = {}, {}
     wikidata(key, ids, srcs)
     print(srcs)
 
 # remove duplicate substances by inchikey
-temp = False
-if temp:
-    keys = Substances.objects.distinct().values_list('inchikey', flat=True).\
+if False:
+    keys = Substances.objects.distinct().values_list('inchikey', flat=True). \
         annotate(keycnt=Count('inchikey')).filter(keycnt__gt=1)
     for key in keys:
         print(key)
@@ -82,25 +169,34 @@ if temp:
         delcnt = FacetLookup.objects.get(id=facid).delete()
         print("deleted " + str(delcnt) + " in facet lookup")
 
-# get latest substance facet_lookup file
-runfl = False
-if runfl:
-    newjld(RequestFactory().request(), 10715)
-
-runas = False
-if runas:
-    subids = Identifiers.objects.filter(lastcheck__isnull=True).values_list('substance_id', flat=True).distinct()
-    keys = Substances.objects.filter(id__in=subids).values_list('inchikey', flat=True).order_by('facet_lookup_id')
+# add trc substances to sciflow
+if False:
+    tmp = requests.get('https://sds.coas.unf.edu/trc/admin/keylist')
+    keys = json.loads(tmp.content)
+    ctkeys = Identifiers.objects.values_list('value', flat=True).filter(type='inchikey',
+                                                                        lastcheck__isnull=False).distinct()
+    # add compounds not found in substances
+    nfsubs = Substances.objects.filter(available='no').values_list('inchikey', flat=True)
+    count = 0
     for key in keys:
-        subid = add(RequestFactory().request(), key, 'update')
-        saved = newjld(RequestFactory().request(), subid)
-        rpath = 'https://sds.coas.unf.edu/sciflow/files/facet/'
-        lpath = 'uploads/tranche/chalklab/chemtwin/' + key + '.jsonld'
-        uploadfile(rpath, lpath, subid)
+        count += 1
+        if key in ctkeys or key in nfsubs or key:
+            print(str(count) + ": found " + key)
+            continue
+        print(key)
+        exit()
+        subid = add(RequestFactory().request(), key, 'addoffline')
+        if subid:
+            saved = newjld(RequestFactory().request(), subid)
+            rpath = 'https://sds.coas.unf.edu/sciflow/files/facet/'
+            lpath = 'uploads/tranche/chalklab/chemtwin/' + key + '.jsonld'
+            uploadfile(rpath, lpath, subid)
+        else:
+            print('InChIKey ' + key + ' not found anywhere')
+        # exit()
 
 # check casrns in substances using inchikeys
-runkey = False
-if runkey:
+if False:
     meta, ids, srcs = {}, {}, {}
     nocas = Substances.objects.filter(casrn__isnull=True).values_list('inchikey', flat=True).order_by('id')
     for key in nocas:
@@ -110,10 +206,9 @@ if runkey:
             exit()
 
 # add rdkit molfiles for substances
-runmol = False
-if runmol:
+if False:
     done = Structures.objects.all().values_list('substance_id', flat=True)
-    subs = Identifiers.objects.all().filter(type='csmiles').\
+    subs = Identifiers.objects.all().filter(type='csmiles'). \
         exclude(substance_id__in=done).values_list('substance_id', flat=True)
     for sub in subs:
         if sub not in done:
@@ -129,8 +224,7 @@ if runmol:
                 print("Saved structure " + smile.value)
 
 # update pubchem csmiles where not available
-runpcs = False
-if runpcs:
+if False:
     subids = Identifiers.objects.all().filter(type='inchikey', source='pubchem').values_list('substance_id', flat=True)
     for subid in subids:
         ids = Identifiers.objects.all().filter(substance_id=subid).values_list('type', flat=True)
@@ -162,8 +256,7 @@ if runpcs:
             print(subid)
 
 # update pubchem ids where not available
-runpci = False
-if runpci:
+if False:
     subids = Identifiers.objects.all().filter(type='inchikey', source='pubchem').values_list('substance_id', flat=True)
     for subid in subids:
         ids = Identifiers.objects.all().filter(substance_id=subid).values_list('type', flat=True)
@@ -179,8 +272,7 @@ if runpci:
             print(subid)
 
 # fix empty molgraphs in json-ld files
-runfix = False
-if runfix:
+if False:
     fixes = FacetFiles.objects.all().filter(file__contains='"atoms":[]').filter(file__contains='chemtwin')
     for fix in fixes:
         # just replace the file don't create a new version in facet_files
@@ -196,8 +288,7 @@ if runfix:
             print('Facet_lookup ' + str(fix.facet_lookup_id) + ' not fixed (no PubChem id)')
 
 # add a new substance jld to the database
-runjld = False
-if runjld:
+if False:
     subs = Substances.objects.all().order_by('id')
     for sub in subs:
         if sub.graphdb is None:
@@ -227,8 +318,7 @@ if runjld:
             print("Already updated '" + sub.graphdb + "'")
 
 # add a new substance to the database
-add = False
-if add:
+if False:
     # example substance that is not found online...
     meta = {
         "name": "sodium gadolinium titanate",
@@ -264,8 +354,7 @@ if add:
         print("Error: something happened on the way to the DB!")
 
 # check output of pubchem request
-runpc = False
-if runpc:
+if False:
     key = 'VWNMWKSURFWKAL-HXOBKFHXSA-N'
     meta, ids, descs, srcs = {}, {}, {}, {}
     pubchem(key, meta, ids, descs, srcs)
@@ -273,8 +362,7 @@ if runpc:
     print(json.dumps(srcs, indent=4))
 
 # check output of chembl request
-runcb = False
-if runcb:
+if False:
     key = 'SBPBAQFWLVIOKP-UHFFFAOYSA-N'
     meta, ids, descs, srcs = {}, {}, {}, {}
     chembl(key, meta, ids, descs, srcs)
@@ -282,8 +370,7 @@ if runcb:
     print(json.dumps(srcs, indent=4))
 
 # check output of classyfire request
-runcf = False
-if runcf:
+if False:
     # key = 'VWNMWKSURFWKAL-HXOBKFZXSA-N'  # (bad inchikey)
     key = 'SIEHZFPZQUNSAS-UHFFFAOYSA-N'
     ids, descs, srcs = {}, {}, {}
@@ -292,8 +379,7 @@ if runcf:
     print(json.dumps(srcs, indent=4))
 
 # check output of wikidata request
-runwd = False
-if runwd:
+if False:
     # key = 'BSYNRYMUTXBXSQ-CHALKCHALK-N'  # (bad inchikey for aspirin)
     key = 'SBPBAQFWLVIOKP-UHFFFAOYSA-N'
     ids, srcs = {}, {}
@@ -302,17 +388,15 @@ if runwd:
     print(json.dumps(srcs, indent=4))
 
 # Get data from commonchemistry using CASRNs
-runcc1 = False
-if runcc1:
+if False:
     key = 'BSYNRYMUTXBXSQ-UHFFFAOYSA-N'
     meta, ids, srcs = {}, {}, {}
     comchem(key, meta, ids, srcs)
     print(ids)
     print(json.dumps(srcs, indent=4))
 
-runcc2 = None
-if runcc2:
-    # process compounds with no casrn in substances table
+# process compounds with no casrn in substances table
+if False:
     subs = Substances.objects.all().values_list('id', flat=True).filter(casrn__isnull=True)
     for sub in subs:
         found = Sources.objects.filter(substance_id__exact=sub, source__exact='comchem')
@@ -331,8 +415,8 @@ if runcc2:
             else:
                 print(sub)
 
-runlm = None
-if runlm:
+# cjeck reach ids for casrn
+if False:
     apipath = "https://commonchemistry.cas.org/api/detail?cas_rn="
     f = open("reach_ids.txt", "r")
     for line in f:
@@ -347,15 +431,13 @@ if runlm:
             print('Not found')
 
 # check output of getinchikey function
-rungi = None
-if rungi:
+if False:
     subid = 1
     out = getinchikey(subid)
     print(out)
 
 # test scyjava
-runsj = None
-if runsj:
+if False:
     config.add_endpoints('io.github.egonw.bacting:managers-cdk:0.0.16')
     workspaceRoot = "."
     cdkClass = jimport("net.bioclipse.managers.CDKManager")

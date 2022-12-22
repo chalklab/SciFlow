@@ -23,21 +23,13 @@ def pubchem(identifier, meta, ids, descs, srcs):
     other = None
     respnse = requests.get(apipath + 'inchikey/' + identifier + '/json')
     if respnse.status_code != 200:
-        other = identifier
-        uhff = '-UHFFFAOYSA-N'
-        identifier = str(re.search('^[A-Z]{14}', identifier).group(0)) + uhff
-        respnse = requests.get(apipath + 'inchikey/' + identifier + '/json')
-        if respnse.status_code == 200:
-            notes = "InChiKey generalized with -UHFFFAOYSA-N"
-            srcs["pubchem"].update({"result": 0, "notes": notes})
-        else:
-            notes = "InChIKey not found, including generic"
-            srcs["pubchem"].update({"result": 0, "notes": notes})
-            return
+        notes = "InChIKey  " + identifier + " not found"
+        srcs["pubchem"].update({"result": 0, "notes": notes})
+        return
 
     # OK compound has been found go get the data
-    json = requests.get(apipath + 'inchikey/' + identifier + '/json').json()
-    full = json["PC_Compounds"][0]
+    jsn = requests.get(apipath + 'inchikey/' + identifier + '/json').json()
+    full = jsn["PC_Compounds"][0]
     pcid = full["id"]["id"]["cid"]
     props = full["props"]
     counts = dict(full["count"])
@@ -93,17 +85,7 @@ def classyfire(identifier, ids, descs, srcs):
     # check to see if compound is in database
     respnse = requests.get(apipath + identifier + '.json')
     if respnse.status_code != 200:
-        # redefine identifier
-        uhff = '-UHFFFAOYSA-N'
-        identifier = str(re.search('^[A-Z]{14}', identifier).group(0)) + uhff
-        respnse = requests.get(apipath + identifier + '.json')
-        if respnse.status_code == 200:
-            notes = "InChiKey generalized by change to block1-UHFFFAOYSA-N"
-            srcs["classyfire"].update({"result": 0, "notes": notes})
-
-    # have we found the compound?
-    if respnse.status_code != 200:
-        notes = "InChIKey Not Found, including generic"
+        notes = "InChIKey  " + identifier + " not found"
         srcs["classyfire"].update({"result": 0, "notes": notes})
         return
 
@@ -144,13 +126,11 @@ def classyfire(identifier, ids, descs, srcs):
     srcs["classyfire"].update({"result": 1})
 
 
-w = "https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&entity="
-
-
 def wikidata(identifier, ids, srcs):
     """ retreive data from wikidata using the qwikidata python package"""
     # find wikidata code for a compound based off its inchikey (wdt:P35)
     srcs.update({"wikidata": {}})
+    w = "https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&entity="
 
     # check identifier for inchikey pattern
     if re.search('[A-Z]{14}-[A-Z]{10}-[A-Z]', identifier) is None:
@@ -164,22 +144,9 @@ def wikidata(identifier, ids, srcs):
     query = q1 + q2 + q3
     res = return_sparql_query_results(query)
     if 'bindings' in res['results'].keys() and not res['results']['bindings']:
-        uhff = '-UHFFFAOYSA-N'
-        identifier = str(re.search('^[A-Z]{14}', identifier).group(0)) + uhff
-        q2 = "WHERE { ?compound wdt:P235 \"" + identifier + "\" ."
-        query = q1 + q2 + q3
-        res = return_sparql_query_results(query)
-        if 'bindings' in res['results'].keys() and res['results']['bindings']:
-            notes = "InChiKey found by changing to block1-UHFFFAOYSA-N"
-            srcs["wikidata"].update({"result": 0, "notes": notes})
-
-    # have we found the compound?
-    if not res['results']['bindings']:
-        notes = "InChIKey not found, including generic"
+        notes = "InChIKey  " + identifier + " not found"
         srcs["wikidata"].update({"result": 0, "notes": notes})
         return
-    else:
-        srcs["wikidata"].update({"result": 1})
 
     # OK compound has been found go get the data
     eurl = res['results']['bindings'][0]['compound']['value']
@@ -234,20 +201,9 @@ def chembl(identifier, meta, ids, descs, srcs):
     notes = None
     result = 0
     if not found:
-        uhff = '-UHFFFAOYSA-N'
-        genericid = str(re.search('^[A-Z]{14}', identifier).group(0)) + uhff
-        found = molecule.filter(molecule_structures__standard_inchi_key=genericid)
-        if found:
-            notes = "InChiKey generalized by change to <block1>-UHFFFAOYSA-N"
-
-    if not found:
         notes = "InChiKey " + identifier + " not found"
-        srcs['chembl'].update({'result': 0})
-        srcs['chembl'].update({"notes": notes})
+        srcs["chembl"].update({"result": 0, "notes": notes})
         return
-    else:
-        srcs['chembl'].update({'result': 1})
-        srcs['chembl'].update({"notes": notes})
 
     cmpd = found[0]
 
@@ -328,12 +284,13 @@ def comchem(identifier, meta, ids, srcs):
     apipath = "https://commonchemistry.cas.org/"
     respnse = requests.get(apipath + 'api/search?q=InChIKey=' + identifier).json()
     if respnse['count'] == 0:
-        srcs["comchem"].update({"result": 0, "notes": "InChIKey not found"})
+        notes = "InChIKey " + identifier + " not found"
+        srcs["comchem"].update({"result": 0, "notes": notes})
         return False
-    else:
-        # even though there may be multiple responses, first is likely correct
-        casrn = respnse['results'][0]['rn']
-        res = requests.get(apipath + 'api/detail?cas_rn=' + casrn).json()
+
+    # even though there may be multiple responses, first is likely correct
+    casrn = respnse['results'][0]['rn']
+    res = requests.get(apipath + 'api/detail?cas_rn=' + casrn).json()
 
     # OK now we have data for the specfic compound
     ids["comchem"] = {}
