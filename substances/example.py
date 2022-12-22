@@ -2,6 +2,7 @@
 import os
 import django
 import time
+import requests
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
@@ -23,7 +24,16 @@ from django.db.models import Q
 
 chkrt = True
 if chkrt:
-    getremottwins()
+    subs = Substances.objects.values_list('id', 'inchikey').all().order_by('inchikey')
+    for sub in subs:
+        found = Identifiers.objects.filter(substance__id=sub[0], value=sub[1])
+        if not found:
+            # if not found what is source? TRC?
+            print(sub[1] + " not found")
+            exit()
+        else:
+            print(sub[1])
+    exit()
 
 chkcf = False
 if chkcf:

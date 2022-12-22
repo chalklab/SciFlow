@@ -5,6 +5,7 @@ import paramiko
 
 
 def remotelogin():
+    """ remote login to the scidata.unf.edu server"""
     ip = rserverip
     u = rserveruser
     p = rserverpass
@@ -40,7 +41,7 @@ def uploadfile(lpath, rpath, subid=0):
     return
 
 
-def getremottwins():
+def getremotetwins():
     """
     this function uploads a file to a remote server using paramiko
     users are advised to store server authentication (and other data as appropriate)

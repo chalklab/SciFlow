@@ -113,6 +113,7 @@ def addsubstance(identifier, output='meta'):
 
 
 def updsubstance(identifier, output='meta'):
+    """ update the metadata, descriptors of a substance """
     # check for inchikey
     match = re.search('^[A-Z]{14}-[A-Z]{10}-[A-Z]$', identifier)
     if match:
@@ -200,7 +201,6 @@ def updsubstance(identifier, output='meta'):
     sub.save()
 
     # IDENTIFIERS
-    print(ids)
     for s, idents in ids.items():
         for t, v in idents.items():
             if v is None or v == []:
@@ -233,7 +233,6 @@ def updsubstance(identifier, output='meta'):
                 print(s + ":" + t + ":" + str(v))
 
     # SOURCES (where the data was obtained from)
-    print(srcs)
     for s, src in srcs.items():
         result, notes = '', ''
         for t, v in src.items():
