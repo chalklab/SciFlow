@@ -22,6 +22,19 @@ from external import wikidata
 from django.test import RequestFactory
 from django.db.models import Q
 
+chkrt = True
+if chkrt:
+    subs = Substances.objects.values_list('id', 'inchikey').all().order_by('inchikey')
+    for sub in subs:
+        found = Identifiers.objects.filter(substance__id=sub[0], value=sub[1])
+        if not found:
+            # if not found what is source? TRC?
+            print(sub[1] + " not found")
+            exit()
+        else:
+            print(sub[1])
+    exit()
+
 # clean duplicate chemtwins from Jena
 if True:
     qry = """
