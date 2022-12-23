@@ -29,21 +29,17 @@ if True:
         found = Identifiers.objects.filter(substance__id=sub[0], value=sub[1])
         if not found:
             addkey = Identifiers(substance_id=sub[0], type='inchikey', value=sub[1], source='trc')
-            if addkey:
-                print(sub[1] + " added")
-            else:
-                print(sub[1] + " not added")
+            addkey.save()
+            print(sub[1] + " added")
 
-                # check name
-                found = Identifiers.objects.filter(substance__id=sub[0], value=sub[2])
-                if not found:
-                    addkey = Identifiers(substance_id=sub[0], type='iupacname', value=sub[2], source='trc')
-                    if addkey:
-                        print(sub[2] + " added")
-                    else:
-                        print(sub[2] + " not added")
-                else:
-                    print(sub[2])
+            # check name
+            found = Identifiers.objects.filter(substance__id=sub[0], value=sub[2])
+            if not found:
+                addname = Identifiers(substance_id=sub[0], type='iupacname', value=sub[2], source='trc')
+                addname.save()
+                print(sub[2] + " added")
+            else:
+                print(sub[2] + " already present")
         else:
             print(sub[1])
 
