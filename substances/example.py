@@ -22,21 +22,33 @@ from external import wikidata
 from django.test import RequestFactory
 from django.db.models import Q
 
-chkrt = True
-if chkrt:
-    subs = Substances.objects.values_list('id', 'inchikey').all().order_by('inchikey')
+if True:
+    subs = Substances.objects.values_list('id', 'inchikey', 'name').all().order_by('inchikey')
     for sub in subs:
+        # check inchikey
         found = Identifiers.objects.filter(substance__id=sub[0], value=sub[1])
         if not found:
-            # if not found what is source? TRC?
-            print(sub[1] + " not found")
-            exit()
+            addkey = Identifiers(substance_id=sub[0], type='inchikey', value=sub[1], source='trc')
+            if addkey:
+                print(sub[1] + " added")
+            else:
+                print(sub[1] + " not added")
+
+                # check name
+                found = Identifiers.objects.filter(substance__id=sub[0], value=sub[2])
+                if not found:
+                    addkey = Identifiers(substance_id=sub[0], type='iupacname', value=sub[2], source='trc')
+                    if addkey:
+                        print(sub[2] + " added")
+                    else:
+                        print(sub[2] + " not added")
+                else:
+                    print(sub[2])
         else:
             print(sub[1])
-    exit()
 
 # clean duplicate chemtwins from Jena
-if True:
+if False:
     qry = """
     JSON { "graph" : ?g, "key" : ?obj } WHERE {
         GRAPH ?g {
@@ -71,7 +83,7 @@ if True:
 
 
 # add missing facet_lookp entries (and files)
-if True:
+if False:
     facetids = FacetLookup.objects.all().values_list('id', flat=True)
     subids = Substances.objects.exclude(facet_lookup_id__in=facetids).values_list('id', flat=True)
     for subid in subids:
