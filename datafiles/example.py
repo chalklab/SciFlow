@@ -1,4 +1,5 @@
 """ example code for the datafiles app"""
+import json
 import time
 import os
 import django
@@ -9,16 +10,37 @@ from datafiles.views import *
 from workflow.gdb_functions import *
 from datafiles.models import *
 from crossref.restful import Works
+from workflow.jena_functions import *
+
+if False:
+    out = compact('nisttrc')
+    print(out)
+
+if False:
+    out = deldataset('SciData')
+    print(out)
+
+if True:
+    # get json content for files for a particular journal (format ['files'=>[],'errors'=>[]])
+    jsn = requests.get('https://sds.coas.unf.edu/trc/admin/jldlist/jced')
+    flist = json.loads(jsn.content)
+    cnt = 1
+    offset = 0
+    for jldurl in flist['files']:
+        if cnt > offset:
+            outcome = jenaadd(jldurl, "", 'nisttrc')
+            print(outcome + " " + jldurl)
+        else:
+            print(jldurl + " already processed")
+        cnt += 1
 
 
-f1 = True
-if f1:
+if False:
     fid = 8095
     viewfile(None, fid)
 
 
-f2 = False
-if f2:
+if False:
     """
     goes though data files in a dataset looking for
     duplicates in json_lookup and attemtps to clean them up
@@ -76,8 +98,7 @@ if f2:
             print(keepidstr)
 
 
-f3 = False
-if f3:
+if False:
     ref = References.objects.get(id=1)
     works = Works()
     meta = works.doi(ref.doi)

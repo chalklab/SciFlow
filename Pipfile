@@ -25,6 +25,7 @@ requests = ">=2.28.1"
 setuptools = ">=65.5"
 rdkit-pypi = "*"
 paramiko = "*"
+crossrefapi = "*"
 
 [dev-packages]
 

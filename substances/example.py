@@ -22,7 +22,26 @@ from external import wikidata
 from django.test import RequestFactory
 from django.db.models import Q
 
+# search key2name for names with 'common name' in them and check names on OPSIN for valid IUPAC Name
 if True:
+    resp = requests.get('')
+
+# find missing twin files
+if False:
+    ikeys = Substances.objects.values_list('inchikey', flat=True)
+    resp = requests.get('https://scidata.unf.edu/tranche/chalklab/chemtwin/keynames.json')
+    jsn = resp.content
+    twins = json.loads(jsn)
+    missing = []
+    for ikey in ikeys:
+        if ikey not in twins.keys():
+            missing.append(ikey)
+    print(missing)
+    print(len(missing))
+    print(len(twins))
+
+# update identifiers for inchikeys and names
+if False:
     subs = Substances.objects.values_list('id', 'inchikey', 'name').all().order_by('inchikey')
     for sub in subs:
         # check inchikey
@@ -76,7 +95,6 @@ if False:
                 print(resp)
     else:
         print(out.content)
-
 
 # add missing facet_lookp entries (and files)
 if False:

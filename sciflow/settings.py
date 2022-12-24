@@ -120,11 +120,11 @@ UNFDB = {
     },
     'trc': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'trc_clean',
+        'NAME': 'trcv2_clean',
         'USER': 'trc',
         'PASSWORD': 'trc42',
         'HOST': '127.0.0.1',
-        'PORT': '3310'
+        'PORT': '3307'
     }
 }
 
