@@ -4,6 +4,7 @@ import os
 import django
 import time
 import requests
+import urllib.parse
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sciflow.settings")
 django.setup()
@@ -22,9 +23,32 @@ from external import wikidata
 from django.test import RequestFactory
 from django.db.models import Q
 
-# search key2name for names with 'common name' in them and check names on OPSIN for valid IUPAC Name
+# search keynames to find missing chemtwin files and extra ones(?)
 if True:
-    resp = requests.get('')
+    resp = requests.get('https://scidata.unf.edu/tranche/chalklab/chemtwin/keynames.json')
+    jsn = resp.content
+    twins = json.loads(jsn)
+    for key, name in twins.items():
+        resp = requests.get('https://scidata.unf.edu/tranche/chalklab/chemtwin/' + key + '.jsonld')
+        if resp.status_code != 200:
+            print('missing ' + key)
+
+# search keynames for names with 'common name' in them and check names on OPSIN for valid IUPAC Name
+if False:
+    resp = requests.get('https://scidata.unf.edu/tranche/chalklab/chemtwin/keynames.json')
+    jsn = resp.content
+    twins = json.loads(jsn)
+    for key, name in twins.items():
+        if 'common' in name:
+            n = name.replace(' (common name)', '')
+            resp = requests.get('https://opsin.ch.cam.ac.uk/opsin/' + n)
+            jsn = resp.content.decode('utf-8')
+            out = json.loads(jsn)
+            if out['status'] == 'SUCCESS':
+                sub = Substances.objects.filter(inchikey=key).values_list('id', 'name')[0]
+                addkey = Identifiers(substance_id=sub[0], type='iupacname', value=sub[1], source='trc')
+                addkey.save()
+                print('IUPAC name added for ' + key)
 
 # find missing twin files
 if False:

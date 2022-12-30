@@ -13,6 +13,7 @@ import requests
 
 
 def molfile(request, subid):
+    """ get the molefile of a substance"""
     file = Structures.objects.get(substance_id=subid)
     return HttpResponse(str(file.molfile), content_type="text/plain")
 
@@ -126,8 +127,8 @@ def subview(request, subid):
     if not descs:
         key = ""
         for i in ids:
-            if i.type == 'inchikey':
-                key = i.value
+            if i[0] == 'inchikey':  # tuple not dictionary
+                key = i[1]
                 break
         m, i, descs, srcs = getsubdata(key)
         savedescs(subid, descs)
