@@ -4,8 +4,9 @@ import json
 from sciflow import localsettings
 
 
-path = "http://jena1.unfcsd.unf.edu:3030/"
-dataset = "SciData"
+# path = "http://jena1.unfcsd.unf.edu:3030/"
+path = "http://localhost:3030/"
+dataset = "nisttrc"
 hdrs = {'Content-Type': 'application/json'}
 hdrsld = {'Content-Type': 'application/ld+json'}
 fpath = localsettings.ppath + "/static/files/"

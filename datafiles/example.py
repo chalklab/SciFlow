@@ -22,7 +22,8 @@ if False:
 
 if True:
     # get json content for files for a particular journal (format ['files'=>[],'errors'=>[]])
-    jsn = requests.get('https://sds.coas.unf.edu/trc/admin/jldlist/jced')
+    # jsn = requests.get('https://sds.coas.unf.edu/trc/admin/jldlist/jced')
+    jsn = requests.get('http://localhost:8080/admin/jldlist/ijt')
     flist = json.loads(jsn.content)
     cnt = 1
     offset = 0
