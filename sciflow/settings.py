@@ -26,7 +26,7 @@ SECRET_KEY = 'xzdi*3p9062t$u9yz5jehu2xsjc=9!+75hlic=-3k^=k^!ssch7rf'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['sds.coas.unf.edu', '127.0.0.1']
+ALLOWED_HOSTS = ['sds.coas.unf.edu', '127.0.0.1', 'localhost']
 
 # cors setup
 CORS_ORIGIN_ALLOW_ALL = False
@@ -69,6 +69,7 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 REST_FRAMEWORK = {
