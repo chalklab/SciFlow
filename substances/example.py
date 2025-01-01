@@ -11,7 +11,6 @@ django.setup()
 from datafiles.df_functions import *
 from substances.sub_functions import *
 from substances.external import *
-from scyjava import config, jimport
 from workflow.gdb_functions import *
 from workflow.admin_functions import *
 from django.core.exceptions import ObjectDoesNotExist

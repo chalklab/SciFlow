@@ -10,5 +10,5 @@ LOCALE_CHOICES = [
 
 class UploadFileForm(forms.Form):
     """ jsonld scidata file upload validator"""
-    file = forms.FileField(validators=[json_validator], widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    file = forms.FileField(validators=[json_validator], widget=forms.ClearableFileInput())
     # locale = forms.CharField(widget=forms.RadioSelect(LOCALE_CHOICES, initial='remote'))
