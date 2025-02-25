@@ -1,0 +1,562 @@
+{
+    "@context": [
+        "https://stuchalk.github.io/scidata/contexts/chembl.jsonld",
+        "https://stuchalk.github.io/scidata/contexts/scidata.jsonld",
+        {
+            "obo": "http://purl.obolibrary.org/obo/",
+            "ss": "http://semanticscience.org/resource/",
+            "mesh": "http://purl.bioontology.org/ontology/MESH",
+            "edam": "http://edamontology.org",
+            "bao": "http://www.bioassayontology.org/bao#",
+            "cco": "http://rdf.ebi.ac.uk/terms/chembl#",
+            "w3i": "https://w3id.org/skgo/modsci#"
+        },
+        {"@base": "http://BASE.jsonld"}
+    ],
+    "@id": "scidata:chembl51366_CHEMBL1084033",
+    "@graph": {
+        "@id": "graph_ID_HERE",
+        "uid": "scidata:chembl51366_CHEMBL1084033",
+        "title": "Second generation N-(1,2-diphenylethyl)piperazines as dual serotonin and noradrenaline reuptake inhibitors: improving metabolic stability and reducing ion channel activity.",
+        "author": [
+            {
+                "@id": "author/1/",
+                "@type": "dc:author",
+                "name": "Fray MJ"
+            },
+            {
+                "@id": "author/2/",
+                "@type": "dc:author",
+                "name": "Fish PV"
+            },
+            {
+                "@id": "author/3/",
+                "@type": "dc:author",
+                "name": "Allan GA"
+            },
+            {
+                "@id": "author/4/",
+                "@type": "dc:author",
+                "name": "Bish G"
+            },
+            {
+                "@id": "author/5/",
+                "@type": "dc:author",
+                "name": "Clarke N"
+            },
+            {
+                "@id": "author/6/",
+                "@type": "dc:author",
+                "name": "Eccles R"
+            },
+            {
+                "@id": "author/7/",
+                "@type": "dc:author",
+                "name": "Harrison AC"
+            },
+            {
+                "@id": "author/8/",
+                "@type": "dc:author",
+                "name": "Le Net JL"
+            },
+            {
+                "@id": "author/9/",
+                "@type": "dc:author",
+                "name": "Phillips SC"
+            },
+            {
+                "@id": "author/10/",
+                "@type": "dc:author",
+                "name": "Regan N"
+            },
+            {
+                "@id": "author/11/",
+                "@type": "dc:author",
+                "name": "Sobry C"
+            },
+            {
+                "@id": "author/12/",
+                "@type": "dc:author",
+                "name": "Stobie A"
+            },
+            {
+                "@id": "author/13/",
+                "@type": "dc:author",
+                "name": "Wakenhut F"
+            },
+            {
+                "@id": "author/14/",
+                "@type": "dc:author",
+                "name": "Westbrook D"
+            },
+            {
+                "@id": "author/15/",
+                "@type": "dc:author",
+                "name": "Westbrook SL"
+            },
+            {
+                "@id": "author/16/",
+                "@type": "dc:author",
+                "name": "Whitlock GA."
+            }
+        ],
+        "description": "New N-(1,2-diphenylethyl)piperazines 6 are disclosed as dual serotonin and noradrenaline reuptake inhibitors (SNRI) which may have potential in treating stress urinary incontinence (SUI). In this Letter, we present new data for SNRI PF-526014 (4) including performance in a canine in vivo model of SUI, cardiovascular assessment, pharmacokinetics in dog and determination of the primary routes of metabolism in vitro. Starting from 4, detailed structure activity relationships established that potent dual SNRIs could be achieved by appropriate substitution of the phenyl rings (6: R; R(1)) combined with a preferred stereochemistry. From this set of compounds, piperazine (-)-6a was identified as a potent and selective dual SNRI with improved metabolic stability and reduced ion channel activity when compared to 4. Based on this profile, (-)-6a was selected for further evaluation in a preclinical model of SUI.",
+        "publisher": "Bioorg. Med. Chem. Lett.",
+        "version": "1.0",
+        "keywords": [
+            "IC50",
+            "HERG",
+            "Small molecule",
+            "HEK293",
+            "Ki",
+            "EC50",
+            "pEC50",
+            "CHO",
+            "pKi",
+            "CHO-K1",
+            "pIC50"
+        ],
+        "starttime": "2020-03-16 16:21:19.456040",
+        "permalink": "http://PERMALINK.jsonld",
+        "toc": [
+            "sci:assay",
+            "sci:compound",
+            "sci:compprop",
+            "sci:datagroup",
+            "sci:suppdata",
+            "sci:system",
+            "sci:target"
+        ],
+        "ids": [
+            "bao:BAO_0000181",
+            "cco:CO_000001",
+            "cco:CO_000003",
+            "cco:CO_000005",
+            "cco:CO_000006",
+            "cco:CO_000007",
+            "cco:CO_000008",
+            "cco:CO_000009",
+            "cco:CO_000016",
+            "cco:CO_000021",
+            "cco:CO_000037",
+            "cco:CO_000045",
+            "cco:CO_000047",
+            "cco:CO_000048",
+            "cco:CO_000049",
+            "cco:CO_000050",
+            "co:CO_000074",
+            "co:CO_000075",
+            "edam:data_0990",
+            "edam:data_1086",
+            "edam:data_2646",
+            "edam:topic_0102",
+            "mesh:D008970",
+            "obo:CHEBI_24835",
+            "obo:CLO_0000001",
+            "obo:FBcv_0003050",
+            "obo:MI_1101",
+            "obo:MI_2010",
+            "obo:MI_2039",
+            "obo:NCIT_C94169",
+            "obo:OBI_0100026",
+            "obo:UBERON_0000479",
+            "ss:CHEMINF_000244",
+            "ss:CHEMINF_000245",
+            "ss:CHEMINF_000254",
+            "ss:CHEMINF_000295",
+            "ss:CHEMINF_000300",
+            "ss:CHEMINF_000307",
+            "ss:CHEMINF_000315",
+            "ss:CHEMINF_000321",
+            "ss:CHEMINF_000323",
+            "ss:CHEMINF_000324",
+            "ss:CHEMINF_000325",
+            "ss:CHEMINF_000327",
+            "ss:CHEMINF_000350",
+            "ss:CHEMINF_000367",
+            "ss:CHEMINF_000431",
+            "ss:CHEMINF_000485",
+            "ss:CHEMINF_000490",
+            "ss:SIO_000070",
+            "ss:SIO_000074",
+            "ss:SIO_000117",
+            "ss:SIO_000136",
+            "ss:SIO_000618",
+            "ss:SIO_001114",
+            "ss:SIO_010781"
+        ],
+        "scidata": {
+            "@id": "scidata",
+            "@type": "sci:scientificData",
+            "discipline": "w3i:Chemistry",
+            "subdiscipline": "w3i:MedicinalChemistry",
+            "methodology": {
+                "aspects": [
+                    {
+                        "@id": "system/1/",
+                        "@type": "sci:system",
+                        "type": "IC50"
+                    },
+                    {
+                        "@id": "assay/1/",
+                        "@type": "sci:assay",
+                        "chembl_id": "CHEMBL1120514",
+                        "description": "Displacement of [3H]dofetilide from human ERG",
+                        "assay_organism": "Homo sapiens"
+                    }
+                ],
+                "@id": "methodology/",
+                "@type": "sci:methodology"
+            },
+            "system": {
+                "facets": [
+                    {
+                        "@id": "compound/1/",
+                        "@type": "sci:compound",
+                        "compound_name": "1-(1-(4-fluorophenyl)-2-(2-(trifluoromethoxy)phenyl)ethyl)piperazine",
+                        "cidx": "CLD0",
+                        "mw_monoisotopic": "368.1512",
+                        "full_molformula": "C19H20F4N2O",
+                        "chembl_id": "CHEMBL1084033",
+                        "standard_inchi": "InChI=1S/C19H20F4N2O/c20-16-7-5-14(6-8-16)17(25-11-9-24-10-12-25)13-15-3-1-2-4-18(15)26-19(21,22)23/h1-8,17,24H,9-13H2",
+                        "standard_inchi_key": "SQSFWPVYWBTHEX-UHFFFAOYSA-N",
+                        "canonical_smiles": "Fc1ccc(C(Cc2ccccc2OC(F)(F)F)N2CCNCC2)cc1"
+                    },
+                    {
+                        "@id": "compound/2/",
+                        "@type": "sci:compound",
+                        "compound_name": "(+)-1-(1-(4-fluorophenyl)-2-(2-(trifluoromethoxy)phenyl)ethyl)piperazine",
+                        "cidx": "CLD0",
+                        "mw_monoisotopic": "368.1512",
+                        "full_molformula": "C19H20F4N2O",
+                        "chembl_id": "CHEMBL1084033",
+                        "standard_inchi": "InChI=1S/C19H20F4N2O/c20-16-7-5-14(6-8-16)17(25-11-9-24-10-12-25)13-15-3-1-2-4-18(15)26-19(21,22)23/h1-8,17,24H,9-13H2",
+                        "standard_inchi_key": "SQSFWPVYWBTHEX-UHFFFAOYSA-N",
+                        "canonical_smiles": "Fc1ccc(C(Cc2ccccc2OC(F)(F)F)N2CCNCC2)cc1"
+                    },
+                    {
+                        "@id": "suppdata/1/",
+                        "@type": "sci:suppdata",
+                        "mw_freebase": "368.37",
+                        "hba": "3",
+                        "hbd": "1",
+                        "psa": "24.50",
+                        "rtb": "5",
+                        "ro3_pass": "N",
+                        "num_ro5_violations": "0",
+                        "full_mwt": "368.37",
+                        "aromatic_rings": "2",
+                        "heavy_atoms": "26"
+                    },
+                    {
+                        "@id": "compprop/1/",
+                        "@type": "sci:compprop",
+                        "qed_weighted": "0.81",
+                        "hba_lipinski": "3",
+                        "hbd_lipinski": "1",
+                        "cx_most_bpka": "9.23",
+                        "cx_logp": "5.03",
+                        "cx_logd": "3.21",
+                        "structure_type": "MOL",
+                        "chirality": "-1",
+                        "inorganic_flag": "-1",
+                        "polymer_flag": "0"
+                    },
+                    {
+                        "@id": "compound/3/",
+                        "@type": "sci:compound",
+                        "compound_name": "(-)-1-(1-(4-fluorophenyl)-2-(2-(trifluoromethoxy)phenyl)ethyl)piperazine",
+                        "cidx": "CLD0",
+                        "mw_monoisotopic": "368.1512",
+                        "full_molformula": "C19H20F4N2O",
+                        "chembl_id": "CHEMBL1084033",
+                        "standard_inchi": "InChI=1S/C19H20F4N2O/c20-16-7-5-14(6-8-16)17(25-11-9-24-10-12-25)13-15-3-1-2-4-18(15)26-19(21,22)23/h1-8,17,24H,9-13H2",
+                        "standard_inchi_key": "SQSFWPVYWBTHEX-UHFFFAOYSA-N",
+                        "canonical_smiles": "Fc1ccc(C(Cc2ccccc2OC(F)(F)F)N2CCNCC2)cc1"
+                    },
+                    {
+                        "@id": "target/1/",
+                        "@type": "sci:target",
+                        "target_mapping": "Protein",
+                        "pref_name": "HERG",
+                        "chembl_id": "CHEMBL240",
+                        "target_type": "SINGLE PROTEIN",
+                        "target_desc": "Target is a single protein chain"
+                    }
+                ],
+                "@id": "system/",
+                "@type": "sci:system"
+            },
+            "dataset": {
+                "datagroup": [
+                    {
+                        "@id": "datagroup/1/",
+                        "@type": "sci:datagroup",
+                        "chembl_id": "CHEMBL1084033",
+                        "datapoints": [
+                            "datapoint/1/",
+                            "datapoint/2/",
+                            "datapoint/3/",
+                            "datapoint/4/",
+                            "datapoint/5/",
+                            "datapoint/6/"
+                        ]
+                    }
+                ],
+                "datapoint": [
+                    {
+                        "@id": "datapoint/1/",
+                        "@type": "sci:datapoint",
+                        "activity_id": 3309689,
+                        "data": [
+                            {
+                                "property": "compound_properties",
+                                "@id": "datapoint/1/datum/1/",
+                                "@type": "sci:derriveddata",
+                                "value": {
+                                    "alogp": "3.91",
+                                    "@id": "datapoint/1/datum/1/value/1/",
+                                    "@type": "sci:value"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/2/",
+                        "@type": "sci:datapoint",
+                        "activity_id": 3309689,
+                        "data": [
+                            {
+                                "property": "activities",
+                                "@id": "datapoint/2/datum/1/",
+                                "@type": "sci:deriveddata",
+                                "value": {
+                                    "standard_relation": "=",
+                                    "@id": "datapoint/2/datum/1/value/1/",
+                                    "@type": "sci:value",
+                                    "standard_value": "8050.000000000000000000000000000000",
+                                    "standard_units": "nM",
+                                    "pchembl_value": "5.09"
+                                }
+                            },
+                            {
+                                "property": "activities",
+                                "@id": "datapoint/2/datum/2/",
+                                "@type": "sci:suppdata",
+                                "value": {
+                                    "potential_duplicate": "0",
+                                    "@id": "datapoint/2/datum/2/value/1/",
+                                    "@type": "sci:value",
+                                    "uo_units": "UO_0000065",
+                                    "qudt_units": "http://www.openphacts.org/units/Nanomolar",
+                                    "relation": "="
+                                }
+                            },
+                            {
+                                "property": "IC50",
+                                "definition": "Concentration required for 50% inhibition",
+                                "@id": "datapoint/2/datum/3/",
+                                "@type": "sci:exptdata",
+                                "value": {
+                                    "value": "8050.000000000000000000000000000000",
+                                    "@id": "datapoint/2/datum/3/value/1/",
+                                    "@type": "sci:value",
+                                    "units": "nM"
+                                }
+                            },
+                            {
+                                "property": "ligand_eff",
+                                "@id": "datapoint/2/datum/4/",
+                                "@type": "sci:supplementaldata",
+                                "value": {
+                                    "bei": "13.83",
+                                    "@id": "datapoint/2/datum/4/value/1/",
+                                    "@type": "sci:value",
+                                    "sei": "20.79",
+                                    "le": "0.27",
+                                    "lle": "1.18"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/3/",
+                        "@type": "sci:datapoint",
+                        "activity_id": 3309696,
+                        "data": [
+                            {
+                                "property": "compound_properties",
+                                "@id": "datapoint/3/datum/1/",
+                                "@type": "sci:derriveddata",
+                                "value": {
+                                    "alogp": "3.91",
+                                    "@id": "datapoint/3/datum/1/value/1/",
+                                    "@type": "sci:value"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/4/",
+                        "@type": "sci:datapoint",
+                        "activity_id": 3309696,
+                        "data": [
+                            {
+                                "property": "activities",
+                                "@id": "datapoint/4/datum/1/",
+                                "@type": "sci:deriveddata",
+                                "value": {
+                                    "standard_relation": "=",
+                                    "@id": "datapoint/4/datum/1/value/1/",
+                                    "@type": "sci:value",
+                                    "standard_value": "9640.000000000000000000000000000000",
+                                    "standard_units": "nM",
+                                    "pchembl_value": "5.02"
+                                }
+                            },
+                            {
+                                "property": "activities",
+                                "@id": "datapoint/4/datum/2/",
+                                "@type": "sci:suppdata",
+                                "value": {
+                                    "potential_duplicate": "0",
+                                    "@id": "datapoint/4/datum/2/value/1/",
+                                    "@type": "sci:value",
+                                    "uo_units": "UO_0000065",
+                                    "qudt_units": "http://www.openphacts.org/units/Nanomolar",
+                                    "relation": "="
+                                }
+                            },
+                            {
+                                "property": "IC50",
+                                "definition": "Concentration required for 50% inhibition",
+                                "@id": "datapoint/4/datum/3/",
+                                "@type": "sci:exptdata",
+                                "value": {
+                                    "value": "9640.000000000000000000000000000000",
+                                    "@id": "datapoint/4/datum/3/value/1/",
+                                    "@type": "sci:value",
+                                    "units": "nM"
+                                }
+                            },
+                            {
+                                "property": "ligand_eff",
+                                "@id": "datapoint/4/datum/4/",
+                                "@type": "sci:supplementaldata",
+                                "value": {
+                                    "bei": "13.62",
+                                    "@id": "datapoint/4/datum/4/value/1/",
+                                    "@type": "sci:value",
+                                    "sei": "20.47",
+                                    "le": "0.26",
+                                    "lle": "1.11"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/5/",
+                        "@type": "sci:datapoint",
+                        "activity_id": 3309697,
+                        "data": [
+                            {
+                                "property": "compound_properties",
+                                "@id": "datapoint/5/datum/1/",
+                                "@type": "sci:derriveddata",
+                                "value": {
+                                    "alogp": "3.91",
+                                    "@id": "datapoint/5/datum/1/value/1/",
+                                    "@type": "sci:value"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "@id": "datapoint/6/",
+                        "@type": "sci:datapoint",
+                        "activity_id": 3309697,
+                        "data": [
+                            {
+                                "property": "activities",
+                                "@id": "datapoint/6/datum/1/",
+                                "@type": "sci:deriveddata",
+                                "value": {
+                                    "standard_relation": "=",
+                                    "@id": "datapoint/6/datum/1/value/1/",
+                                    "@type": "sci:value",
+                                    "standard_value": "4950.000000000000000000000000000000",
+                                    "standard_units": "nM",
+                                    "pchembl_value": "5.30"
+                                }
+                            },
+                            {
+                                "property": "activities",
+                                "@id": "datapoint/6/datum/2/",
+                                "@type": "sci:suppdata",
+                                "value": {
+                                    "potential_duplicate": "0",
+                                    "@id": "datapoint/6/datum/2/value/1/",
+                                    "@type": "sci:value",
+                                    "uo_units": "UO_0000065",
+                                    "qudt_units": "http://www.openphacts.org/units/Nanomolar",
+                                    "relation": "="
+                                }
+                            },
+                            {
+                                "property": "IC50",
+                                "definition": "Concentration required for 50% inhibition",
+                                "@id": "datapoint/6/datum/3/",
+                                "@type": "sci:exptdata",
+                                "value": {
+                                    "value": "4950.000000000000000000000000000000",
+                                    "@id": "datapoint/6/datum/3/value/1/",
+                                    "@type": "sci:value",
+                                    "units": "nM"
+                                }
+                            },
+                            {
+                                "property": "ligand_eff",
+                                "@id": "datapoint/6/datum/4/",
+                                "@type": "sci:supplementaldata",
+                                "value": {
+                                    "bei": "14.40",
+                                    "@id": "datapoint/6/datum/4/value/1/",
+                                    "@type": "sci:value",
+                                    "sei": "21.65",
+                                    "le": "0.28",
+                                    "lle": "1.40"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "@id": "dataset/1/",
+                "@type": "sci:dataset"
+            }
+        },
+        "sources": [
+            {
+                "@id": "source/1/",
+                "@type": "dc:source",
+                "title": "Second generation N-(1,2-diphenylethyl)piperazines as dual serotonin and noradrenaline reuptake inhibitors: improving metabolic stability and reducing ion channel activity.",
+                "doi": "10.1016/j.bmcl.2010.04.052",
+                "journal": "Bioorg. Med. Chem. Lett.",
+                "year": "2010",
+                "volume": "20",
+                "issue": "12"
+            },
+            {
+                "@id": "source/2/",
+                "@type": "dc:source",
+                "url": "https://www.ebi.ac.uk/chembl/document_report_card/CHEMBL1155538/"
+            }
+        ],
+        "rights": [
+            {
+                "@id": "rights/1/",
+                "@type": "dc:rights",
+                "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+            }
+        ]
+    }
+}

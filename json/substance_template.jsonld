@@ -1,0 +1,87 @@
+{
+    "@context": [
+        "https://stuchalk.github.io/scidata/contexts/scidata.jsonld",
+        "https://stuchalk.github.io/scidata/contexts/fair_molecule.jsonld",
+        {
+            "sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#",
+            "obo": "http://purl.obolibrary.org/obo/",
+            "ss": "http://semanticscience.org/resource/",
+            "atc": "http://purl.bioontology.org/ontology/ATC/",
+            "w3i": "https://w3id.org/skgo/modsci#"
+        },
+        {"@base": "https://scidata.unf.edu/substance/<inchikey>/"}
+    ],
+    "@id": "https://scidata.unf.edu/substance/<inchikey>",
+    "@graph": {
+        "@id": "",
+        "uid": "scidata:substance:<inchikey>",
+        "title": "",
+        "author": [
+            {
+                "@id": "author/1/",
+                "@type": "dc:author",
+                "name": "Stuart Chalk",
+                "orcid": "0000-0002-0703-7776"
+            }
+        ],
+        "description": "Metadata, identifiers and descriptors about a chemical substance",
+        "publisher": "Chalk Research Laboratory, University of North Florida",
+        "version": "1.0",
+        "keywords": [
+            "chemical substance",
+            "chemical compound"
+        ],
+        "starttime": "",
+        "permalink": "https://scidata.unf.edu/substance/<inchikey>",
+        "toc": ["sdo:compound"],
+        "scidata": {
+            "@id": "scidata",
+            "@type": "sdo:scientificData",
+            "discipline": "w3i:Chemistry",
+            "system": {
+                "@id": "system/",
+                "@type": "sdo:system",
+                "facets": [
+                    {
+                        "@id": "compound/1/",
+                        "@type": "sdo:compound",
+                        "name": "",
+                        "formula": "",
+                        "molweight": "",
+                        "monoisotopicmass": "",
+                        "identifiers": {
+                            "@id": "identifier/",
+                            "@type": "obo:IAO_0000578"
+                        },
+                        "descriptors": {
+                            "@id": "descriptor/",
+                            "@type": "ss:CHEMINF_000123"
+                        },
+                        "molgraph": {
+                            "@id": "molgraph/",
+                            "@type": "ss:CHEMINF_000022",
+                            "atoms": [],
+                            "bonds": []
+                        }
+                    }
+                ]
+            }
+        },
+        "sources": [
+            {
+                "@id": "source/1/",
+                "@type": "dc:source",
+                "title": "UNF SciFlow System",
+                "url": "https://sciflow.unf.edu"
+            }
+        ],
+        "rights": [
+            {
+                "@id": "rights/1/",
+                "@type": "dc:rights",
+                "holder": "University of North Florida",
+                "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
+            }
+        ]
+    }
+}
